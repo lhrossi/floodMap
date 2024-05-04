@@ -2,12 +2,10 @@
   "name": "nuxt-app",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "preview": "nuxt preview"
   },
   "devDependencies": {
     "@invictus.codes/nuxt-vuetify": "^0.3.0",
