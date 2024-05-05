@@ -167,6 +167,16 @@ useHead({
   titleTemplate: () => "Localização das Tropas",
 });
 
+const modal = ref(false)
+const payloadForm = reactive({
+  numero_pelotao: "asdad",
+  nome_militar_resp: "asdasd"
+})
+function handleSubmit() {
+  modal.value = false
+  console.log(payloadForm)
+}
+
 const { data: items } =  await useFetch<any>('/api/missoes');
 
 // const { data: result } =  await useFetch<any>('/api/missoes', { method:'post',
@@ -185,8 +195,6 @@ const { data: items } =  await useFetch<any>('/api/missoes');
 // console.log(result)  
 </script>
 
-<style lang="scss">
-</style>
 
   <!--
 
@@ -204,6 +212,7 @@ const { data: items } =  await useFetch<any>('/api/missoes');
 
   -->
 
+<style lang="scss"> 
   .civis {
     color: #071d41;
     border-radius: 10px; /* Ajuste o valor conforme necessário */
