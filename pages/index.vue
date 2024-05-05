@@ -174,7 +174,7 @@ useMapbox("map", (map: any) => {
 .total-vagas {
   font-size: 0.75rem;
   position: fixed;
-  z-index: 999;
+  z-index: 899;
   right: 1rem;
   top: 5rem;
   background: white;
