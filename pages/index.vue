@@ -5,8 +5,18 @@
         Falha ao carregar abrigos
       </v-snackbar>
       <div class="total-vagas">
-        Total de vagas: <b>{{ totalVagas }}</b> <br>
-        Vagas disponíveis: <b>{{ totalVagas - totalVagasOcupadas }}</b> <br> <br>
+        <div>
+          Total de vagas: <b>{{ totalVagas }}</b>
+        </div>
+        <div>
+          Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
+        </div>
+        <div
+          class="text-lg font-bold text-center"
+          :style="{ color: calcularCor(totalVagas, totalVagasOcupadas) }"
+        >
+          {{ Math.round((totalVagasOcupadas * 100) / totalVagas) }}%
+        </div>
         <v-btn size="small" v-on:click="filterDrawer = true">
           Filtrar abrigos
         </v-btn>
@@ -33,11 +43,11 @@
         <v-col>
           <MapboxMap
             map-id="map"
-            style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%;height: 100%"
+            style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
             :options="{
               style: 'mapbox://styles/mapbox/streets-v12',
               center: [-51.1771419, -30.1088701],
-              zoom: 9
+              zoom: 9,
             }"
           >
             <LazyMapboxDefaultMarker
@@ -45,7 +55,9 @@
               :marker-id="`marker-${item.id}`"
               :key="item.id"
               :lnglat="[item.longitude, item.latitude]"
-              :options="{}"
+              :options="{
+                color: calcularCor(item.vagas, item.vagas_ocupadas),
+              }"
             >
               <LazyMapboxDefaultPopup
                 :popup-id="`popup-${item.id}`"
@@ -54,12 +66,37 @@
               >
                 <h3 v-if="item.nome">{{ item.nome }}</h3>
                 <p v-if="item.address">{{ item.address }}</p>
-                <p v-if="item.nome_contato || item.telefone">{{ item.nome_contato }} <span v-show="item.telefone">- {{ item.telefone }}</span></p>
-                <p v-if="item.demanda">{{ item.demanda }}</p>
-                <v-divider class="my-2"/>
-                <v-chip v-if="item.vagas" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
-                <v-divider class="my-2"/>
-                <a class="d-flex justify-end" :href="`https://www.google.com/maps/dir//${item.latitude},${item.longitude}`" target="_blank" rel="noopener noreferrer">Como Chegar</a>
+                <p v-if="item.nome_contato || item.telefone">
+                  {{ item.nome_contato }}
+                  <span v-show="item.telefone">- {{ item.telefone }}</span>
+                </p>
+                <v-divider class="my-2" />
+                <div class="flex space-x-2">
+                  <v-chip v-if="item.vagas" variant="flat" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
+                  <v-chip
+                    v-if="
+                      !isNaN(item.vagas) &&
+                      !isNaN(item.vagas_ocupadas) &&
+                      item.vagas > 0
+                    "
+                    variant="flat"
+                    size="small"
+                    :color="calcularCor(item.vagas, item.vagas_ocupadas)"
+                    >{{
+                      Math.max(item.vagas - item.vagas_ocupadas, 0)
+                    }}
+                    livres</v-chip
+                  >
+                </div>
+                <Necessidades :abrigo="item" />
+                <v-divider class="my-2" />
+                <a
+                  class="d-flex justify-end"
+                  :href="`https://www.google.com/maps/dir//${item.latitude},${item.longitude}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Como Chegar</a
+                >
               </LazyMapboxDefaultPopup>
             </LazyMapboxDefaultMarker>
             <MapboxGeolocateControl position="bottom-right" />
@@ -122,20 +159,40 @@ const totalVagasOcupadas = computed(() => {
 })
 
 useHead({
-  titleTemplate: () => 'Localização dos abrigos'
-})
+  titleTemplate: () => "Localização dos abrigos",
+});
 
-useMapbox('map', (map: any) => {
+useMapbox("map", (map: any) => {
   map._markers.forEach(({ _popup: popup }: any) => {
-    popup.remove()
-  })
-})
+    popup.remove();
+  });
+});
+
+function calcularCor(vagas:any, vagasOcupadas:any) {
+  if (isNaN(vagas) || isNaN(vagasOcupadas) || vagas <= 0) {
+    return "lightgrey";
+  }
+  const percentual = (vagasOcupadas * 100) / vagas;
+  if (percentual <= 50) {
+    // Calcula a cor entre verde e amarelo
+    var r = Math.floor(255 * (percentual / 50));
+    var g = 255;
+    var b = 0;
+  } else {
+    // Calcula a cor entre amarelo e vermelho
+    var r = 255;
+    var g = Math.floor(255 * ((100 - percentual) / 50));
+    var b = 0;
+  }
+  return `rgb(${r}, ${g}, ${b})`;
+}
 </script>
 
 <style lang="scss">
 .mapboxgl-popup-content {
   min-width: 250px;
 }
+
 .mapboxgl-popup-close-button {
   width: 25px;
   height: 25px;
@@ -161,6 +218,7 @@ useMapbox('map', (map: any) => {
   border-radius: 0.5rem;
   border: 1px solid #ddd;
 }
+<<<<<<< HEAD
 
 .filtros {
   padding: 1rem;
@@ -168,3 +226,6 @@ useMapbox('map', (map: any) => {
 }
 
 </style>
+=======
+</style>
+>>>>>>> f31ade596a4d46986b2785e656148d312ea1faf4
