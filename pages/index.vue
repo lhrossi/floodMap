@@ -35,6 +35,8 @@
                 <p v-if="item.demanda">{{ item.demanda }}</p>
                 <v-divider class="my-2"/>
                 <v-chip v-if="item.vagas" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
+                <v-divider class="my-2"/>
+                <a class="d-flex justify-end" :href="`https://www.google.com/maps/dir//${item.address}`" target="_blank" rel="noopener noreferrer">Como Chegar</a>
               </LazyMapboxDefaultPopup>
             </LazyMapboxDefaultMarker>
             <MapboxGeolocateControl position="bottom-right" />
@@ -69,6 +71,8 @@ const totalVagasOcupadas = computed(() => items.value.reduce((acc, item) => {
   }
   return acc + value
 }, 0))
+
+console.log(JSON.stringify(items.value))
 
 useHead({
   titleTemplate: () => 'Localização dos abrigos'
