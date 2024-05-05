@@ -178,7 +178,7 @@
     titleTemplate: () => "Localização das Tropas",
   });
   
-  const { data: items } =  await useFetch<any>('/api/missoes');
+  const { data: items } =  await useFetch<any>('/api/missoesget');
 
   const modal = ref(false)
 
@@ -188,12 +188,10 @@
     modal.value = false
     console.log(payloadForm)
     
-    const { data: result } = await useFetch<any>('/api/missoes', { method:'post', body: payloadForm });
+    const { data: result } = await useFetch<any>('/api/missoespost', { method:'post', body: payloadForm });
     modal.value = false
     console.log(result)  
   }
-
-
 </script>
 
 <style lang="scss">

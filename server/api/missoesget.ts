@@ -3,7 +3,7 @@ import axios from 'axios';
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
 
-  const response = await axios.get(`${config.public.API_URL}/missoes`, {
+  const response = await axios.get(`http://localhost:3000/missoes`, {
     headers: {
       'Authorization': config.public.API_TOKEN
     }
