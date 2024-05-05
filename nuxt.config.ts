@@ -13,6 +13,13 @@ const normalTheme: ThemeDefinition = {
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    public: {
+      API_TOKEN: process.env.NUXT_PUBLIC_API_TOKEN,
+      API_URL: process.env.NUXT_PUBLIC_API_URL || '/api/mock'
+    }
+  },
+
   modules: [
     '@invictus.codes/nuxt-vuetify',
     // 'nuxt-api-party',
@@ -21,7 +28,7 @@ export default defineNuxtConfig({
     // 'nuxt-cloudflare-analytics',
     'dayjs-nuxt', // https://github.com/fumeapp/dayjs
     '@vueuse/nuxt', // https://vueuse.org/guide/
-    'nuxt-mapbox', // https://github.com/AlexLavoie42/Nuxt-Mapbox
+    'nuxt-mapbox', // https://alexlavoie42.github.io/Nuxt-Mapbox/
   ],
 
   app: {
