@@ -13,6 +13,13 @@ const normalTheme: ThemeDefinition = {
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    public: {
+      API_TOKEN: process.env.API_TOKEN,
+      API_URL: process.env.NUXT_PUBLIC_API_URL || '/api/mock'
+    }
+  },
+
   modules: [
     '@invictus.codes/nuxt-vuetify',
     // 'nuxt-api-party',
