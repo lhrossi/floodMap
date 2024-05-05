@@ -36,7 +36,7 @@
                 <v-divider class="my-2"/>
                 <v-chip v-if="item.vagas" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
                 <v-divider class="my-2"/>
-                <a class="d-flex justify-end" :href="`https://www.google.com/maps/dir//${item.address}`" target="_blank" rel="noopener noreferrer">Como Chegar</a>
+                <a class="d-flex justify-end" :href="`https://www.google.com/maps/dir//${item.latitude},${item.longitude}`" target="_blank" rel="noopener noreferrer">Como Chegar</a>
               </LazyMapboxDefaultPopup>
             </LazyMapboxDefaultMarker>
             <MapboxGeolocateControl position="bottom-right" />
