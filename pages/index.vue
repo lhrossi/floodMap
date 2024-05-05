@@ -1,6 +1,11 @@
 <template>
   <v-container>
     <v-container>
+      <div class="total-vagas">
+        Total de vagas: <b>{{ totalVagas }}</b> <br>
+        Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
+        
+      </div>
       <v-row class="mt-4">
         <v-col>
           <MapboxMap
@@ -41,7 +46,29 @@
 </template>
 
 <script setup lang="ts">
-const { data: items } = await useFetch<any>('/api/abrigos')
+const { data: items } = await useFetch<any>('/api/abrigos',
+  { }
+)
+
+console.log(items)
+
+console.log(Array.from(items))
+
+const totalVagas = computed(() => items.value.reduce((acc, item) => {
+  const value = parseInt(item.vagas)
+  if (isNaN(value)) {
+    return acc
+  }
+  return acc + value
+}, 0))
+
+const totalVagasOcupadas = computed(() => items.value.reduce((acc, item) => {
+  const value = parseInt(item.vagas_ocupadas)
+  if (isNaN(value)) {
+    return acc
+  }
+  return acc + value
+}, 0))
 
 useHead({
   titleTemplate: () => 'Localização dos abrigos'
@@ -71,4 +98,17 @@ useMapbox('map', (map: any) => {
     outline: none;
   }
 }
+
+.total-vagas {
+  font-size: 0.75rem;
+  position: fixed;
+  z-index: 999;
+  right: 1rem;
+  top: 5rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ddd;
+}
+
 </style>
