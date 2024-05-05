@@ -11,10 +11,7 @@
         <div>
           Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
         </div>
-        <div
-          class="text-lg font-bold text-center"
-          :style="{ color: calcularCor(totalVagas, totalVagasOcupadas) }"
-        >
+        <div class="text-lg font-bold text-center" :style="{ color: calcularCor(totalVagas, totalVagasOcupadas) }">
           {{ Math.round((totalVagasOcupadas * 100) / totalVagas) }}%
         </div>
         <v-btn size="small" v-on:click="filterDrawer = true">
@@ -32,7 +29,7 @@
             v-on:click="filter.enabled = !filter.enabled"
             :variant="filter.enabled ? 'elevated' : 'outlined'"
             size="small" color="primary">
-            {{ filter.name }}: {{ items?.filter(filter.filterFunction).length }}
+            {{ filter.name }}: {{ abrigos?.filter(filter.filterFunction).length }}
           </v-chip>
           <v-btn size="small" v-on:click="filterDrawer = false">
             Fechar
@@ -51,48 +48,32 @@
             }"
           >
             <LazyMapboxDefaultMarker
-              v-for="item of filteredItems"
-              :marker-id="`marker-${item.id}`"
-              :key="item.id"
-              :lnglat="[item.longitude, item.latitude]"
+              v-for="abrigo of filteredItems"
+              :marker-id="`marker-${abrigo.id}`"
+              :key="abrigo.id"
+              :lnglat="[abrigo.longitude, abrigo.latitude]"
               :options="{
-                color: calcularCor(item.vagas, item.vagas_ocupadas),
+                color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
               }"
             >
               <LazyMapboxDefaultPopup
-                :popup-id="`popup-${item.id}`"
-                :lnglat="[item.longitude, item.latitude]"
+                :popup-id="`popup-${abrigo.id}`"
+                :lnglat="[abrigo.longitude, abrigo.latitude]"
                 :options="{ closeOnClick: true, closeButton: true }"
               >
-                <h3 v-if="item.nome">{{ item.nome }}</h3>
-                <p v-if="item.address">{{ item.address }}</p>
-                <p v-if="item.nome_contato || item.telefone">
-                  {{ item.nome_contato }}
-                  <span v-show="item.telefone">- {{ item.telefone }}</span>
+                <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
+                <p v-if="abrigo.address">{{ abrigo.address }}</p>
+                <p v-if="abrigo.nome_contato || abrigo.telefone">
+                  {{ abrigo.nome_contato }}
+                  <span v-show="abrigo.telefone">- {{ abrigo.telefone }}</span>
                 </p>
                 <v-divider class="my-2" />
-                <div class="flex space-x-2">
-                  <v-chip v-if="item.vagas" variant="flat" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
-                  <v-chip
-                    v-if="
-                      !isNaN(item.vagas) &&
-                      !isNaN(item.vagas_ocupadas) &&
-                      item.vagas > 0
-                    "
-                    variant="flat"
-                    size="small"
-                    :color="calcularCor(item.vagas, item.vagas_ocupadas)"
-                    >{{
-                      Math.max(item.vagas - item.vagas_ocupadas, 0)
-                    }}
-                    livres</v-chip
-                  >
-                </div>
-                <Necessidades :abrigo="item" />
+                <ContagemVagas :abrigo="abrigo" />
+                <Necessidades :abrigo="abrigo" />
                 <v-divider class="my-2" />
                 <a
                   class="d-flex justify-end"
-                  :href="`https://www.google.com/maps/dir//${item.latitude},${item.longitude}`"
+                  :href="`https://www.google.com/maps/dir//${abrigo.latitude},${abrigo.longitude}`"
                   target="_blank"
                   rel="noopener noreferrer"
                   >Como Chegar</a
@@ -108,7 +89,9 @@
 </template>
 
 <script setup lang="ts">
-const { data: items, error } = await useFetch<any>('/api/abrigos',
+import calcularCor from "../utils/calcularCor";
+
+const { data: abrigos, error } = await useFetch<any>('/api/abrigos',
   { }
 )
 
@@ -122,21 +105,21 @@ let filters = ref([
 ])
 
 const filteredItems = computed(() => {
-  if (!items.value) {
+  if (!abrigos.value) {
     return []
   }
   const enabledFilters = filters.value.filter(f => f.enabled)
   if (enabledFilters.length === 0) {
-    return items.value
+    return abrigos.value
   }
-  return items.value.filter(item => enabledFilters.every(filter => filter.filterFunction(item)))
+  return abrigos.value.filter(item => enabledFilters.every(filter => filter.filterFunction(item)))
 })
 
 const totalVagas = computed(() => {
-  if (!items.value) {
+  if (!abrigos.value) {
     return 0
   }
-  return items.value.reduce((acc, item) => {
+  return abrigos.value.reduce((acc, item) => {
     const value = parseInt(item.vagas)
     if (isNaN(value)) {
       return acc
@@ -146,10 +129,10 @@ const totalVagas = computed(() => {
 })
 
 const totalVagasOcupadas = computed(() => {
-  if (!items.value) {
+  if (!abrigos.value) {
     return 0
   }
-  return items.value.reduce((acc, item) => {
+  return abrigos.value.reduce((acc, item) => {
     const value = parseInt(item.vagas_ocupadas)
     if (isNaN(value)) {
       return acc
@@ -167,25 +150,6 @@ useMapbox("map", (map: any) => {
     popup.remove();
   });
 });
-
-function calcularCor(vagas:any, vagasOcupadas:any) {
-  if (isNaN(vagas) || isNaN(vagasOcupadas) || vagas <= 0) {
-    return "lightgrey";
-  }
-  const percentual = (vagasOcupadas * 100) / vagas;
-  if (percentual <= 50) {
-    // Calcula a cor entre verde e amarelo
-    var r = Math.floor(255 * (percentual / 50));
-    var g = 255;
-    var b = 0;
-  } else {
-    // Calcula a cor entre amarelo e vermelho
-    var r = 255;
-    var g = Math.floor(255 * ((100 - percentual) / 50));
-    var b = 0;
-  }
-  return `rgb(${r}, ${g}, ${b})`;
-}
 </script>
 
 <style lang="scss">
@@ -218,7 +182,6 @@ function calcularCor(vagas:any, vagasOcupadas:any) {
   border-radius: 0.5rem;
   border: 1px solid #ddd;
 }
-<<<<<<< HEAD
 
 .filtros {
   padding: 1rem;
@@ -226,6 +189,3 @@ function calcularCor(vagas:any, vagasOcupadas:any) {
 }
 
 </style>
-=======
-</style>
->>>>>>> f31ade596a4d46986b2785e656148d312ea1faf4
