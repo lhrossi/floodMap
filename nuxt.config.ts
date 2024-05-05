@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     // 'nuxt-cloudflare-analytics',
     'dayjs-nuxt', // https://github.com/fumeapp/dayjs
     '@vueuse/nuxt', // https://vueuse.org/guide/
-    'nuxt-mapbox', // https://github.com/AlexLavoie42/Nuxt-Mapbox
+    'nuxt-mapbox', // https://alexlavoie42.github.io/Nuxt-Mapbox/
   ],
 
   app: {
