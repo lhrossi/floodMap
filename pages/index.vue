@@ -19,14 +19,7 @@
         <v-col>
           <MapboxMap
             map-id="map"
-            style="
-              position: absolute;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-            "
+            style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
             :options="{
               style: 'mapbox://styles/mapbox/streets-v12',
               center: [-51.1771419, -30.1088701],
@@ -53,16 +46,9 @@
                   {{ item.nome_contato }}
                   <span v-show="item.telefone">- {{ item.telefone }}</span>
                 </p>
-                <p v-if="item.demanda">{{ item.demanda }}</p>
                 <v-divider class="my-2" />
                 <div class="flex space-x-2">
-                  <v-chip
-                    v-if="item.vagas"
-                    variant="flat"
-                    size="small"
-                    color="primary"
-                    >{{ item.vagas }} vagas</v-chip
-                  >
+                  <v-chip v-if="item.vagas" variant="flat" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
                   <v-chip
                     v-if="
                       !isNaN(item.vagas) &&
@@ -78,6 +64,7 @@
                     livres</v-chip
                   >
                 </div>
+                <Necessidades :abrigo="item" />
                 <v-divider class="my-2" />
                 <a
                   class="d-flex justify-end"
