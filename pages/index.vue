@@ -1,9 +1,19 @@
 <template>
   <v-container>
     <v-container>
-      <div class="total-vagas">
-        Total de vagas: <b>{{ totalVagas }}</b> <br />
-        Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
+      <div class="total-vagas flex flex-col">
+        <div>
+          Total de vagas: <b>{{ totalVagas }}</b>
+        </div>
+        <div>
+          Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
+        </div>
+        <div
+          class="text-lg font-bold text-center"
+          :style="{ color: calcularCor(totalVagas, totalVagasOcupadas) }"
+        >
+          {{ Math.round((totalVagasOcupadas * 100) / totalVagas) }}%
+        </div>
       </div>
       <v-row class="mt-4">
         <v-col>
@@ -29,7 +39,7 @@
               :key="item.id"
               :lnglat="[item.longitude, item.latitude]"
               :options="{
-                color: calcularCor(item),
+                color: calcularCor(item.vagas, item.vagas_ocupadas),
               }"
             >
               <LazyMapboxDefaultPopup
@@ -54,11 +64,18 @@
                     >{{ item.vagas }} vagas</v-chip
                   >
                   <v-chip
-                    v-if="!isNaN(item.vagas) && !isNaN(item.vagas_ocupadas) && item.vagas > 0"
+                    v-if="
+                      !isNaN(item.vagas) &&
+                      !isNaN(item.vagas_ocupadas) &&
+                      item.vagas > 0
+                    "
                     variant="flat"
                     size="small"
-                    :color="calcularCor(item)"
-                    >{{ Math.max(item.vagas - item.vagas_ocupadas, 0) }} livres</v-chip
+                    :color="calcularCor(item.vagas, item.vagas_ocupadas)"
+                    >{{
+                      Math.max(item.vagas - item.vagas_ocupadas, 0)
+                    }}
+                    livres</v-chip
                   >
                 </div>
                 <v-divider class="my-2" />
@@ -118,11 +135,11 @@ useMapbox("map", (map: any) => {
   });
 });
 
-function calcularCor(item: any) {
-  if (isNaN(item.vagas) || isNaN(item.vagas_ocupadas) || item.vagas <= 0) {
+function calcularCor(vagas:any, vagasOcupadas:any) {
+  if (isNaN(vagas) || isNaN(vagasOcupadas) || vagas <= 0) {
     return "lightgrey";
   }
-  const percentual = (item.vagas_ocupadas * 100) / item.vagas;
+  const percentual = (vagasOcupadas * 100) / vagas;
   if (percentual <= 50) {
     // Calcula a cor entre verde e amarelo
     var r = Math.floor(255 * (percentual / 50));
