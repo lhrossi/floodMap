@@ -11,7 +11,13 @@
           </div>
           <div class="flex flex-auto"></div>
           <div class="flex">
-            <a href="https://abrigospoa.web.app/home" target="_blank" class="button is-link">Abrigos PoA</a>
+            <v-btn
+              color="primary"
+              text
+              href="https://abrigospoa.web.app/home"
+              target="_blank"
+              >Abrigos PoA</v-btn
+            >
           </div>
         </div>
       </v-toolbar-title>
@@ -42,5 +48,3 @@
 </template>
 
 <script setup></script>
-
-<style lang="scss"></style>
