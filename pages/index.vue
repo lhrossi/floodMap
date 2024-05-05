@@ -1,11 +1,34 @@
 <template>
   <v-container>
     <v-container>
+      <v-snackbar v-model="error" multi-line >
+        Falha ao carregar abrigos
+      </v-snackbar>
       <div class="total-vagas">
         Total de vagas: <b>{{ totalVagas }}</b> <br>
-        Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
-        
+        Vagas disponíveis: <b>{{ totalVagas - totalVagasOcupadas }}</b> <br> <br>
+        <v-btn size="small" v-on:click="filterDrawer = true">
+          Filtrar abrigos
+        </v-btn>
       </div>
+      <v-navigation-drawer
+        v-model="filterDrawer"
+        temporary
+      >
+        <div class="flex flex-column filtros">
+          <span>Filtrar abrigos</span>
+          <v-chip
+            v-for="filter of filters"
+            v-on:click="filter.enabled = !filter.enabled"
+            :variant="filter.enabled ? 'elevated' : 'outlined'"
+            size="small" color="primary">
+            {{ filter.name }}: {{ items?.filter(filter.filterFunction).length }}
+          </v-chip>
+          <v-btn size="small" v-on:click="filterDrawer = false">
+            Fechar
+          </v-btn>
+        </div>
+      </v-navigation-drawer>
       <v-row class="mt-4">
         <v-col>
           <MapboxMap
@@ -18,7 +41,7 @@
             }"
           >
             <LazyMapboxDefaultMarker
-              v-for="item of items"
+              v-for="item of filteredItems"
               :marker-id="`marker-${item.id}`"
               :key="item.id"
               :lnglat="[item.longitude, item.latitude]"
@@ -48,31 +71,55 @@
 </template>
 
 <script setup lang="ts">
-const { data: items } = await useFetch<any>('/api/abrigos',
+const { data: items, error } = await useFetch<any>('/api/abrigos',
   { }
 )
 
-console.log(items)
+const filterDrawer = ref(false)
 
-console.log(Array.from(items))
+let filters = ref([
+  { name: 'Com vagas', enabled: false, filterFunction: item => parseInt(item.vagas_ocupadas) < parseInt(item.vagas) },
+  { name: 'Com Cozinha', enabled: false, filterFunction: item => item.cozinha == true },
+  { name: 'Com Banheiros', enabled: false, filterFunction: item => item.banheiros == true },
+  { name: 'Com Demanda', enabled: false, filterFunction: item => item.demanda != null },
+])
 
-const totalVagas = computed(() => items.value.reduce((acc, item) => {
-  const value = parseInt(item.vagas)
-  if (isNaN(value)) {
-    return acc
+const filteredItems = computed(() => {
+  if (!items.value) {
+    return []
   }
-  return acc + value
-}, 0))
-
-const totalVagasOcupadas = computed(() => items.value.reduce((acc, item) => {
-  const value = parseInt(item.vagas_ocupadas)
-  if (isNaN(value)) {
-    return acc
+  const enabledFilters = filters.value.filter(f => f.enabled)
+  if (enabledFilters.length === 0) {
+    return items.value
   }
-  return acc + value
-}, 0))
+  return items.value.filter(item => enabledFilters.every(filter => filter.filterFunction(item)))
+})
 
-console.log(JSON.stringify(items.value))
+const totalVagas = computed(() => {
+  if (!items.value) {
+    return 0
+  }
+  return items.value.reduce((acc, item) => {
+    const value = parseInt(item.vagas)
+    if (isNaN(value)) {
+      return acc
+    }
+    return acc + value
+  }, 0)
+})
+
+const totalVagasOcupadas = computed(() => {
+  if (!items.value) {
+    return 0
+  }
+  return items.value.reduce((acc, item) => {
+    const value = parseInt(item.vagas_ocupadas)
+    if (isNaN(value)) {
+      return acc
+    }
+    return acc + value
+  }, 0)
+})
 
 useHead({
   titleTemplate: () => 'Localização dos abrigos'
@@ -113,6 +160,11 @@ useMapbox('map', (map: any) => {
   padding: 1rem;
   border-radius: 0.5rem;
   border: 1px solid #ddd;
+}
+
+.filtros {
+  padding: 1rem;
+  gap: 0.5rem;
 }
 
 </style>
