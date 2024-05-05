@@ -12,14 +12,14 @@
               zoom: 9
             }"
           >
-            <MapboxDefaultMarker
+            <LazyMapboxDefaultMarker
               v-for="item of items"
               :marker-id="`marker-${item.id}`"
               :key="item.id"
               :lnglat="[item.longitude, item.latitude]"
               :options="{}"
             >
-              <MapboxDefaultPopup
+              <LazyMapboxDefaultPopup
                 :popup-id="`popup-${item.id}`"
                 :lnglat="[item.longitude, item.latitude]"
                 :options="{ closeOnClick: true, closeButton: true }"
@@ -30,8 +30,8 @@
                 <p v-if="item.demanda">{{ item.demanda }}</p>
                 <v-divider class="my-2"/>
                 <v-chip v-if="item.vagas" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
-              </MapboxDefaultPopup>
-            </MapboxDefaultMarker>
+              </LazyMapboxDefaultPopup>
+            </LazyMapboxDefaultMarker>
             <MapboxGeolocateControl position="bottom-right" />
           </MapboxMap>
         </v-col>
