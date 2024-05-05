@@ -30,10 +30,11 @@
               >
               <!-- faça um output de texto do status de gravidade baseado na variável item.situacao, verificando se o valor da variável for igual a 1 (baixo), 2 (médio) e 3 (alto)-->
                 
-              <h3>{{ item.nome_pelotao }} - {{item.civis}} civis - </h3>
+              <h3>{{ item.nome_militar_resp }} - {{item.civis}} civis - </h3>
               {{ item.situacao === 1 ? 'Baixo' : item.situacao === 2 ? 'Médio' : 'Alto' }} Risco
                 <p>{{ item.coordenadas }} <br> {{ item.endereco }}</p><br>
                 <p v-if="item.situacao_acamados">{{ item.situacao_acamados }}</p>
+                <p> Transporte:  {{ item.transporte }} </p>
               </MapboxDefaultPopup>
             </MapboxDefaultMarker>
             <MapboxGeolocateControl position="bottom-right" />
@@ -54,15 +55,14 @@ const items = ref([
     longitude: -51.150350635190655,
     latitude: -30.049900789428545,
     id: "1SazynPW6hAHbiyS57cs",
-    nome_pelotao: "Esquadrão especial",
+    nome_militar_resp: "Alan Cardec",
     civis:"05",
     situacao: 2, // 1 - baixo, 2 - médio, 3 - alto risco
     coordenadas: "-30.049900789428545, -51.150350635190655",
     endereco: "Avenida Alcides São Severiano, 100 bairro sarandi",
     situacao_acamados:"Precisa de Transporte de acamados",
     aph: false,
-    ext: ""
-    
+    transporte: "carro" // carro, moto, ambulância, caminhão, helicóptero, barco
   }
 ])
 </script>
