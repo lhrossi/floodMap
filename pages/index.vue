@@ -39,7 +39,7 @@
                 :options="{ closeOnClick: false }"
               >
                 <h1 class="mb-1 font-bold text-base">
-                  {{ item.nome_pelotao }}
+                  {{ item.numero_pelotao }}
                 </h1>
 
                 <hr class="my-1 border-t border-gray-100 opacity-10" />
@@ -50,7 +50,7 @@
 
                 <div class="flex items-center justify-around">
                   <span style="background-color: #4582ff; color: #fff; border-radius: 10px; padding: 5px 10px; display: inline-block;">
-                    {{ item.civis }} civis resgatados
+                    {{ item.quantidade_civis }} civis resgatados
                   </span>
 
                   <span 
@@ -93,10 +93,7 @@
                 </P>
 
                 <p>
-                  Meios de acesso:
-                  <span v-for="(transporte, index) in item.transporte" :key="index">
-                    {{ transporte }}{{ index !== item.transporte.length - 1 ? ', ' : '' }}
-                  </span>
+                  Meios de acesso: {{ transporte }}
                 </p>
 
                 <hr class="my-1 border-t border-gray-100 opacity-10" />
@@ -142,12 +139,12 @@
               <v-select
                 label="Risco da situação"
                 :items="['1 - baixo', '2 - médio', '3 - alto risco']"
-                v-model="payloadForm.risco"
+                v-model="payloadForm.situacao"
               ></v-select>
               <v-text-field label="Endereço" v-model="payloadForm.endereco"></v-text-field>
               <v-checkbox label="Atendimento pré Hospitalar" v-model="payloadForm.aph"></v-checkbox>
-              <v-text-field label="Civis Resgatados" v-model="payloadForm.civis_resgatados"></v-text-field>
-              <v-text-field label="Pets resgatados" v-model="payloadForm.pets_resgatados"></v-text-field>
+              <v-text-field label="Civis Resgatados" v-model="payloadForm.quantidade_civis"></v-text-field>
+              <v-text-field label="Pets resgatados" v-model="payloadForm.quantidade_pets"></v-text-field>
               <v-select
                 label="Transporte de acesso"
                 :items="['A pé', 'Carro', 'Moto', 'Ambulância', 'Caminhão', 'Helicóptero', 'Barco']"
@@ -174,38 +171,28 @@
 </template>
 
 <script setup lang="ts">
-import { useGeolocation } from '@vueuse/core'
-const { coords } = useGeolocation()
+  import { useGeolocation } from '@vueuse/core'
+  const { coords } = useGeolocation()
 
-useHead({
-  titleTemplate: () => "Localização das Tropas",
-});
-
-const modal = ref(false)
-
-const payloadForm = reactive({})
-
-function handleSubmit() {
-  modal.value = false
-  console.log(payloadForm)
+  useHead({
+    titleTemplate: () => "Localização das Tropas",
+  });
   
-const { data: result } =  await useFetch<any>('/api/missoes', { method:'post',
-   body: {
-       longitude: -71.150350635190655, 
-       latitude: -30.049900789428545,
-       nome_militar_resp: "Leandro Cardec", 
-       civis:"05",
-       situacao: 2, // 1 - baixo, 2 - médio, 3 - alto risco
-       coordenadas: "-30.049900789428545, -51.150350635190655",
-       endereco: "Avenida Bage - Canoas",
-       situacao_acamados:"Precisa de Transporte de acamados",
-       aph: false,
-       transporte: "carro" // carro, moto, ambulância, caminhão, helicóptero, barco
-     }});
- console.log(result)  
-}
+  const { data: items } =  await useFetch<any>('/api/missoes');
 
-const { data: items } =  await useFetch<any>('/api/missoes');
+  const modal = ref(false)
+
+  const payloadForm = reactive({})
+
+  async function handleSubmit() {
+    modal.value = false
+    console.log(payloadForm)
+    
+    const { data: result } = await useFetch<any>('/api/missoes', { method:'post', body: payloadForm });
+    modal.value = false
+    console.log(result)  
+  }
+
 
 </script>
 
