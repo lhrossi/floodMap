@@ -71,7 +71,6 @@
                       Risco
                     </p>
                   </span>
-
                 </div>
 
 
@@ -136,10 +135,25 @@
 
     <v-dialog v-model="modal" max-width="600">
         <template v-slot:default="{ isActive }">
-          <v-card title="Adicionar uma nova Missão">
+          <v-card title="Adicionar nova Missão">
             <v-container>
               <v-text-field label="Número do Pelotão" v-model="payloadForm.numero_pelotao"></v-text-field>
               <v-text-field label="Nome do Militar Responsável" v-model="payloadForm.nome_militar_resp"></v-text-field>
+              <v-select
+                label="Risco da situação"
+                :items="['1 - baixo', '2 - médio', '3 - alto risco']"
+                v-model="payloadForm.risco"
+              ></v-select>
+              <v-text-field label="Endereço" v-model="payloadForm.endereco"></v-text-field>
+              <v-checkbox label="Atendimento pré Hospitalar" v-model="payloadForm.aph"></v-checkbox>
+              <v-text-field label="Civis Resgatados" v-model="payloadForm.civis_resgatados"></v-text-field>
+              <v-text-field label="Pets resgatados" v-model="payloadForm.pets_resgatados"></v-text-field>
+              <v-select
+                label="Transporte de acesso"
+                :items="['A pé', 'Carro', 'Moto', 'Ambulância', 'Caminhão', 'Helicóptero', 'Barco']"
+                v-model="payloadForm.transporte"
+              ></v-select>
+            
             </v-container>
       
             <v-card-actions>
@@ -166,10 +180,7 @@ useHead({
 
 const modal = ref(false)
 
-const payloadForm = reactive({
-  numero_pelotao: "asdad",
-  nome_militar_resp: "asdasd"
-})
+const payloadForm = reactive({})
 
 function handleSubmit() {
   modal.value = false
@@ -197,23 +208,6 @@ const items = ref([
 </script>
 
 <style lang="scss">
-</style>
-
-  <!--
-
-  informações mostradas no formulário front:
-    1 - numero_pelotao: "1"
-    2 - nome_militar_resp: "Alan Cardec",
-    3 - Risco da situação: 2, // 1 - baixo, 2 - médio, 3 - Eminente
-    4 - endereco: "Avenida Alcides São Severiano, 100 bairro sarandi",
-    5 - situacao_acamados: sim ou nao,
-    6 - Atendimento pré Hospitalar (aph): Sim ou não,
-    7 - Civis Resgatados:"05",
-    8 - pets: 10,
-    9 - Transporte de acesso: "carro" // carro, moto, ambulância, caminhão, helicóptero, barco
-    10 - coordenadas: x // só no front
-
-  -->
 
   .civis {
     color: #071d41;
