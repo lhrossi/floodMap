@@ -42,15 +42,19 @@
 
 <script setup lang="ts">
 import axios from 'axios'
-
 useHead({
   titleTemplate: () => 'Localização dos abrigos'
 })
 
+const config = useRuntimeConfig()
 const { data: items } = useQuery<any>({
   queryKey: ['abrigos'],
-  queryFn: () => axios.get('/api/mock'),
-  select: (response) => response.data,
+  queryFn: () => axios.get(`${config.public.API_URL}/abrigos`, {
+    headers: {
+      'Authorization': config.public.API_TOKEN
+    }
+  }),
+  select: (response) => response.data.filter((item: any) => item.longitude && item.latitude),
 })
 
 watch(items, (newItems: any) => {
