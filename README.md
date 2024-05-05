@@ -46,6 +46,11 @@ pnpm run build
 # yarn
 yarn build
 ```
+MapBox Token
+
+Create an account in mapbox.com
+Make a copy of .env.example and replace the `MAPBOX_ACCESS_TOKEN` value with your token.
+
 
 Locally preview production build:
 
