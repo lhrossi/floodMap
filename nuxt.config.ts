@@ -39,6 +39,14 @@ export default defineNuxtConfig({
     },
   },
 
+  css: ['~/assets/css/main.css'],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+
   mapbox: {
     accessToken: process.env.MAPBOX_ACCESS_TOKEN!
   },
