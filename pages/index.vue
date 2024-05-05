@@ -8,10 +8,7 @@
         <div>
           Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
         </div>
-        <div
-          class="text-lg font-bold text-center"
-          :style="{ color: calcularCor(totalVagas, totalVagasOcupadas) }"
-        >
+        <div class="text-lg font-bold text-center" :style="{ color: calcularCor(totalVagas, totalVagasOcupadas) }">
           {{ Math.round((totalVagasOcupadas * 100) / totalVagas) }}%
         </div>
       </div>
@@ -27,48 +24,32 @@
             }"
           >
             <LazyMapboxDefaultMarker
-              v-for="item of items"
-              :marker-id="`marker-${item.id}`"
-              :key="item.id"
-              :lnglat="[item.longitude, item.latitude]"
+              v-for="abrigo of abrigos"
+              :marker-id="`marker-${abrigo.id}`"
+              :key="abrigo.id"
+              :lnglat="[abrigo.longitude, abrigo.latitude]"
               :options="{
-                color: calcularCor(item.vagas, item.vagas_ocupadas),
+                color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
               }"
             >
               <LazyMapboxDefaultPopup
-                :popup-id="`popup-${item.id}`"
-                :lnglat="[item.longitude, item.latitude]"
+                :popup-id="`popup-${abrigo.id}`"
+                :lnglat="[abrigo.longitude, abrigo.latitude]"
                 :options="{ closeOnClick: true, closeButton: true }"
               >
-                <h3 v-if="item.nome">{{ item.nome }}</h3>
-                <p v-if="item.address">{{ item.address }}</p>
-                <p v-if="item.nome_contato || item.telefone">
-                  {{ item.nome_contato }}
-                  <span v-show="item.telefone">- {{ item.telefone }}</span>
+                <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
+                <p v-if="abrigo.address">{{ abrigo.address }}</p>
+                <p v-if="abrigo.nome_contato || abrigo.telefone">
+                  {{ abrigo.nome_contato }}
+                  <span v-show="abrigo.telefone">- {{ abrigo.telefone }}</span>
                 </p>
                 <v-divider class="my-2" />
-                <div class="flex space-x-2">
-                  <v-chip v-if="item.vagas" variant="flat" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
-                  <v-chip
-                    v-if="
-                      !isNaN(item.vagas) &&
-                      !isNaN(item.vagas_ocupadas) &&
-                      item.vagas > 0
-                    "
-                    variant="flat"
-                    size="small"
-                    :color="calcularCor(item.vagas, item.vagas_ocupadas)"
-                    >{{
-                      Math.max(item.vagas - item.vagas_ocupadas, 0)
-                    }}
-                    livres</v-chip
-                  >
-                </div>
-                <Necessidades :abrigo="item" />
+                <ContagemVagas :abrigo="abrigo" />
+                <Necessidades :abrigo="abrigo" />
                 <v-divider class="my-2" />
                 <a
                   class="d-flex justify-end"
-                  :href="`https://www.google.com/maps/dir//${item.latitude},${item.longitude}`"
+                  :href="`https://www.google.com/maps/dir//${abrigo.latitude},${abrigo.longitude}`"
                   target="_blank"
                   rel="noopener noreferrer"
                   >Como Chegar</a
@@ -84,14 +65,14 @@
 </template>
 
 <script setup lang="ts">
-const { data: items } = await useFetch<any>("/api/abrigos", {});
+import calcularCor from "../utils/calcularCor";
 
-console.log(items);
+const { data: abrigos } = await useFetch<any>("/api/abrigos", {});
 
-console.log(Array.from(items));
+console.log(JSON.stringify(abrigos));
 
 const totalVagas = computed(() =>
-  items.value.reduce((acc: any, item: any) => {
+  abrigos.value.reduce((acc: any, item: any) => {
     const value = parseInt(item.vagas);
     if (isNaN(value)) {
       return acc;
@@ -101,7 +82,7 @@ const totalVagas = computed(() =>
 );
 
 const totalVagasOcupadas = computed(() =>
-  items.value.reduce((acc: any, item: any) => {
+  abrigos.value.reduce((acc: any, item: any) => {
     const value = parseInt(item.vagas_ocupadas);
     if (isNaN(value)) {
       return acc;
@@ -110,7 +91,7 @@ const totalVagasOcupadas = computed(() =>
   }, 0)
 );
 
-console.log(JSON.stringify(items.value));
+console.log(JSON.stringify(abrigos.value));
 
 useHead({
   titleTemplate: () => "Localização dos abrigos",
@@ -121,25 +102,6 @@ useMapbox("map", (map: any) => {
     popup.remove();
   });
 });
-
-function calcularCor(vagas:any, vagasOcupadas:any) {
-  if (isNaN(vagas) || isNaN(vagasOcupadas) || vagas <= 0) {
-    return "lightgrey";
-  }
-  const percentual = (vagasOcupadas * 100) / vagas;
-  if (percentual <= 50) {
-    // Calcula a cor entre verde e amarelo
-    var r = Math.floor(255 * (percentual / 50));
-    var g = 255;
-    var b = 0;
-  } else {
-    // Calcula a cor entre amarelo e vermelho
-    var r = 255;
-    var g = Math.floor(255 * ((100 - percentual) / 50));
-    var b = 0;
-  }
-  return `rgb(${r}, ${g}, ${b})`;
-}
 </script>
 
 <style lang="scss">
