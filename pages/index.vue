@@ -116,11 +116,46 @@
 
               </MapboxDefaultPopup>
             </MapboxDefaultMarker>
-            <MapboxGeolocateControl position="bottom-right" />
+            <MapboxGeolocateControl position="bottom-left" />
           </MapboxMap>
         </v-col>
       </v-row>
+      
+      <v-fab
+        @click="modal = true"
+        icon="mdi-plus"
+        color="blue"
+        class="ms-4 mb-4"
+        location="bottom right"
+        size="64"
+        absolute
+        app
+        appear
+      ></v-fab>
     </v-container>
+
+    <v-dialog v-model="modal" max-width="600">
+        <template v-slot:default="{ isActive }">
+          <v-card title="Adicionar uma nova Missão">
+            <v-container>
+              <v-text-field label="Número do Pelotão" v-model="payloadForm.numero_pelotao"></v-text-field>
+              <v-text-field label="Nome do Militar Responsável" v-model="payloadForm.nome_militar_resp"></v-text-field>
+            </v-container>
+      
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                text="Salvar"
+                @click="handleSubmit"
+              ></v-btn>
+              <v-btn
+                text="Cancelar"
+                @click="isActive.value = false"
+              ></v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
   </v-container>
 </template>
 
@@ -151,6 +186,24 @@ const { data: items } =  await useFetch<any>('/api/missoes');
 </script>
 
 <style lang="scss">
+</style>
+
+  <!--
+
+  informações mostradas no formulário front:
+    1 - numero_pelotao: "1"
+    2 - nome_militar_resp: "Alan Cardec",
+    3 - Risco da situação: 2, // 1 - baixo, 2 - médio, 3 - Eminente
+    4 - endereco: "Avenida Alcides São Severiano, 100 bairro sarandi",
+    5 - situacao_acamados: sim ou nao,
+    6 - Atendimento pré Hospitalar (aph): Sim ou não,
+    7 - Civis Resgatados:"05",
+    8 - pets: 10,
+    9 - Transporte de acesso: "carro" // carro, moto, ambulância, caminhão, helicóptero, barco
+    10 - coordenadas: x // só no front
+
+  -->
+
   .civis {
     color: #071d41;
     border-radius: 10px; /* Ajuste o valor conforme necessário */
