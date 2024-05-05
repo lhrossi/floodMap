@@ -7,11 +7,11 @@
             <div class="mr-2">
               <v-icon size="large">mdi-home-map-marker</v-icon>
             </div>
-            Localização dos abrigos
+            Localização das tropas
           </div>
           <div class="flex flex-auto"></div>
           <div class="flex">
-            <a href="https://abrigospoa.web.app/home" target="_blank" class="button is-link">Abrigos PoA</a>
+           <!-- <a href="https://abrigospoa.web.app/home" target="_blank" class="button is-link">Abrigos PoA</a> !-->
           </div>
         </div>
       </v-toolbar-title>
