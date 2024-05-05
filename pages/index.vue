@@ -41,32 +41,17 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
+const { data: items } = await useFetch<any>('/api/abrigos')
+
 useHead({
   titleTemplate: () => 'Localização dos abrigos'
 })
 
-const config = useRuntimeConfig()
-const { data: items } = useQuery<any>({
-  queryKey: ['abrigos'],
-  queryFn: () => axios.get(`${config.public.API_URL}/abrigos`, {
-    headers: {
-      'Authorization': config.public.API_TOKEN
-    }
-  }),
-  select: (response) => response.data.filter((item: any) => item.longitude && item.latitude),
+useMapbox('map', (map: any) => {
+  map._markers.forEach(({ _popup: popup }: any) => {
+    popup.remove()
+  })
 })
-
-watch(items, (newItems: any) => {
-  if (newItems.length) {
-    newItems.forEach((item: any) => {
-      useMapboxPopup(`popup-${item.id}`, (popup) => {
-        popup.remove()
-      })
-    })
-  }
-})
-
 </script>
 
 <style lang="scss">
