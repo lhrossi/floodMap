@@ -1,44 +1,41 @@
 <template>
   <v-container>
     <v-container>
-      <div class="total-vagas">
-        Total de vagas: <b>{{ totalVagas }}</b> <br>
-        Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
-        
-      </div>
       <v-row class="mt-4">
         <v-col>
           <MapboxMap
-            map-id="map"
-            style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%;height: 100%"
+            :map-id="`mapid`"
+            style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
             :options="{
               style: 'mapbox://styles/mapbox/streets-v12',
               center: [-51.1771419, -30.1088701],
-              zoom: 9
+              zoom: 10
             }"
           >
-            <LazyMapboxDefaultMarker
+            <MapboxDefaultMarker
               v-for="item of items"
               :marker-id="`marker-${item.id}`"
               :key="item.id"
               :lnglat="[item.longitude, item.latitude]"
-              :options="{}"
+              :options="{ 
+                color: item.situacao === 1 ? 'green' : item.situacao === 2 ? 'yellow' : 'red',
+              }"
             >
-              <LazyMapboxDefaultPopup
+              <MapboxDefaultPopup
                 :popup-id="`popup-${item.id}`"
                 :lnglat="[item.longitude, item.latitude]"
-                :options="{ closeOnClick: true, closeButton: true }"
+                :options="{
+                  closeOnClick: false
+                }"
               >
-                <h3 v-if="item.nome">{{ item.nome }}</h3>
-                <p v-if="item.address">{{ item.address }}</p>
-                <p v-if="item.nome_contato || item.telefone">{{ item.nome_contato }} <span v-show="item.telefone">- {{ item.telefone }}</span></p>
-                <p v-if="item.demanda">{{ item.demanda }}</p>
-                <v-divider class="my-2"/>
-                <v-chip v-if="item.vagas" size="small" color="primary">{{ item.vagas }} vagas</v-chip>
-                <v-divider class="my-2"/>
-                <a class="d-flex justify-end" :href="`https://www.google.com/maps/dir//${item.latitude},${item.longitude}`" target="_blank" rel="noopener noreferrer">Como Chegar</a>
-              </LazyMapboxDefaultPopup>
-            </LazyMapboxDefaultMarker>
+              <!-- faça um output de texto do status de gravidade baseado na variável item.situacao, verificando se o valor da variável for igual a 1 (baixo), 2 (médio) e 3 (alto)-->
+                
+              <h3>{{ item.nome_pelotao }} - {{item.civis}} civis - </h3>
+              {{ item.situacao === 1 ? 'Baixo' : item.situacao === 2 ? 'Médio' : 'Alto' }} Risco
+                <p>{{ item.coordenadas }} <br> {{ item.endereco }}</p><br>
+                <p v-if="item.situacao_acamados">{{ item.situacao_acamados }}</p>
+              </MapboxDefaultPopup>
+            </MapboxDefaultMarker>
             <MapboxGeolocateControl position="bottom-right" />
           </MapboxMap>
         </v-col>
@@ -48,71 +45,27 @@
 </template>
 
 <script setup lang="ts">
-const { data: items } = await useFetch<any>('/api/abrigos',
-  { }
-)
-
-console.log(items)
-
-console.log(Array.from(items))
-
-const totalVagas = computed(() => items.value.reduce((acc, item) => {
-  const value = parseInt(item.vagas)
-  if (isNaN(value)) {
-    return acc
-  }
-  return acc + value
-}, 0))
-
-const totalVagasOcupadas = computed(() => items.value.reduce((acc, item) => {
-  const value = parseInt(item.vagas_ocupadas)
-  if (isNaN(value)) {
-    return acc
-  }
-  return acc + value
-}, 0))
-
-console.log(JSON.stringify(items.value))
-
 useHead({
-  titleTemplate: () => 'Localização dos abrigos'
+  titleTemplate: () => 'Localização das Tropas'
 })
 
-useMapbox('map', (map: any) => {
-  map._markers.forEach(({ _popup: popup }: any) => {
-    popup.remove()
-  })
-})
+const items = ref([
+  {
+    longitude: -51.150350635190655,
+    latitude: -30.049900789428545,
+    id: "1SazynPW6hAHbiyS57cs",
+    nome_pelotao: "Esquadrão especial",
+    civis:"05",
+    situacao: 2, // 1 - baixo, 2 - médio, 3 - alto risco
+    coordenadas: "-30.049900789428545, -51.150350635190655",
+    endereco: "Avenida Alcides São Severiano, 100 bairro sarandi",
+    situacao_acamados:"Precisa de Transporte de acamados",
+    aph: false,
+    ext: ""
+    
+  }
+])
 </script>
 
 <style lang="scss">
-.mapboxgl-popup-content {
-  min-width: 250px;
-}
-.mapboxgl-popup-close-button {
-  width: 25px;
-  height: 25px;
-  font-size: 17px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 25px;
-
-  &:focus {
-    outline: none;
-  }
-}
-
-.total-vagas {
-  font-size: 0.75rem;
-  position: fixed;
-  z-index: 999;
-  right: 1rem;
-  top: 5rem;
-  background: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #ddd;
-}
-
 </style>
