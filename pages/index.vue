@@ -177,7 +177,7 @@
               </v-col>
 
               <v-col cols="12" sm="12">
-                <v-checkbox label="Atendimento pré Hospitalar" v-model="payloadForm.aph"></v-checkbox>
+                <v-checkbox color="primary" label="Atendimento pré Hospitalar" v-model="payloadForm.aph"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="12" md="6">
@@ -190,7 +190,8 @@
 
               <v-col cols="12" sm="12">
                 <v-select
-                multiple
+                  color="primary"
+                  multiple
                   label="Transporte de acesso"
                   :items="['A pé', 'Carro', 'Moto', 'Ambulância', 'Caminhão', 'Helicóptero', 'Barco']"
                   v-model="payloadForm.transporte"
