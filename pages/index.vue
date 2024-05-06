@@ -2,6 +2,7 @@
   <v-container>
     <v-container>
       <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
+      <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @filterChange="(a) => (abrigosFiltrados = a)" />
       <div class="total-vagas">
         <div>
           Total de vagas: <b>{{ dadosGerais.totalVagas }}</b>
@@ -53,7 +54,6 @@
           </MapboxMap>
         </v-col>
       </v-row>
-      <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @filterChange="(a) => (abrigosFiltrados = a)" />
     </v-container>
   </v-container>
 </template>
