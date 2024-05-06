@@ -3,7 +3,7 @@ import { ThemeDefinition } from 'vuetify';
 const normalTheme: ThemeDefinition = {
   dark: false,
   colors: {
-    primary: '#2196F3',
+    primary: '#009688',
     secondary: '#d92344',
     background: '#f5f4f4',
   },
