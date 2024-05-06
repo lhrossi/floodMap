@@ -24,8 +24,14 @@
       >
         <div class="flex flex-column filtros">
           <span>Filtrar abrigos</span>
+          <v-select
+            v-for="filter of filters.filter(p => p.items)"
+            :label="filter.name"
+            :items="filter.items" 
+            v-model="filter.model"
+            v-on:update:modelValue="filter.enabled = !filter.enabled" />
           <v-chip
-            v-for="filter of filters"
+            v-for="filter of filters.filter(p => !p.items)"
             v-on:click="filter.enabled = !filter.enabled"
             :variant="filter.enabled ? 'elevated' : 'outlined'"
             size="small" color="primary">
@@ -95,6 +101,13 @@ const { data: abrigos, error } = await useFetch<any>('/api/abrigos',
   { }
 )
 
+const cities = ["Todos"].concat(
+  abrigos.value.map(item => item.city)
+  .filter((city, index, self) => self.indexOf(city) === index)
+  .filter((city) => city && city != "")
+);
+
+
 const filterDrawer = ref(false)
 
 let filters = ref([
@@ -102,6 +115,9 @@ let filters = ref([
   { name: 'Com Cozinha', enabled: false, filterFunction: item => item.cozinha == true },
   { name: 'Com Banheiros', enabled: false, filterFunction: item => item.banheiros == true },
   { name: 'Com Demanda', enabled: false, filterFunction: item => item.demanda != null },
+  { name: 'Cidade', enabled: false, filterFunction: (item, model) => {
+    return model == "Todos" || item.city === model
+  }, items:cities, model:null },
 ])
 
 const filteredItems = computed(() => {
@@ -112,7 +128,10 @@ const filteredItems = computed(() => {
   if (enabledFilters.length === 0) {
     return abrigos.value
   }
-  return abrigos.value.filter(item => enabledFilters.every(filter => filter.filterFunction(item)))
+  const filtrados = abrigos.value.filter(item => enabledFilters
+    .every(filter => filter.filterFunction(item, filter.model)))
+    filtrados.every(item => console.log(item.city))
+  return filtrados;
 })
 
 const totalVagas = computed(() => {
