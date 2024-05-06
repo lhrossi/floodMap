@@ -2,8 +2,8 @@ import axios from 'axios';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  const response = await axios.post(`http://localhost:3000/missoes`, {
-    body: await readBody(event),
+  const body = await readBody(event)
+  const response = await axios.post(`${config.public.API_URL}/missoes`, body, {
     headers: {
       'Authorization': config.public.API_TOKEN,
     }
