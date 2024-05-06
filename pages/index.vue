@@ -1,47 +1,17 @@
 <template>
   <v-container>
     <v-container>
-      <v-snackbar v-model="error" multi-line >
-        Falha ao carregar abrigos
-      </v-snackbar>
+      <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
       <div class="total-vagas">
         <div>
-          Total de vagas: <b>{{ totalVagas }}</b>
+          Total de vagas: <b>{{ dadosGerais.totalVagas }}</b>
         </div>
         <div>
-          Vagas ocupadas: <b>{{ totalVagasOcupadas }}</b>
+          Vagas ocupadas: <b>{{ dadosGerais.totalVagasOcupadas }}</b>
         </div>
-        <div class="text-lg font-bold text-center" :style="{ color: calcularCor(totalVagas, totalVagasOcupadas) }">
-          {{ Math.round((totalVagasOcupadas * 100) / totalVagas) }}%
-        </div>
-        <v-btn size="small" v-on:click="filterDrawer = true">
-          Filtrar abrigos
-        </v-btn>
+        <div class="text-lg font-bold text-center" :style="{ color: dadosGerais.cor }">{{ Math.round(dadosGerais.percentualOcupacao) }}%</div>
+        <v-btn size="small" v-on:click="mostrarFiltros = true"> Filtrar abrigos </v-btn>
       </div>
-      <v-navigation-drawer
-        v-model="filterDrawer"
-        temporary
-      >
-        <div class="flex flex-column filtros">
-          <span>Filtrar abrigos</span>
-          <v-select
-            v-for="filter of filters.filter(p => p.items)"
-            :label="filter.name"
-            :items="filter.items" 
-            v-model="filter.model"
-            v-on:update:modelValue="filter.enabled = !filter.enabled" />
-          <v-chip
-            v-for="filter of filters.filter(p => !p.items)"
-            v-on:click="filter.enabled = !filter.enabled"
-            :variant="filter.enabled ? 'elevated' : 'outlined'"
-            size="small" color="primary">
-            {{ filter.name }}: {{ abrigos?.filter(filter.filterFunction).length }}
-          </v-chip>
-          <v-btn size="small" v-on:click="filterDrawer = false">
-            Fechar
-          </v-btn>
-        </div>
-      </v-navigation-drawer>
       <v-row class="mt-4">
         <v-col>
           <MapboxMap
@@ -54,7 +24,7 @@
             }"
           >
             <LazyMapboxDefaultMarker
-              v-for="abrigo of filteredItems"
+              v-for="abrigo of abrigosFiltrados"
               :marker-id="`marker-${abrigo.id}`"
               :key="abrigo.id"
               :lnglat="[abrigo.longitude, abrigo.latitude]"
@@ -76,20 +46,14 @@
                 <v-divider class="my-2" />
                 <ContagemVagas :abrigo="abrigo" />
                 <Necessidades :abrigo="abrigo" />
-                <v-divider class="my-2" />
-                <a
-                  class="d-flex justify-end"
-                  :href="`https://www.google.com/maps/dir//${abrigo.latitude},${abrigo.longitude}`"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Como Chegar</a
-                >
+                <ComoChegar :abrigo="abrigo" />
               </LazyMapboxDefaultPopup>
             </LazyMapboxDefaultMarker>
             <MapboxGeolocateControl position="bottom-right" />
           </MapboxMap>
         </v-col>
       </v-row>
+      <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @filterChange="(a) => (abrigosFiltrados = a)" />
     </v-container>
   </v-container>
 </template>
@@ -97,72 +61,26 @@
 <script setup lang="ts">
 import calcularCor from "../utils/calcularCor";
 
-const { data: abrigos, error } = await useFetch<any>('/api/abrigos',
-  { }
-)
+const { data: abrigos, error } = await useFetch<any>("/api/abrigos", {});
 
-const cities = ["Todos"].concat(
-  abrigos.value.map(item => item.city)
-  .filter((city, index, self) => self.indexOf(city) === index)
-  .filter((city) => city && city != "")
-);
+const abrigosFiltrados = ref(abrigos.value);
+const mostrarFiltros = ref(false);
 
+const dadosGerais = computed(() => {
+  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "" };
 
-const filterDrawer = ref(false)
+  if (!abrigos.value) return dadosDefault;
 
-let filters = ref([
-  { name: 'Com vagas', enabled: false, filterFunction: item => parseInt(item.vagas_ocupadas) < parseInt(item.vagas) },
-  { name: 'Com Cozinha', enabled: false, filterFunction: item => item.cozinha == true },
-  { name: 'Com Banheiros', enabled: false, filterFunction: item => item.banheiros == true },
-  { name: 'Com Demanda', enabled: false, filterFunction: item => item.demanda != null },
-  { name: 'Cidade', enabled: false, filterFunction: (item, model) => {
-    return model == "Todos" || item.city === model
-  }, items:cities, model:null },
-])
-
-const filteredItems = computed(() => {
-  if (!abrigos.value) {
-    return []
-  }
-  const enabledFilters = filters.value.filter(f => f.enabled)
-  if (enabledFilters.length === 0) {
-    return abrigos.value
-  }
-  const filtrados = abrigos.value.filter(item => enabledFilters
-    .every(filter => filter.filterFunction(item, filter.model)))
-    filtrados.every(item => console.log(item.city))
-  return filtrados;
-})
-
-const totalVagas = computed(() => {
-  if (!abrigos.value) {
-    return 0
-  }
   return abrigos.value.reduce((acc, item) => {
-    const value = parseInt(item.vagas)
-    if (isNaN(value)) {
-      return acc
-    }
-    return acc + value
-  }, 0)
-})
-
-const totalVagasOcupadas = computed(() => {
-  if (!abrigos.value) {
-    return 0
-  }
-  return abrigos.value.reduce((acc, item) => {
-    const value = parseInt(item.vagas_ocupadas)
-    if (isNaN(value)) {
-      return acc
-    }
-    return acc + value
-  }, 0)
-})
-
-useHead({
-  titleTemplate: () => "Localização dos abrigos",
+    acc.totalVagas += parseInt(item.vagas ?? "0");
+    acc.totalVagasOcupadas += parseInt(item.vagas_ocupadas ?? "0");
+    acc.percentualOcupacao = (acc.totalVagasOcupadas * 100) / acc.totalVagas;
+    acc.cor = calcularCor(acc.totalVagas, acc.totalVagasOcupadas);
+    return acc;
+  }, dadosDefault);
 });
+
+useHead({ titleTemplate: () => "Localização dos abrigos" });
 
 useMapbox("map", (map: any) => {
   map._markers.forEach(({ _popup: popup }: any) => {
@@ -206,5 +124,4 @@ useMapbox("map", (map: any) => {
   padding: 1rem;
   gap: 0.5rem;
 }
-
 </style>
