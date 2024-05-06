@@ -309,12 +309,8 @@
 
   async function novaMissao() {
     resetForm()
-    // payloadForm.value.numero_pelotao = '10'
-    // payloadForm.value.nome_militar_resp = 'Cel. Silva 2'
-    // payloadForm.value.endereco = 'Endereço de Teste 2'
-    // payloadForm.value.transporte = ['Carro', 'Moto']
-    payloadForm.value.latitude = -30.155716
-    payloadForm.value.longitude = -51.217240
+    // payloadForm.value.latitude = -30.155716
+    // payloadForm.value.longitude = -51.217240
     modal.value = true
   }
 
