@@ -376,18 +376,14 @@
   }
 
   const resetForm = function() {
-    payloadForm.value = {
-      numero_pelotao: '',
-      nome_militar_resp: '',
-      situacao: 2,
-      endereco: '',
-      latitude: 0,
-      longitude: 0,
-      aph: false,
-      quantidade_civis: null,
-      quantidade_pets: null,
-      transporte: []
-    }
+    payloadForm.value.numero_pelotao = '',
+    payloadForm.value.nome_militar_resp = '',
+    payloadForm.value.situacao = 2,
+    payloadForm.value.endereco = '',
+    payloadForm.value.aph = false,
+    payloadForm.value.quantidade_civis = null,
+    payloadForm.value.quantidade_pets = null,
+    payloadForm.value.transporte = []
   }
 
   useHead({
