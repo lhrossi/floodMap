@@ -41,13 +41,10 @@
                 <h1 class="mb-1 font-bold text-base">
                   {{ item.numero_pelotao }}
                 </h1>
-
                 <hr class="my-1 border-t border-gray-100 opacity-10" />
-                
                 <h3 class="mb-2 font-bold text-sm">
                   Militar Responsável: {{ item.nome_militar_resp }}
                 </h3>
-
                 <div class="flex items-center justify-around">
                   <span style="background-color: #4582ff; color: #fff; border-radius: 10px; padding: 5px 10px; display: inline-block;">
                     {{ item.quantidade_civis }} civis resgatados
@@ -72,44 +69,34 @@
                     </p>
                   </span>
                 </div>
-
-
                 <hr class="my-1 border-t border-gray-100 opacity-10" />
-
                 <p>
                   {{ item.endereco }}
                 </p>
-
                 <p v-if="item.situacao_acamados">
                   {{ item.situacao_acamados }}
                 </p>
-
                 <p>
                   Aph: {{ item.aph === 1 ? 'Sim' : 'Não' }}
                 </p>
-
-                <P>
-                  Quantidade Pets: {{item.quantidade_pets}}
-                </P>
-
                 <p>
-                  Meios de acesso: {{ transporte }}
+                  Quantidade Pets: {{item.quantidade_pets}}
                 </p>
-
+                <p>
+                  Meios de acesso: {{ item.transporte }}
+                </p>
                 <hr class="my-1 border-t border-gray-100 opacity-10" />
-
                 <h3 class="mb-2 font-bold text-sm">
                   Coordenadas:
                 </h3>
-
                 <p>
                   Lat: {{item.latitude}}
                 </p>
-
                 <p>
                   Long: {{item.longitude}}
                 </p>
-
+                <button @click="updateSubmit">Atualizar</button>
+                <!-- <button v-on:click="deleteSubmit(item.id)">Remover</button> -->
               </MapboxDefaultPopup>
             </MapboxDefaultMarker>
             <MapboxGeolocateControl position="bottom-left" />
@@ -117,17 +104,16 @@
         </v-col>
       </v-row>
       
-      <v-fab
-        @click="modal = true"
+      <v-btn
+        @click="handleNew(payloadForm)"
         icon="mdi-plus"
         color="blue"
-        class="ms-4 mb-4"
         location="bottom right"
         size="64"
         absolute
         app
         appear
-      ></v-fab>
+      ></v-btn>
     </v-container>
 
     <v-dialog v-model="modal" max-width="600">
@@ -142,6 +128,8 @@
                 v-model="payloadForm.situacao"
               ></v-select>
               <v-text-field label="Endereço" v-model="payloadForm.endereco"></v-text-field>
+              <v-text-field label="Lagitude" v-model="payloadForm.latitude" v-bind:model-value="coords.latitude" :disabled="true"></v-text-field>
+              <v-text-field label="Longitude" v-model="payloadForm.longitude" v-bind:model-value="coords.longitude" :disabled="true"></v-text-field>
               <v-checkbox label="Atendimento pré Hospitalar" v-model="payloadForm.aph"></v-checkbox>
               <v-text-field label="Civis Resgatados" v-model="payloadForm.quantidade_civis"></v-text-field>
               <v-text-field label="Pets resgatados" v-model="payloadForm.quantidade_pets"></v-text-field>
@@ -166,7 +154,7 @@
             </v-card-actions>
           </v-card>
         </template>
-      </v-dialog>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -178,19 +166,38 @@
     titleTemplate: () => "Localização das Tropas",
   });
   
-  const { data: items } =  await useFetch<any>('/api/missoesget');
+  const { data: items } =  await useFetch<any>('/api/mock');
 
   const modal = ref(false)
 
-  const payloadForm = reactive({})
+  const payloadForm = reactive({ })
+
+  async function handleNew(data) {
+    modal.value = true
+    data = reactive({ latitude: coords.latitude, longitude: coords.longitude })
+  }
 
   async function handleSubmit() {
     modal.value = false
-    console.log(payloadForm)
     
     const { data: result } = await useFetch<any>('/api/missoespost', { method:'post', body: payloadForm });
     modal.value = false
-    console.log(result)  
+  }
+  
+  async function updateSubmit() {
+    console.log('asdasd')
+    // modal.value = true
+    // data = dataForUpdate
+    // //const { data: result } = await useFetch<any>('/api/missoespost', { method:'post', body: payloadForm });
+    // modal.value = false
+  }
+  
+  async function deleteSubmit(id) {
+    modal.value = false
+    
+    console.log(id)
+    //const { data: result } = await useFetch<any>('/api/missoespost', { method:'post', body: payloadForm });
+    modal.value = false
   }
 </script>
 
