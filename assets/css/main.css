@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* remove weird blue border of gmaps when active */
+iframe + div {
+  border: none !important;
+}
