@@ -1,20 +1,9 @@
 <template>
   <v-layout>
-    <v-app-bar flat class="border-b">
-      <v-toolbar-title class="mr-4">
-        <div class="flex">
-          <div class="flex items-end">
-            <div class="mr-2">
-              <v-icon size="large">mdi-home-map-marker</v-icon>
-            </div>
-            Localização das tropas
-          </div>
-          <div class="flex flex-auto"></div>
-          <div class="flex">
-           <!-- <a href="https://abrigospoa.web.app/home" target="_blank" class="button is-link">Abrigos PoA</a> !-->
-          </div>
-        </div>
-      </v-toolbar-title>
+    <v-app-bar flat class="border-b" title="Localização das tropas">
+      <template v-slot:prepend>
+        <v-icon size="40">mdi-home-map-marker</v-icon>
+      </template>
     </v-app-bar>
 
     <v-main>
