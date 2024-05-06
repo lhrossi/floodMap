@@ -1,13 +1,13 @@
-import { ThemeDefinition } from 'vuetify';
+import { ThemeDefinition } from "vuetify";
 
 const normalTheme: ThemeDefinition = {
   dark: false,
   colors: {
-    primary: '#074b66',
-    secondary: '#d92344',
-    background: '#f5f4f4',
+    primary: "#074b66",
+    secondary: "#d92344",
+    background: "#f5f4f4",
   },
-}
+};
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -16,30 +16,29 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       API_TOKEN: process.env.NUXT_PUBLIC_API_TOKEN,
-      API_URL: process.env.NUXT_PUBLIC_API_URL || '/api/mock'
-    }
+      API_URL: process.env.NUXT_PUBLIC_API_URL || "/api/mock",
+      GMAPS_KEY: process.env.NUXT_PUBLIC_GMAPS_KEY,
+    },
   },
 
   modules: [
-    '@invictus.codes/nuxt-vuetify',
+    "@invictus.codes/nuxt-vuetify",
     // 'nuxt-api-party',
-    'nuxt-snackbar',
-    '@hebilicious/vue-query-nuxt',
+    "nuxt-snackbar",
+    "@hebilicious/vue-query-nuxt",
     // 'nuxt-cloudflare-analytics',
-    'dayjs-nuxt', // https://github.com/fumeapp/dayjs
-    '@vueuse/nuxt', // https://vueuse.org/guide/
-    'nuxt-mapbox', // https://alexlavoie42.github.io/Nuxt-Mapbox/
+    "dayjs-nuxt", // https://github.com/fumeapp/dayjs
+    "@vueuse/nuxt", // https://vueuse.org/guide/
+    "nuxt-mapbox", // https://alexlavoie42.github.io/Nuxt-Mapbox/
   ],
 
   app: {
     head: {
-      link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon-logi.png' }
-      ]
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-logi.png" }],
     },
   },
 
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -48,29 +47,29 @@ export default defineNuxtConfig({
   },
 
   mapbox: {
-    accessToken: process.env.MAPBOX_ACCESS_TOKEN!
+    accessToken: process.env.MAPBOX_ACCESS_TOKEN!,
   },
-  
+
   dayjs: {
-    locales: ['pt-br'],
-    plugins: ['relativeTime', 'utc', 'timezone', 'localizedFormat'],
-    defaultLocale: 'pt-br',
-    defaultTimezone: 'America/Sao_Paulo',
+    locales: ["pt-br"],
+    plugins: ["relativeTime", "utc", "timezone", "localizedFormat"],
+    defaultLocale: "pt-br",
+    defaultTimezone: "America/Sao_Paulo",
   },
 
   vuetify: {
     // https://vuetifyjs.com
     vuetifyOptions: {
       theme: {
-        defaultTheme: 'normalTheme',
+        defaultTheme: "normalTheme",
         themes: {
-          normalTheme
-        }
+          normalTheme,
+        },
       },
     },
     // https://github.com/invictus-codes/nuxt-vuetify
     moduleOptions: {
       useVuetifyLabs: true,
-    }
-  }
-})
+    },
+  },
+});
