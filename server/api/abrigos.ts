@@ -9,7 +9,18 @@ export default defineEventHandler(async (event) => {
     }
   })
 
-  const data = response.data.filter((item: any) => item.longitude && item.latitude)
+  const data = response.data.map((item: any) => {
+    if (!item.longitude || !item.latitude) {
+      // Replace missing latitude and longitude with default values
+      return {
+          ...item,
+          latitude: -30,
+          longitude: -50
+      };
+    } else {
+      return item;
+    }
+  });
 
   return data
 })
