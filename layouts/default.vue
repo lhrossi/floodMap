@@ -1,10 +1,25 @@
 <template>
   <v-layout>
     <v-app-bar flat class="border-b">
-      <v-toolbar-title>
-        <v-icon size="large">mdi-home-map-marker</v-icon>
-
-        Localização dos abrigos
+      <v-toolbar-title class="mr-4">
+        <div class="flex">
+          <div class="flex items-end">
+            <div class="mr-2">
+              <v-icon size="large">mdi-home-map-marker</v-icon>
+            </div>
+            Localização dos abrigos
+          </div>
+          <div class="flex flex-auto"></div>
+          <div class="flex">
+            <v-btn
+              color="primary"
+              text
+              href="https://abrigospoa.web.app/home"
+              target="_blank"
+              >Abrigos PoA</v-btn
+            >
+          </div>
+        </div>
       </v-toolbar-title>
     </v-app-bar>
 
@@ -32,9 +47,4 @@
   </v-footer> -->
 </template>
 
-<script setup>
-
-</script>
-
-<style lang="scss">
-</style>
+<script setup></script>
