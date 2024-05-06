@@ -112,7 +112,8 @@
                   variant="flat"
                   size="small"
                   class="mx-0 flex-grow-1"
-                  @click="editarMissao(item)"
+                  :loading="loading"
+                  @click="editarMissao(item.id)"
                 ></v-btn>
                 <v-btn
                   text="Excluir"
@@ -120,6 +121,7 @@
                   variant="flat"
                   size="small"
                   class="mx-0 flex-grow-1"
+                  :disabled="loading"
                   @click="deleteMissao(item)"
                 ></v-btn>
               </v-card-actions>
@@ -270,6 +272,7 @@
   const items = ref([])
   const modal = ref(false)
   const showFab = ref(false)
+  const form = ref(null)
   const form_valid = ref(false)
   const dialogoExcluirMissao = ref(null)
   const situacoes = [
@@ -277,8 +280,7 @@
     { title: '2 - MÉDIO', value: 2 },
     { title: '3 - ALTO RISCO', value: 3 }
   ]
-  const payloadForm = reactive({
-    id: null,
+  const payloadForm = ref({
     numero_pelotao: '',
     nome_militar_resp: '',
     situacao: 2,
@@ -298,7 +300,7 @@
     required: (value) => !!value || 'Campo obrigatório',
   })
 
-  carregarMissoes();
+  await carregarMissoes();
 
   const notify = (message) => {
     snackbar.value.show = true
@@ -306,12 +308,13 @@
   }
 
   async function novaMissao() {
-    // payloadForm.numero_pelotao = '10'
-    // payloadForm.nome_militar_resp = 'Cel. Silva 2'
-    // payloadForm.endereco = 'Endereço de Teste 2'
-    // payloadForm.transporte = ['Carro', 'Moto']
-    // payloadForm.latitude = -30.093869
-    // payloadForm.longitude = -51.100308
+    resetForm()
+    // payloadForm.value.numero_pelotao = '10'
+    // payloadForm.value.nome_militar_resp = 'Cel. Silva 2'
+    // payloadForm.value.endereco = 'Endereço de Teste 2'
+    // payloadForm.value.transporte = ['Carro', 'Moto']
+    payloadForm.value.latitude = -30.155716
+    payloadForm.value.longitude = -51.217240
     modal.value = true
   }
 
@@ -323,11 +326,11 @@
   async function salvarMissao() {
     try {
       loading.value = true
-      if (!!payloadForm.id) {
-        const { data: response } = await useFetch<any>(`/api/missao/${payloadForm.id}`, { method:'put', body: payloadForm });
-        carregarMissoes();
+      if (!!payloadForm.value.id) {
+        const { data: response } = await useFetch<any>(`/api/missao/${payloadForm.value.id}`, { method:'put', body: payloadForm.value });
+        await carregarMissoes();
       } else {
-        const { data: response } = await useFetch<any>('/api/missoes', { method:'post', body: payloadForm });
+        const { data: response } = await useFetch<any>('/api/missoes', { method:'post', body: payloadForm.value });
         const { data: missao } = await useFetch<any>(`/api/missao/${response.value.id}`);
         items.value.push(missao.value)
       }
@@ -339,12 +342,12 @@
       loading.value = false
     }
   }
-  
-  async function editarMissao(missao) {
+
+  async function editarMissao(missao_id) {
     try {
       loading.value = true
-      // const { data: response } = useFetch<any>(`/api/missao/${missao.id}`);
-      // payloadForm.value = response.value
+      const { data: response } = await useFetch<any>(`/api/missao/${missao_id}`);
+      payloadForm.value = response.value
       modal.value = true
     } catch (error) {
       console.log("error", error);
@@ -352,7 +355,7 @@
       loading.value = false
     }
   }
-  
+
   async function deleteMissao(missao) {
     const response = await dialogoExcluirMissao.value.abrir()
     if (response == true) {
@@ -360,6 +363,7 @@
       try {
         dialogoExcluirMissao.value.startLoading();
         await useFetch<any>(`/api/missao/${missao.id}`, { method:'delete' });
+        await carregarMissoes();
         notify('Missão excluída com sucesso.');
       } catch (error) {
         console.log("error", error);
@@ -375,6 +379,21 @@
     return situacao === 1 ? 'green' : situacao === 2 ? 'yellow' : 'red'
   }
 
+  const resetForm = function() {
+    payloadForm.value = {
+      numero_pelotao: '',
+      nome_militar_resp: '',
+      situacao: 2,
+      endereco: '',
+      latitude: 0,
+      longitude: 0,
+      aph: false,
+      quantidade_civis: null,
+      quantidade_pets: null,
+      transporte: []
+    }
+  }
+
   useHead({
     titleTemplate: () => "Localização das Tropas",
   });
@@ -388,8 +407,8 @@
   watch(coords, (newCoords) => {
     if (newCoords.latitude != Infinity) {
       showFab.value = true
-      payloadForm.latitude = newCoords.latitude
-      payloadForm.longitude = newCoords.longitude
+      payloadForm.value.latitude = newCoords.latitude
+      payloadForm.value.longitude = newCoords.longitude
     }
   });
 
