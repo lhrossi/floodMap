@@ -3,7 +3,7 @@ import { ThemeDefinition } from 'vuetify';
 const normalTheme: ThemeDefinition = {
   dark: false,
   colors: {
-    primary: '#074b66',
+    primary: '#2196F3',
     secondary: '#d92344',
     background: '#f5f4f4',
   },
@@ -61,6 +61,15 @@ export default defineNuxtConfig({
   vuetify: {
     // https://vuetifyjs.com
     vuetifyOptions: {
+      defaults: {
+        VTextField: {
+          density: "default",
+          color: "primary",
+        },
+        VBtn: {
+          color: "primary",
+        },
+      },
       theme: {
         defaultTheme: 'normalTheme',
         themes: {
