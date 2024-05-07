@@ -380,8 +380,8 @@ const notify = (message) => {
 
 async function novaMissao() {
   resetForm();
-  // payloadForm.value.latitude = -30.155716
-  // payloadForm.value.longitude = -51.217240
+  // payloadForm.value.latitude = -30.090398
+  // payloadForm.value.longitude = -51.328853
   modal.value = true;
 }
 
