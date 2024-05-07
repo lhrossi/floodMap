@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   const response = await axios.get(`${config.public.API_URL}/missoes`, {
     headers: {
-      'Authorization': config.public.API_TOKEN
+      'Authorization': config.API_TOKEN
     }
   })
 
