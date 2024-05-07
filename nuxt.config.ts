@@ -21,9 +21,25 @@ export default defineNuxtConfig({
       API_URL: process.env.NUXT_PUBLIC_API_URL
     }
   },
+  basicAuth: {
+    enabled: true,
+    users: [
+      {
+        username: "admin",
+        password: "bnmkH24@",
+      },
+      {
+        username: "tropa",
+        password: "admin",
+      },
+    ],
+    // Optional: Whitelist routes
+    // allowedRoutes: ["/api/.*"],
+  },
 
   modules: [
     '@invictus.codes/nuxt-vuetify',
+    '@kgierke/nuxt-basic-auth',
     // 'nuxt-api-party',
     'nuxt-snackbar',
     '@hebilicious/vue-query-nuxt',
