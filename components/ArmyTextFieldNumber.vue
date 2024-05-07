@@ -3,6 +3,7 @@
     ref="input"
     v-model="model"
     v-bind="$attrs"
+    type="tel"
   >
     <template v-slot:append-inner>
       <v-btn 
