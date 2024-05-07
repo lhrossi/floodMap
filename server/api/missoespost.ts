@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const response = await axios.post(`${config.public.API_URL}/missoes`, body, {
     headers: {
-      'Authorization': config.public.API_TOKEN,
+      'Authorization': config.API_TOKEN,
     }
   })
   return response.data;

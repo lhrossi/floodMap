@@ -24,7 +24,7 @@
           :lnglat="[item.longitude, item.latitude]"
           :options="{ color: corMarcador(item.situacao) }"
         >
-          <MapboxDefaultPopup
+          <LazyMapboxDefaultPopup
             :popup-id="`popup-${item.id}`"
             :lnglat="[item.longitude, item.latitude]"
             :options="{ closeOnClick: true, closeButton: true }"
@@ -171,7 +171,7 @@
                 ></v-btn>
               </v-card-actions>
             </v-card>
-          </MapboxDefaultPopup>
+          </LazyMapboxDefaultPopup>
         </MapboxDefaultMarker>
       </template>
       <MapboxGeolocateControl position="bottom-left" />
@@ -380,8 +380,8 @@ const notify = (message) => {
 
 async function novaMissao() {
   resetForm();
-  // payloadForm.value.latitude = -30.155716
-  // payloadForm.value.longitude = -51.217240
+  // payloadForm.value.latitude = -30.090398
+  // payloadForm.value.longitude = -51.328853
   modal.value = true;
 }
 

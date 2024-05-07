@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: config.public.API_TOKEN
+      Authorization: config.API_TOKEN
     }
   })
 
