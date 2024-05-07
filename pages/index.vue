@@ -249,17 +249,17 @@
               </v-col>
 
               <v-col cols="12" sm="12" md="6">
-                <v-text-field
+                <ArmyTextFieldNumber
                   label="Civis Resgatados"
                   v-model="payloadForm.quantidade_civis"
-                ></v-text-field>
+                ></ArmyTextFieldNumber>
               </v-col>
 
               <v-col cols="12" sm="12" md="6">
-                <v-text-field
-                  label="Pets resgatados"
+                <ArmyTextFieldNumber
+                label="Pets resgatados"
                   v-model="payloadForm.quantidade_pets"
-                ></v-text-field>
+                ></ArmyTextFieldNumber>
               </v-col>
 
               <v-col cols="12" sm="12">
@@ -338,7 +338,7 @@
 <script setup lang="ts">
 import { useGeolocation } from "@vueuse/core";
 
-const { coords } = useGeolocation();
+const { coords, pause } = useGeolocation();
 const loading = ref(false);
 const items = ref([]);
 const modal = ref(false);
@@ -453,14 +453,14 @@ const corMarcador = function (situacao) {
 };
 
 const resetForm = function () {
-  (payloadForm.value.numero_pelotao = ""),
-    (payloadForm.value.nome_militar_resp = ""),
-    (payloadForm.value.situacao = 2),
-    (payloadForm.value.endereco = ""),
-    (payloadForm.value.aph = false),
-    (payloadForm.value.quantidade_civis = null),
-    (payloadForm.value.quantidade_pets = null),
-    (payloadForm.value.transporte = []);
+  payloadForm.value.numero_pelotao = ""
+  payloadForm.value.nome_militar_resp = ""
+  payloadForm.value.situacao = 2
+  payloadForm.value.endereco = ""
+  payloadForm.value.aph = false
+  payloadForm.value.quantidade_civis = null
+  payloadForm.value.quantidade_pets = null
+  payloadForm.value.transporte = [];
 };
 
 useHead({
