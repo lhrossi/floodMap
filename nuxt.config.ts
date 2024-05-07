@@ -14,10 +14,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   runtimeConfig: {
-    public: {
-      API_TOKEN: process.env.NUXT_PUBLIC_API_TOKEN,
-      API_URL: process.env.NUXT_PUBLIC_API_URL || '/api/mock'
-    }
+    API_TOKEN: process.env.NUXT_PUBLIC_API_TOKEN,
+    API_URL: process.env.NUXT_PUBLIC_API_URL || '/api/mock'
   },
 
   modules: [
