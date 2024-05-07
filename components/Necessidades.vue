@@ -2,7 +2,12 @@
   <div v-if="necessidades.length > 0" class="flex flex-column gap-1">
     <v-divider class="my-2" />
     <h5 class="font-bold">Necessidades:</h5>
-    <span v-for="necessidade in necessidades" :class="necessidade.class">{{ necessidade.nome }}</span>
+    <span 
+      v-for="necessidade in necessidades" 
+      :class="necessidade.class"
+      :key="necessidade.nome">
+      {{ necessidade.nome }}
+    </span>
   </div>
 </template>
 

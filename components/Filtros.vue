@@ -9,6 +9,7 @@
         :variant="filtro.habilitado ? 'elevated' : 'outlined'"
         size="small"
         color="primary"
+        :key="filtro.nome"
       >
         {{ filtro.nome }}: {{ abrigosPorCidade?.filter(filtro.filtro).length }}
       </v-chip>
@@ -23,14 +24,15 @@ const emit = defineEmits(["filterChange"]);
 
 const cidade = ref("Todos");
 
-const cidades = ref(
-  ["Todos"].concat(
+const cidades = computed(() => {
+  if (!props.abrigos) return [];
+  return ["Todos"].concat(
     props.abrigos
       .map((item) => item.city)
       .filter((city, index, self) => self.indexOf(city) === index)
       .filter((city) => city && city != "")
   )
-);
+})
 
 const filtrosPreDefinidos = ref([
   { nome: "Com vagas", habilitado: false, filtro: (abrigo: any) => parseInt(abrigo.vagas_ocupadas) < parseInt(abrigo.vagas) },
