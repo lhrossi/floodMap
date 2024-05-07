@@ -10,11 +10,7 @@
         width: 100%;
         height: 100%;
       "
-      :options="{
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: [-51.1771419, -30.1088701],
-        zoom: 10,
-      }"
+      :options="mapOptions"
     >
       <template v-if="items.length > 0">
         <MapboxDefaultMarker
@@ -86,7 +82,7 @@
                     <div>
                       <div class="text-body-2 font-weight-bold">Aph</div>
                       <div>
-                        <span>{{ item.aph === 1 ? "Sim" : "Não" }}</span>
+                        <span>{{ item.aph == 1 ? "Sim" : "Não" }}</span>
                       </div>
                     </div>
                   </v-col>
@@ -133,7 +129,7 @@
                       </div>
                     </div>
                   </v-col>
-                  <v-col cols="12">
+                  <v-col cols="12" sm="6">
                     <div>
                       <div class="text-body-2 font-weight-bold">
                         Coordenadas
@@ -143,6 +139,12 @@
                         Longitude: {{ item.longitude }}
                       </div>
                     </div>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <ArmyComoChegar
+                      :origem="[coords.longitude, coords.latitude]"
+                      :destino="[item.longitude, item.latitude]"
+                    ></ArmyComoChegar>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -243,6 +245,8 @@
               <v-col cols="12" sm="12">
                 <v-checkbox
                   color="primary"
+                  true-value="1"
+                  false-value="0"
                   label="Atendimento pré Hospitalar"
                   v-model="payloadForm.aph"
                 ></v-checkbox>
@@ -373,12 +377,30 @@ const rules = ref({
 
 await carregarMissoes();
 
+const mapOptions = ref({
+  style: 'mapbox://styles/mapbox/streets-v12',
+  center: [-51.1771419, -30.1088701],
+  zoom: 10,
+})
+
 const notify = (message) => {
   snackbar.value.show = true;
   snackbar.value.message = message;
 };
 
+const mapRef = useMapboxRef("map");
+
+const centralizarMapa = (longitude: number, latitude: number) => {
+  mapRef.value?.flyTo({
+    center: [longitude, latitude],
+    zoom: 10,
+    speed: 4,
+  });
+  // mapRef.value.setCenter([longitude, latitude]);
+};
+
 async function novaMissao() {
+  centralizarMapa(coords.value.longitude, coords.value.latitude);
   resetForm();
   // payloadForm.value.latitude = -30.090398
   // payloadForm.value.longitude = -51.328853
