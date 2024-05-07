@@ -22,4 +22,4 @@ jobs:
                 ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
             - name: Deploy
               run: |
-                 ssh ${{ secrets.USER_IP }} 'whoami && bash /var/www/update.sh floodMap'
+                 ssh ${{ secrets.USER_IP }} 'bash /var/www/update.sh floodMap'
