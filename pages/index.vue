@@ -12,7 +12,7 @@
       "
       :options="mapOptions"
     >
-      <template v-if="items.length > 0">
+      <template v-if="items?.length > 0">
         <MapboxDefaultMarker
           v-for="item in items"
           :marker-id="`marker-${item.id}`"
@@ -375,7 +375,7 @@ const rules = ref({
   required: (value) => !!value || "Campo obrigatório",
 });
 
-await carregarMissoes();
+// await carregarMissoes(); // Não funciona dentro do onMounted 
 
 const mapOptions = ref({
   style: 'mapbox://styles/mapbox/streets-v12',
@@ -402,31 +402,48 @@ const centralizarMapa = (longitude: number, latitude: number) => {
 async function novaMissao() {
   centralizarMapa(coords.value.longitude, coords.value.latitude);
   resetForm();
-  // payloadForm.value.latitude = -30.090398
-  // payloadForm.value.longitude = -51.328853
   modal.value = true;
 }
 
+const auth = useUserAuth();
+
 async function carregarMissoes() {
-  const { data: missoes } = await useFetch("/api/missoes");
-  items.value = <Array>missoes.value;
+  if (!auth.isLoggedIn()) {
+    navigateTo({ path: "/login" });
+    return;
+  }
+
+  try {
+    const { data, error } = await useFetch("/api/missoes");
+
+    if (error.value) {
+      notify("Não foi possível carregar as missões.");
+      return;
+    }
+
+    items.value = <Array>data.value;
+    
+  } catch (error) {
+    throw error;
+  }
+
 }
 
 async function salvarMissao() {
   try {
     loading.value = true;
     if (!!payloadForm.value.id) {
-      const { data: response } = await useFetch<any>(
+      const { data: response } = await useFetch(
         `/api/missao/${payloadForm.value.id}`,
         { method: "put", body: payloadForm.value }
       );
       await carregarMissoes();
     } else {
-      const { data: response } = await useFetch<any>("/api/missoes", {
+      const { data: response } = await useFetch("/api/missoes", {
         method: "post",
         body: payloadForm.value,
       });
-      const { data: missao } = await useFetch<any>(
+      const { data: missao } = await useFetch(
         `/api/missao/${response.value.id}`
       );
       items.value.push(missao.value);
@@ -441,13 +458,20 @@ async function salvarMissao() {
 }
 
 async function editarMissao(missao_id) {
+
   try {
     loading.value = true;
-    const { data: response } = await useFetch<any>(`/api/missao/${missao_id}`);
+    const { data: response, error } = await useFetch(`/api/missao/${missao_id}`);
+    
+    if (error.value) {
+      notify("Não foi possível editar missão.");
+      return;
+    }
+
     payloadForm.value = response.value;
     modal.value = true;
   } catch (error) {
-    console.log("error", error);
+    throw error;
   } finally {
     loading.value = false;
   }
@@ -458,7 +482,7 @@ async function deleteMissao(missao) {
   if (response == true) {
     try {
       dialogoExcluirMissao.value.startLoading();
-      await useFetch<any>(`/api/missao/${missao.id}`, { method: "delete" });
+      await useFetch(`/api/missao/${missao.id}`, { method: "delete" });
       await carregarMissoes();
       notify("Missão excluída com sucesso.");
     } catch (error) {
@@ -485,6 +509,11 @@ const resetForm = function () {
   payloadForm.value.transporte = [];
 };
 
+
+
+
+await carregarMissoes();
+
 useHead({
   titleTemplate: () => "Localização das Tropas",
 });
@@ -502,6 +531,7 @@ watch(coords, (newCoords) => {
     payloadForm.value.longitude = newCoords.longitude;
   }
 });
+
 </script>
 
 <style lang="scss">
