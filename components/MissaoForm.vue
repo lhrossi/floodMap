@@ -8,7 +8,7 @@
       
     <v-card>
       <v-card-title>
-        Adicionar nova Missão
+        Adicionar nova Pelotão
       </v-card-title>
       <v-divider class="my-0"></v-divider>
 
