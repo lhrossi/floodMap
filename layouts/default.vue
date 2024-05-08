@@ -16,7 +16,7 @@
               text
               href="https://abrigospoa.web.app/home"
               target="_blank"
-              >Abrigos PoA</v-btn
+              >Gestão de abrigos</v-btn
             >
           </div>
         </div>
