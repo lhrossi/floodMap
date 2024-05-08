@@ -101,9 +101,6 @@ let regras = {
 
 onMounted(() => {
   form.value.reset();
-  // alerta.alertar("Teste de alerta");
-  usuario.email = "armyteste9@gmail.com"
-  usuario.password = "armyteste123"
 });
 
 const login = async () => {
