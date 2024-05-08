@@ -1,6 +1,8 @@
 export default function() {
+  const COOKIE_MAX_AGE = 24 * 60 * 60;
+  
   const token = useCookie('access_token', {
-    maxAge: 8 * 60 * 60,
+    maxAge: COOKIE_MAX_AGE,
   });
   
   async function login(credenciais) {
