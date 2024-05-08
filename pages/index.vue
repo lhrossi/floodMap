@@ -185,7 +185,7 @@
     >
       <v-card>
         <v-card-title>
-          {{ !!payloadForm.id ? "Editar" : "Adicionar" }} missão
+          {{ !!payloadForm.id ? "Editar" : "Adicionar" }} Pelotão
         </v-card-title>
         <v-divider></v-divider>
 
