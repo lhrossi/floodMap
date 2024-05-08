@@ -1,5 +1,7 @@
 import { ThemeDefinition } from 'vuetify';
 
+import users from './users';
+
 const normalTheme: ThemeDefinition = {
   dark: false,
   colors: {
@@ -23,16 +25,7 @@ export default defineNuxtConfig({
   },
   basicAuth: {
     enabled: true,
-    users: [
-      {
-        username: "admin",
-        password: "bnmkH24@",
-      },
-      {
-        username: "tropa",
-        password: "admin",
-      },
-    ],
+    users: users,
     // Optional: Whitelist routes
     // allowedRoutes: ["/api/.*"],
   },

@@ -9,7 +9,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn variant="text" ref="btnNao" @click="responder(false)" :disable="loading">{{ botaoNao }}</v-btn>
+        <v-btn variant="text" ref="btnNao" @click="responder(false)" :disabled="loading">{{ botaoNao }}</v-btn>
         <v-btn variant="flat" ref="btnSim" :color="corBotaoSim" :loading="loading" @click="responder(true)">{{ botaoSim }}</v-btn >
       </v-card-actions>
     </v-card>
