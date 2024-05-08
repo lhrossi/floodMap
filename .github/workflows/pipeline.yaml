@@ -18,9 +18,8 @@ jobs:
               run: |
                 mkdir -p ~/.ssh/
                 echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
-                cat ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
                 ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
             - name: Deploy
               run: |
-                 ssh ${{ secrets.USER_IP }} 'bash /var/www/update.sh floodMap'
+                 ssh ${{ secrets.USER_IP }} 'whoami && bash /var/www/update.sh floodMap'
