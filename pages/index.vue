@@ -3,7 +3,7 @@
     <v-container>
       <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
       <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @filterChange="(a) => (abrigosFiltrados = a)" />
-      <Instrucoes v-show="mostrarInstrucoes" :closeModal="closeModal" />
+      <Instrucoes v-if="mostrarInstrucoes" :closeModal="closeModal" />
       <div class="total-vagas">
         <div class="total-vagas-percentage text-center mb-2.5" :style="{ backgroundColor: dadosGerais.cor }">
           {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
