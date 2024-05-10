@@ -4,7 +4,7 @@
       <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
       <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @filterChange="(a) => (abrigosFiltrados = a)" />
       <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
-        <Instrucoes/>
+        <Instrucoes />
       </Modal>
       <div class="total-vagas">
         <div class="total-vagas-percentage text-center mb-2.5" :style="{ backgroundColor: dadosGerais.cor }">
@@ -33,8 +33,8 @@
             style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
             :options="{
               style: 'mapbox://styles/mapbox/streets-v12',
-              center: [-51.1771419, -30.1088701],
-              zoom: 9,
+              center: [-52.351117644156055, -31.744639003988283],
+              zoom: 11,
             }"
           >
             <LazyMapboxDefaultMarker

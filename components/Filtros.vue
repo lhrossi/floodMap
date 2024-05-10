@@ -1,25 +1,12 @@
 <template>
   <v-navigation-drawer temporary class="drawer-style">
     <div class="flex flex-column filtros">
-      <div
-        class="px-4 py-4 border-b flex justify-between items-center header-filter"
-      >
+      <div class="px-4 py-4 border-b flex justify-between items-center header-filter">
         <span class="text-2xl">Encontrar abrigo | Filtros</span>
-        <v-btn
-          elevation="0"
-          rounded="xl"
-          size="x-small"
-          class="flex items-center justify-center"
-          >&#x2715;
-        </v-btn>
+        <v-btn elevation="0" rounded="xl" size="x-small" class="flex items-center justify-center">&#x2715; </v-btn>
       </div>
       <span class="px-4 flex flex-col gap-1 pt-8">
-        <v-select
-          :label="'Cidades'"
-          :items="cidades"
-          v-model="cidade"
-          class="w-full"
-        />
+        <v-select :label="'Cidades'" :items="cidades" v-model="cidade" class="w-full" />
         <v-chip
           v-for="filtro of filtrosPreDefinidos"
           v-on:click="filtro.habilitado = !filtro.habilitado"
@@ -33,22 +20,8 @@
         </v-chip>
       </span>
       <div class="px-4 flex gap-2 w-full pt-12 border-t mt-12">
-        <v-btn
-          elevation="0"
-          rounded="xl"
-          class="flex-1"
-          size="large"
-          border="#CBCBCB sm"
-          >Limpar filtro</v-btn
-        >
-        <v-btn
-          elevation="0"
-          rounded="xl"
-          class="flex-1"
-          size="large"
-          color="primary"
-          >Aplicar
-        </v-btn>
+        <v-btn elevation="0" rounded="xl" class="flex-1" size="large" border="#CBCBCB sm">Limpar filtro</v-btn>
+        <v-btn elevation="0" rounded="xl" class="flex-1" size="large" color="primary">Aplicar </v-btn>
       </div>
     </div>
   </v-navigation-drawer>
@@ -58,7 +31,7 @@
 const props = defineProps<{ abrigos: any[] }>();
 const emit = defineEmits(["filterChange"]);
 
-const cidade = ref("Todos");
+const cidade = ref("Pelotas");
 
 const cidades = computed(() => {
   if (!props.abrigos) return [];
@@ -74,8 +47,7 @@ const filtrosPreDefinidos = ref([
   {
     nome: "Com vagas",
     habilitado: false,
-    filtro: (abrigo: any) =>
-      parseInt(abrigo.vagas_ocupadas) < parseInt(abrigo.vagas),
+    filtro: (abrigo: any) => parseInt(abrigo.vagas_ocupadas) < parseInt(abrigo.vagas),
   },
   {
     nome: "Com Cozinha",
@@ -97,28 +69,22 @@ const filtrosPreDefinidos = ref([
 const abrigosPorCidade = computed(() => {
   if (!props.abrigos) return [];
 
-  return props.abrigos.filter(
-    (abrigo) => cidade.value == "Todos" || abrigo.city == cidade.value
-  );
+  return props.abrigos.filter((abrigo) => cidade.value == "Todos" || abrigo.city == cidade.value);
 });
 
 const filtrarDados = () => {
   if (!props.abrigos) return [];
 
-  const filtrosHabilitados = filtrosPreDefinidos.value.filter(
-    (filtro) => filtro.habilitado
-  );
+  const filtrosHabilitados = filtrosPreDefinidos.value.filter((filtro) => filtro.habilitado);
 
-  let abrigosFiltrados = abrigosPorCidade.value.filter(
-    (a) =>
-      filtrosHabilitados.length == 0 ||
-      filtrosHabilitados.some((f) => f.filtro(a))
-  );
+  let abrigosFiltrados = abrigosPorCidade.value.filter((a) => filtrosHabilitados.length == 0 || filtrosHabilitados.some((f) => f.filtro(a)));
 
   emit("filterChange", abrigosFiltrados);
 };
 
 watch([cidade, filtrosPreDefinidos], filtrarDados, { deep: true });
+
+filtrarDados();
 </script>
 
 <style lang="scss">
