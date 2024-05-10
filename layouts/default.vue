@@ -1,14 +1,9 @@
 <template>
   <v-layout>
     <v-app-bar class="border-b">
-      <v-toolbar-title class="mr-4">
+      <v-toolbar-title>
         <div class="flex">
-          <div class="flex items-end align-center">
-            <div class="mr-2">
-              <AbrigaRsLogo />
-            </div>
-          </div>
-          <div class="flex flex-auto"></div>
+          <AbrigaRsLogo />
           <div class="flex align-center">
             <v-btn color="dark" text :class="{ active: currentButton === 'mapa', 'menu-item': true }" @click="() => selectButton('mapa')">
               <span>Mapa</span>
@@ -51,10 +46,6 @@ const selectButton = (button) => {
 .v-toolbar {
   border-radius: 0 0 16px 16px;
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.16);
-}
-
-.v-toolbar.v-toolbar--flat .v-toolbar__content {
-  height: 84px !important;
 }
 
 .v-btn__content {
