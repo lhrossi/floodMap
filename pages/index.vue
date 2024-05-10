@@ -61,7 +61,11 @@
 <script setup lang="ts">
 import calcularCor from "../utils/calcularCor";
 
-const { data: abrigos, error } = await useFetch<any>("/api/abrigos", {});
+const token = useRoute().query.token as string;
+
+const requestUrl = token ? `/api/abrigos?token=${new URLSearchParams(token).toString()}` : "/api/abrigos";
+
+const { data: abrigos, error } = await useFetch<any>(requestUrl, {});
 
 const abrigosFiltrados = ref(abrigos.value);
 const mostrarFiltros = ref(false);
