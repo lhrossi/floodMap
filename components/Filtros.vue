@@ -21,7 +21,7 @@
       </span>
       <div class="px-4 flex gap-2 w-full pt-12 border-t mt-12">
         <v-btn elevation="0" rounded="xl" class="flex-1" size="large" border="#CBCBCB sm">Limpar filtro</v-btn>
-        <v-btn elevation="0" rounded="xl" class="flex-1" size="large" color="primary">Aplicar </v-btn>
+        <v-btn elevation="0" rounded="xl" class="flex-1" size="large" color="primary">Aplicar</v-btn>
       </div>
     </div>
   </v-navigation-drawer>
