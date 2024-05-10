@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-app-bar flat class="border-b">
+    <v-app-bar class="border-b">
       <v-toolbar-title class="mr-4">
         <div class="flex">
           <div class="flex items-end align-center">
@@ -10,39 +10,21 @@
           </div>
           <div class="flex flex-auto"></div>
           <div class="flex align-center">
-            <v-btn
-              color="dark"
-              text
-              :class="{ active: currentButton === 'mapa', 'menu-item': true }"
-              @click="() => selectButton('mapa')"
-            >
+            <v-btn color="dark" text :class="{ active: currentButton === 'mapa', 'menu-item': true }" @click="() => selectButton('mapa')">
               <span>Mapa</span>
               <div class="underline"></div>
             </v-btn>
-            <v-btn
-              color="dark"
-              text
-              :class="{ active: currentButton === 'sobre', 'menu-item': true }"
-              @click="() => selectButton('sobre')"
+            <v-btn color="dark" text :class="{ active: currentButton === 'sobre', 'menu-item': true }" @click="() => selectButton('sobre')"
               >Sobre
               <div class="underline"></div>
             </v-btn>
-            <v-btn
-              color="dark"
-              text
-              href="https://abrigospoa.web.app/login"
-              target="_blank"
-              >Login</v-btn
-            >
+            <v-btn color="dark" text href="https://abrigospoa.web.app/login" target="_blank">Login</v-btn>
           </div>
         </div>
       </v-toolbar-title>
     </v-app-bar>
     <v-main>
-      <Modal
-        v-if="currentButton === 'sobre'"
-        :click="() => selectButton('mapa')"
-      >
+      <Modal v-if="currentButton === 'sobre'" :click="() => selectButton('mapa')">
         <AboutModal />
       </Modal>
       <slot></slot>
