@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
       }
     });
 
-    return data.slice(0, 10);
+    return data;
   } catch (err) {
     console.error("err", err);
     return [];
