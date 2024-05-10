@@ -3,15 +3,28 @@
     <v-container>
       <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
       <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @filterChange="(a) => (abrigosFiltrados = a)" />
+      <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
+        <Instrucoes />
+      </Modal>
       <div class="total-vagas">
-        <div>
-          Total de vagas: <b>{{ dadosGerais.totalVagas }}</b>
+        <div class="total-vagas-percentage text-center mb-2.5" :style="{ backgroundColor: dadosGerais.cor }">
+          {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
         </div>
-        <div>
-          Vagas ocupadas: <b>{{ dadosGerais.totalVagasOcupadas }}</b>
+        <div class="statistic flex justify-between mb-4">
+          <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
         </div>
-        <div class="text-lg font-bold text-center" :style="{ color: dadosGerais.cor }">{{ Math.round(dadosGerais.percentualOcupacao) }}%</div>
-        <v-btn size="small" v-on:click="mostrarFiltros = true"> Filtrar abrigos </v-btn>
+        <div class="statistic flex justify-between mb-2.5">
+          <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
+        </div>
+        <PrimaryButton
+          class="primary-button"
+          size="x-large"
+          rounded="xl"
+          color="primary"
+          :click="() => (mostrarFiltros = true)"
+          text="Encontrar abrigo"
+        />
+        <div class="instructions text-center w-full my-2.5"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
       </div>
       <v-row class="mt-4">
         <v-col>
@@ -20,8 +33,8 @@
             style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
             :options="{
               style: 'mapbox://styles/mapbox/streets-v12',
-              center: [-51.1771419, -30.1088701],
-              zoom: 9,
+              center: [-52.351117644156055, -31.744639003988283],
+              zoom: 11,
             }"
           >
             <LazyMapboxDefaultMarker
@@ -70,8 +83,10 @@ const { data: abrigos, error } = await useFetch<any>(requestUrl, {});
 const abrigosFiltrados = ref(abrigos.value);
 const mostrarFiltros = ref(false);
 
+const mostrarInstrucoes = ref(false);
+
 const dadosGerais = computed(() => {
-  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "" };
+  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#007972" };
 
   if (!abrigos.value) return dadosDefault;
 
@@ -91,6 +106,12 @@ useMapbox("map", (map: any) => {
     popup.remove();
   });
 });
+
+const closeModal = () => {
+  console.log("callued");
+  mostrarFiltros.value = false;
+  mostrarInstrucoes.value = false;
+};
 </script>
 
 <style lang="scss">
@@ -113,15 +134,47 @@ useMapbox("map", (map: any) => {
 }
 
 .total-vagas {
+  width: 327px;
+  max-width: 90%;
   font-size: 0.75rem;
   position: fixed;
-  z-index: 899;
-  right: 1rem;
-  top: 5rem;
+  z-index: 3;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: white;
   padding: 1rem;
   border-radius: 0.5rem;
   border: 1px solid #ddd;
+
+  &-percentage {
+    padding: 4px 8px 4px 8px;
+    border-radius: 50px;
+    width: fit-content;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .statistic {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    letter-spacing: 0.005em;
+    text-align: left;
+  }
+
+  .primary-button {
+    width: 100%;
+  }
+
+  .instructions b {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    letter-spacing: 0.005em;
+    text-align: left;
+    cursor: pointer;
+  }
 }
 
 .filtros {
