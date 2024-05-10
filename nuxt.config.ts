@@ -1,4 +1,4 @@
-import { ThemeDefinition } from 'vuetify';
+import type { ThemeDefinition } from 'vuetify';
 
 const normalTheme: ThemeDefinition = {
   dark: false,
@@ -16,6 +16,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     API_TOKEN: process.env.NUXT_PUBLIC_API_TOKEN,
+    MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
     API_URL: process.env.NUXT_PUBLIC_API_URL || '/api/mock'
   },
 

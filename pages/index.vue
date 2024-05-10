@@ -2,7 +2,7 @@
   <v-container>
     <v-container>
       <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
-      <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @closeFilters="() => mostrarFiltros = false" @filterChange="(a) => (abrigosFiltrados = a)" />
+      <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @closeFilters="() => mostrarFiltros = false" @filterChange="(a) => (abrigosFiltrados = a)" @cityChange="(a) => handleCityChange(a)"/>
       <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
         <Instrucoes />
       </Modal>
@@ -26,9 +26,10 @@
             style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
             :options="{
               style: 'mapbox://styles/mapbox/streets-v12',
-              center: [-52.351117644156055, -31.744639003988283],
+              center: mapCenter,
               zoom: 11,
             }"
+            @load="handleMapLoad"
           >
             <LazyMapboxDefaultMarker
               v-for="abrigo of abrigosFiltrados"
@@ -65,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
 import calcularCor from "../utils/calcularCor";
 
 const token = useRoute().query.token as string;
@@ -77,6 +79,8 @@ const abrigosFiltrados = ref(abrigos.value);
 const mostrarFiltros = ref(false);
 
 const mostrarInstrucoes = ref(false);
+
+const mapCenter = ref([-52.351117644156055, -31.744639003988283]);
 
 const dadosGerais = computed(() => {
   const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#007972" };
@@ -94,28 +98,64 @@ const dadosGerais = computed(() => {
 
 useHead({ titleTemplate: () => "Localização dos abrigos" });
 
-useMapbox("map", (map: any) => {
-  map._markers.forEach(({ _popup: popup }: any) => {
-    popup.remove();
-  });
-});
 
 const mapRef = useMapboxRef('map');
-
-watch([abrigosFiltrados], () => {
-  console.log(mapRef.value)
-  setTimeout(() => {
-    mapRef.value?._markers.forEach(({ _popup: popup }: any) => {
-      popup.remove();
-    });
-  }, 1000);
-}, { deep: true });
 
 const closeModal = () => {
   console.log("callued");
   mostrarFiltros.value = false;
   mostrarInstrucoes.value = false;
 };
+
+async function clearPopups() {
+  mapRef.value?._markers.forEach(({ _popup: popup }: any) => {
+    popup.remove();
+  });
+  mapRef.value?._markers.forEach((marker: any) => {
+    marker.remove();
+  });
+}
+watch(abrigosFiltrados, () => {
+  useMapbox("map", (map: any) => {
+    map._markers.forEach(({ _popup: popup }: any) => {
+      popup.remove();
+    });
+    map._markers.forEach((marker: any) => {
+      marker.remove();
+    });
+  });
+},{deep: true})
+
+async function handleMapLoad () {
+  console.log("load")
+  useMapbox("map", (map: any) => {
+    map._markers.forEach(({ _popup: popup }: any) => {
+      popup.remove();
+    });
+  });
+}
+
+// Função para obter as coordenadas da cidade a partir do nome
+async function getCityCoordinates(cityName: string) {
+  const geolocationUrl = `/api/geolocation?${new URLSearchParams({city: cityName})}`;
+
+  return await useFetch<any>(geolocationUrl, {}).data;
+}
+
+async function handleCityChange(cidade: string) {
+  clearPopups()
+  if(cidade != "Todos" && cidade != ""){
+    ; // Substitua pelo nome da cidade desejada
+    const coordinates = await getCityCoordinates(cidade);
+    if (coordinates) {
+      console.log('Coordenadas da cidade:', coordinates.value);
+      console.log('Coordenadas da cidade:', coordinates);
+      mapCenter.value = coordinates.value
+    } else {
+      console.log('Cidade não encontrada ou erro ao obter coordenadas.');
+    }
+  }
+}
 </script>
 
 <style lang="scss">
