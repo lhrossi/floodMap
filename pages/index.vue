@@ -31,8 +31,8 @@
             style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
             :options="{
               style: 'mapbox://styles/mapbox/streets-v12',
-              center: [-52.351117644156055, -31.744639003988283],
-              zoom: 11,
+              center: [-50.951117644156055, -30.744639003988283],
+              zoom: 7,
             }"
           >
             <LazyMapboxDefaultMarker
