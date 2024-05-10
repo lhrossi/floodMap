@@ -10,20 +10,13 @@
         <div class="total-vagas-percentage text-center mb-2.5" :style="{ backgroundColor: dadosGerais.cor }">
           {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
         </div>
-        <div class="statistic flex justify-between mb-4">
+        <div class="statistic flex justify-between mb-1">
           <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
         </div>
-        <div class="statistic flex justify-between mb-2.5">
+        <div class="statistic flex justify-between mb-1">
           <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
         </div>
-        <PrimaryButton
-          class="primary-button"
-          size="x-large"
-          rounded="xl"
-          color="primary"
-          :click="() => (mostrarFiltros = true)"
-          text="Encontrar abrigo"
-        />
+        <PrimaryButton class="primary-button" rounded="xl" color="primary" :click="() => (mostrarFiltros = true)" text="Encontrar abrigo" />
         <div class="instructions text-center w-full my-2.5"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
       </div>
       <v-row class="mt-4">
@@ -135,13 +128,12 @@ const closeModal = () => {
 
 .total-vagas {
   width: 327px;
-  max-width: 90%;
-  font-size: 0.75rem;
+  max-width: 50%;
   position: fixed;
   z-index: 3;
-  bottom: 0;
+  bottom: 1%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -10%);
   background: white;
   padding: 1rem;
   border-radius: 0.5rem;
@@ -157,7 +149,6 @@ const closeModal = () => {
   }
 
   .statistic {
-    font-size: 1rem;
     font-weight: 400;
     line-height: 1.5rem;
     letter-spacing: 0.005em;
