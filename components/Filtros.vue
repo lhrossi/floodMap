@@ -31,7 +31,7 @@
 const props = defineProps<{ abrigos: any[] }>();
 const emit = defineEmits(["filterChange", "closeFilters"]);
 
-const cidade = ref("Pelotas");
+const cidade = ref("Todos");
 
 const cidades = computed(() => {
   if (!props.abrigos) return [];
