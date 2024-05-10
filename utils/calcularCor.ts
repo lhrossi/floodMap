@@ -1,18 +1,14 @@
+
 export default function calcularCor(vagas: any, vagasOcupadas: any) {
   if (isNaN(vagas) || isNaN(vagasOcupadas) || vagas <= 0) {
-    return "lightgrey";
+    return "#007972";
   }
   const percentual = (vagasOcupadas * 100) / vagas;
-  if (percentual <= 50) {
-    // Calcula a cor entre verde e amarelo
-    var r = Math.floor(255 * (percentual / 50));
-    var g = 255;
-    var b = 0;
-  } else {
-    // Calcula a cor entre amarelo e vermelho
-    var r = 255;
-    var g = Math.floor(255 * ((100 - percentual) / 50));
-    var b = 0;
+  if (percentual < 0) {
+    return "#007972";
   }
-  return `rgb(${r}, ${g}, ${b})`;
+  if (percentual <= 25) return '#007972'
+  if (percentual <= 50) return '#114DE6'
+  if (percentual <= 75) return '#E67711'
+  return '#E61127'
 }
