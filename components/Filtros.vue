@@ -3,7 +3,7 @@
     <div class="flex flex-column filtros">
       <div class="px-4 py-4 border-b flex justify-between items-center header-filter">
         <span class="text-2xl">Encontrar abrigo | Filtros</span>
-        <v-btn elevation="0" rounded="xl" size="x-small" class="flex items-center justify-center">&#x2715; </v-btn>
+        <v-btn elevation="0" rounded="xl" size="x-small" class="flex items-center justify-center" @click="() => emit('closeFilters')">&#x2715; </v-btn>
       </div>
       <span class="px-4 flex flex-col gap-1 pt-8">
         <v-select :label="'Cidades'" :items="cidades" v-model="cidade" class="w-full" />
@@ -21,7 +21,7 @@
       </span>
       <div class="px-4 flex gap-2 w-full pt-12 border-t mt-12">
         <v-btn elevation="0" rounded="xl" class="flex-1" size="large" border="#CBCBCB sm">Limpar filtro</v-btn>
-        <v-btn elevation="0" rounded="xl" class="flex-1" size="large" color="primary">Aplicar</v-btn>
+        <v-btn elevation="0" rounded="xl" class="flex-1" size="large" color="primary" @click="() => emit('closeFilters')">Aplicar</v-btn>
       </div>
     </div>
   </v-navigation-drawer>
@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{ abrigos: any[] }>();
-const emit = defineEmits(["filterChange"]);
+const emit = defineEmits(["filterChange", "closeFilters"]);
 
 const cidade = ref("Pelotas");
 

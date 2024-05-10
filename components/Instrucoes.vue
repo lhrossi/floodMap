@@ -10,7 +10,7 @@
             </div>
             <h4>Procure pelo abrigo</h4>
           </div>
-          <div class="content">
+          <div class="content pr-8">
             <p>Procure pelo abrigo que deseja informações de como ajudar na sua região ou filtre os abrigos que mais
               precisam do tipo de doação que você quer fazer</p>
           </div>
@@ -25,10 +25,24 @@
             </div>
             <h4>Entre em contato</h4>
           </div>
-          <div class="content">
+          <div class="content pr-4">
             <p>Entre em contato com o abrigo para combinar a entrega!</p>
           </div>
-          <img src="../assets/images/step1.png" alt="">
+          <img src="../assets/images/step2.png" alt="">
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <div class="step-title">
+            <div class="tag">
+              <p>Passo 3</p>
+            </div>
+            <h4>Atualize</h4>
+          </div>
+          <div class="content pr-4">
+            <p>⁠O abrigo dará baixa, e a lista se manterá sempre atualizada!</p>
+          </div>
+          <img src="../assets/images/step3.png" alt="">
         </div>
       </div>
     </v-container>
@@ -83,7 +97,6 @@ h3 {
         line-height: 1.5rem;
         letter-spacing: 0.005em;
         text-align: left;
-
       }
     }
 
