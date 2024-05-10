@@ -2,7 +2,12 @@
   <v-container>
     <v-container>
       <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
-      <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @closeFilters="() => mostrarFiltros = false" @filterChange="(a) => (abrigosFiltrados = a)" />
+      <Filtros
+        :abrigos="abrigos"
+        v-model="mostrarFiltros"
+        @closeFilters="() => (mostrarFiltros = false)"
+        @filterChange="(a) => (abrigosFiltrados = a)"
+      />
       <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
         <Instrucoes />
       </Modal>
@@ -94,22 +99,19 @@ const dadosGerais = computed(() => {
 
 useHead({ titleTemplate: () => "Localização dos abrigos" });
 
-useMapbox("map", (map: any) => {
-  map._markers.forEach(({ _popup: popup }: any) => {
-    popup.remove();
-  });
-});
+const mapRef = useMapboxRef("map");
 
-const mapRef = useMapboxRef('map');
-
-watch([abrigosFiltrados], () => {
-  console.log(mapRef.value)
-  setTimeout(() => {
-    mapRef.value?._markers.forEach(({ _popup: popup }: any) => {
-      popup.remove();
+watch(
+  [abrigosFiltrados],
+  () => {
+    useMapbox("map", (map: any) => {
+      map._markers.forEach(({ _popup: popup }: any) => {
+        popup.remove();
+      });
     });
-  }, 1000);
-}, { deep: true });
+  },
+  { deep: true }
+);
 
 const closeModal = () => {
   console.log("callued");
