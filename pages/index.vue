@@ -6,18 +6,18 @@
       <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
         <Instrucoes />
       </Modal>
-      <div class="total-vagas">
-        <div class="total-vagas-percentage text-center mb-2.5" :style="{ backgroundColor: dadosGerais.cor }">
+      <div class="total-vagas w-full max-w-72 text-sm text-lg-sm flex flex-col gap-1">
+        <div class="total-vagas-percentage text-center" :style="{ backgroundColor: dadosGerais.cor }">
           {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
         </div>
-        <div class="statistic flex justify-between mb-1">
+        <div class="statistic flex justify-between">
           <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
         </div>
-        <div class="statistic flex justify-between mb-1">
+        <div class="statistic flex justify-between">
           <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
         </div>
         <PrimaryButton class="primary-button" rounded="xl" color="primary" :click="() => (mostrarFiltros = true)" text="Encontrar abrigo" />
-        <div class="instructions text-center w-full my-2.5"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
+        <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
       </div>
       <v-row class="mt-4">
         <v-col>
@@ -127,8 +127,6 @@ const closeModal = () => {
 }
 
 .total-vagas {
-  width: 327px;
-  max-width: 50%;
   position: fixed;
   z-index: 3;
   bottom: 1%;
@@ -144,7 +142,6 @@ const closeModal = () => {
     border-radius: 50px;
     width: fit-content;
     color: white;
-    font-size: 0.75rem;
     font-weight: 500;
   }
 
@@ -155,12 +152,7 @@ const closeModal = () => {
     text-align: left;
   }
 
-  .primary-button {
-    width: 100%;
-  }
-
   .instructions b {
-    font-size: 0.875rem;
     line-height: 1.5rem;
     letter-spacing: 0.005em;
     text-align: left;
