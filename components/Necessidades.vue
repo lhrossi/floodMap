@@ -1,5 +1,5 @@
 <template>
-  <div v-if="abrigo.itensUteis.length > 0" class="flex flex-column gap-1">
+  <div v-if="abrigo.itensUteis?.length > 0" class="flex flex-column gap-1">
     <v-divider class="my-2" />
     <h5 class="font-bold">Necessidades:</h5>
     <ul>

@@ -16,7 +16,7 @@
           :key="filtro.nome"
         >
           {{ filtro.nome }}:
-          {{ abrigosPorCidade?.filter(filtro.filtro).length }}
+          {{ abrigosPorCidade?.filter(filtro.filtro)?.length }}
         </v-chip>
       </span>
       <div class="px-4 flex gap-2 w-full pt-12 border-t mt-12">
@@ -69,7 +69,8 @@ const filtrosPreDefinidos = ref([
 const abrigosPorCidade = computed(() => {
   if (!props.abrigos) return [];
 
-  return props.abrigos.filter((abrigo) => cidade.value == "Todos" || abrigo.city == cidade.value);
+  return props.abrigos.filter((abrigo) => cidade.value == "Todos" || abrigo.city == cidade.value) || [];
+
 });
 
 const filtrarDados = () => {
@@ -77,7 +78,7 @@ const filtrarDados = () => {
 
   const filtrosHabilitados = filtrosPreDefinidos.value.filter((filtro) => filtro.habilitado);
 
-  let abrigosFiltrados = abrigosPorCidade.value.filter((a) => filtrosHabilitados.length == 0 || filtrosHabilitados.some((f) => f.filtro(a)));
+  let abrigosFiltrados = abrigosPorCidade.value.filter((a) => filtrosHabilitados?.length == 0 || filtrosHabilitados.some((f) => f.filtro(a)));
 
   emit("filterChange", abrigosFiltrados);
 };
