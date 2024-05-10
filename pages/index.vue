@@ -2,7 +2,13 @@
   <v-container>
     <v-container>
       <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
-      <Filtros :abrigos="abrigos" v-model="mostrarFiltros" @closeFilters="() => mostrarFiltros = false" @filterChange="(a) => (abrigosFiltrados = a)" @cityChange="(a) => handleCityChange(a)"/>
+      <Filtros
+        :abrigos="abrigos"
+        v-model="mostrarFiltros"
+        @closeFilters="() => (mostrarFiltros = false)"
+        @filterChange="(a) => (abrigosFiltrados = a)"
+        @cityChange="(a) => handleCityChange(a)"
+      />
       <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
         <Instrucoes />
       </Modal>
@@ -97,7 +103,6 @@ const dadosGerais = computed(() => {
 });
 
 useHead({ titleTemplate: () => "Localização dos abrigos" });
-
 
 const mapRef = useMapboxRef('map');
 
