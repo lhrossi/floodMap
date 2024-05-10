@@ -143,14 +143,15 @@ async function getCityCoordinates(cityName: string) {
 }
 
 async function handleCityChange(cidade: string) {
-  clearPopups()
   if(cidade != "Todos" && cidade != ""){
     ; // Substitua pelo nome da cidade desejada
     const coordinates = await getCityCoordinates(cidade);
     if (coordinates) {
-      console.log('Coordenadas da cidade:', coordinates.value);
-      console.log('Coordenadas da cidade:', coordinates);
-      mapCenter.value = coordinates.value
+      setTimeout(() => {
+        console.log('Coordenadas da cidade:', coordinates.value);
+        mapCenter.value = coordinates.value
+      }, 200);
+      clearPopups()
     } else {
       console.log('Cidade não encontrada ou erro ao obter coordenadas.');
     }
