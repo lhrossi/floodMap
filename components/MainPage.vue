@@ -22,32 +22,10 @@
         :marker-id="`marker-${abrigo.id}`"
         :key="abrigo.id"
         :lnglat="[abrigo.longitude, abrigo.latitude]"
-        :options="{
-          color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
-        }"
       >
-        <LazyMapboxDefaultPopup
-          :popup-id="`popup-${abrigo.id}`"
-          :lnglat="[abrigo.longitude, abrigo.latitude]"
-          :options="{ closeOnClick: true, closeButton: true }"
-        >
-          <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
-
-          <p v-if="abrigo.address">{{ abrigo.address }}</p>
-
-          <p v-if="abrigo.nome_contato || abrigo.telefone">
-            {{ abrigo.nome_contato }}
-            <span v-show="abrigo.telefone">- {{ abrigo.telefone }}</span>
-          </p>
-
-          <v-divider class="my-2" />
-
-          <ContagemVagas :abrigo="abrigo" />
-
-          <Necessidades :abrigo="abrigo" />
-
-          <ComoChegar :abrigo="abrigo" />
-        </LazyMapboxDefaultPopup>
+        <template #marker>
+          <Marker :abrigo="abrigo" />
+        </template>
       </LazyMapboxDefaultMarker>
 
       <MapboxGeolocateControl position="bottom-right" />
@@ -131,22 +109,10 @@ function centerMap(city: string) {
   });
 }
 
-async function clearPopups() {
-  await nextTick();
-
-  useMapbox("map", (map) => {
-    map._markers.forEach(({ _popup: popup }: any) => {
-      popup.remove();
-    });
-  });
-}
-
 function closeModal() {
   mostrarFiltros.value = false;
   mostrarInstrucoes.value = false;
 };
-
-watch(abrigosFiltrados, clearPopups);
 
 useHead({
   title: 'Localização dos abrigos',
