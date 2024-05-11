@@ -1,77 +1,87 @@
 <template>
-  <v-container>
-    <v-container>
-      <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
-      <Filtros
-        :abrigos="abrigos"
-        :city="props.filterByCity"
-        v-model="mostrarFiltros"
-        @closeFilters="() => (mostrarFiltros = false)"
-        @filterChange="(a) => (abrigosFiltrados = a)"
-      />
-      <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
-        <Instrucoes />
-      </Modal>
-      <div class="total-vagas w-full max-w-72 text-sm text-lg-sm flex flex-col gap-1">
-        <div class="total-vagas-percentage text-center" :style="{ backgroundColor: dadosGerais.cor }">
-          {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
-        </div>
-        <div class="statistic flex justify-between">
-          <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
-        </div>
-        <div class="statistic flex justify-between">
-          <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
-        </div>
-        <PrimaryButton class="primary-button" rounded="xl" color="primary" :click="() => (mostrarFiltros = true)" text="Encontrar abrigo" />
-        <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
+  <div>
+    <Filtros
+      v-model="mostrarFiltros"
+      :abrigos="abrigos"
+      :city="filterByCity"
+      @closeFilters="() => (mostrarFiltros = false)"
+      @filterChange="(a) => (abrigosFiltrados = a)"
+      @cityChange="centerMap"
+    />
+
+    <MapboxMap
+      map-id="map"
+      :options="{
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: mapCenter,
+        zoom: mapZoom,
+      }"
+    >
+      <LazyMapboxDefaultMarker
+        v-for="abrigo in abrigosFiltrados"
+        :marker-id="`marker-${abrigo.id}`"
+        :key="abrigo.id"
+        :lnglat="[abrigo.longitude, abrigo.latitude]"
+        :options="{
+          color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
+        }"
+      >
+        <LazyMapboxDefaultPopup
+          :popup-id="`popup-${abrigo.id}`"
+          :lnglat="[abrigo.longitude, abrigo.latitude]"
+          :options="{ closeOnClick: true, closeButton: true }"
+        >
+          <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
+
+          <p v-if="abrigo.address">{{ abrigo.address }}</p>
+
+          <p v-if="abrigo.nome_contato || abrigo.telefone">
+            {{ abrigo.nome_contato }}
+            <span v-show="abrigo.telefone">- {{ abrigo.telefone }}</span>
+          </p>
+
+          <v-divider class="my-2" />
+
+          <ContagemVagas :abrigo="abrigo" />
+
+          <Necessidades :abrigo="abrigo" />
+
+          <ComoChegar :abrigo="abrigo" />
+        </LazyMapboxDefaultPopup>
+      </LazyMapboxDefaultMarker>
+
+      <MapboxGeolocateControl position="bottom-right" />
+    </MapboxMap>
+
+    <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
+
+    <div class="total-vagas w-full max-w-72 text-sm text-lg-sm flex flex-col gap-1">
+      <div class="total-vagas-percentage text-center" :style="{ backgroundColor: dadosGerais.cor }">
+        {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
       </div>
-      <v-row class="mt-4">
-        <v-col>
-          <MapboxMap
-            map-id="map"
-            style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
-            :options="{
-              style: 'mapbox://styles/mapbox/streets-v12',
-              center: props.mapCenter,
-              zoom: props.mapZoom,
-            }"
-          >
-            <LazyMapboxDefaultMarker
-              v-for="abrigo of abrigosFiltrados"
-              :marker-id="`marker-${abrigo.id}`"
-              :key="abrigo.id"
-              :lnglat="[abrigo.longitude, abrigo.latitude]"
-              :options="{
-                color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
-              }"
-            >
-              <LazyMapboxDefaultPopup
-                :popup-id="`popup-${abrigo.id}`"
-                :lnglat="[abrigo.longitude, abrigo.latitude]"
-                :options="{ closeOnClick: true, closeButton: true }"
-              >
-                <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
-                <p v-if="abrigo.address">{{ abrigo.address }}</p>
-                <p v-if="abrigo.nome_contato || abrigo.telefone">
-                  {{ abrigo.nome_contato }}
-                  <span v-show="abrigo.telefone">- {{ abrigo.telefone }}</span>
-                </p>
-                <v-divider class="my-2" />
-                <ContagemVagas :abrigo="abrigo" />
-                <Necessidades :abrigo="abrigo" />
-                <ComoChegar :abrigo="abrigo" />
-              </LazyMapboxDefaultPopup>
-            </LazyMapboxDefaultMarker>
-            <MapboxGeolocateControl position="bottom-right" />
-          </MapboxMap>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-container>
+
+      <div class="statistic flex justify-between">
+        <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
+      </div>
+
+      <div class="statistic flex justify-between">
+        <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
+      </div>
+
+      <PrimaryButton class="primary-button" rounded="xl" color="primary" :click="() => (mostrarFiltros = true)" text="Encontrar abrigo" />
+
+      <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
+    </div>
+
+    <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
+      <Instrucoes />
+    </Modal>
+  </div>
 </template>
 
 <script setup lang="ts">
-import calcularCor from "../utils/calcularCor";
+import calcularCor from "~/utils/calcularCor";
+import { defaultCenter } from "~/config";
 
 type Props = {
   mapCenter: number[];
@@ -79,8 +89,8 @@ type Props = {
   filterByCity?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  mapCenter: () => [-50.951117644156055, -30.744639003988283],
+withDefaults(defineProps<Props>(), {
+  mapCenter: () => defaultCenter,
   mapZoom: 7
 });
 
@@ -92,7 +102,6 @@ const { data: abrigos, error } = await useFetch<any>(requestUrl, {});
 
 const abrigosFiltrados = ref(abrigos.value);
 const mostrarFiltros = ref(false);
-
 const mostrarInstrucoes = ref(false);
 
 const dadosGerais = computed(() => {
@@ -109,27 +118,39 @@ const dadosGerais = computed(() => {
   }, dadosDefault);
 });
 
-useHead({ titleTemplate: () => "Localização dos abrigos" });
+function centerMap(city: string) {
+  const [first] = abrigosFiltrados.value;
+  const all = city === 'Todos';
 
-const mapRef = useMapboxRef("map");
-
-watch(
-  [abrigosFiltrados],
-  () => {
-    useMapbox("map", (map: any) => {
-      map._markers.forEach(({ _popup: popup }: any) => {
-        popup.remove();
-      });
+  useMapbox("map", (map) => {
+    map.flyTo({
+      center: all ? defaultCenter : [first.longitude, first.latitude],
+      zoom: all ? 7 : 12,
+      speed: 1,
     });
-  },
-  { deep: true }
-);
+  });
+}
 
-const closeModal = () => {
-  console.log("callued");
+async function clearPopups() {
+  await nextTick();
+
+  useMapbox("map", (map) => {
+    map._markers.forEach(({ _popup: popup }: any) => {
+      popup.remove();
+    });
+  });
+}
+
+function closeModal() {
   mostrarFiltros.value = false;
   mostrarInstrucoes.value = false;
 };
+
+watch(abrigosFiltrados, clearPopups);
+
+useHead({
+  title: 'Localização dos abrigos',
+});
 </script>
 
 <style lang="scss">
