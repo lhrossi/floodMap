@@ -66,7 +66,7 @@ onClickOutside(tooltip, close, {
       <ComoChegar :abrigo="abrigo" />
 
       <button
-        class="w-6 h-6 flex items-center justify-center absolute top-0 right-0 text-base text-neutral-400"
+        class="w-6 h-6 flex items-center justify-center absolute top-0 right-0 rounded-full text-base text-neutral-500 hover:bg-neutral-100"
         @click="close"
       >
         ×
