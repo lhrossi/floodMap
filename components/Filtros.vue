@@ -30,7 +30,7 @@
 <script setup lang="ts">
 const props = defineProps<{ abrigos: any[]; city?: string }>();
 
-const emit = defineEmits(["filterChange", "closeFilters"]);
+const emit = defineEmits(["filterChange", "cityChange", "closeFilters"]);
 
 const cidade = ref(props.city || "Todos");
 
@@ -83,7 +83,12 @@ const filtrarDados = () => {
   emit("filterChange", abrigosFiltrados);
 };
 
+function onCityChange(value: string) {
+  emit("cityChange", value);
+}
+
 watch([cidade, filtrosPreDefinidos], filtrarDados, { deep: true });
+watch(cidade, onCityChange)
 
 filtrarDados();
 </script>
