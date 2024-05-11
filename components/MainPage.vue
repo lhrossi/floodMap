@@ -131,7 +131,9 @@ function centerMap(city: string) {
   });
 }
 
-function clearPopups() {
+async function clearPopups() {
+  await nextTick();
+
   useMapbox("map", (map) => {
     map._markers.forEach(({ _popup: popup }: any) => {
       popup.remove();
