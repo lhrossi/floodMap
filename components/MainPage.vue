@@ -20,7 +20,6 @@ const { data: abrigos, error } = await useFetch<any>(requestUrl, {});
 
 const abrigosFiltrados = ref(abrigos.value);
 const mostrarFiltros = ref(false);
-
 const mostrarInstrucoes = ref(false);
 
 const dadosGerais = computed(() => {
@@ -108,7 +107,7 @@ useHead({
     <Filtros
       v-model="mostrarFiltros"
       :abrigos="abrigos"
-      :city="props.filterByCity"
+      :city="filterByCity"
       @closeFilters="() => (mostrarFiltros = false)"
       @filterChange="(a) => (abrigosFiltrados = a)"
     />
