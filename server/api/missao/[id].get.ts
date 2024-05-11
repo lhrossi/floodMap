@@ -9,8 +9,7 @@ export default defineEventHandler(async (event) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      // Authorization: config.API_TOKEN
-      Authorization: cookies.access_token
+      Authorization: `Bearer ${cookies.access_token}`
     }
   });
 
