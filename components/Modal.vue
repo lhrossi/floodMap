@@ -1,9 +1,16 @@
 <template>
-    <v-container class="about-modal flex flex-col" max-width="500px">
-      <slot></slot>
-      <PrimaryButton color="primary" hoverColor="organge" rounded="xl" size="x-large" text="Voltar"
-        :click="() => props.click()" />
-    </v-container>
+  <v-container class="about-modal flex flex-col" max-width="500px">
+    <slot></slot>
+    
+    <PrimaryButton
+      color="primary"
+      hoverColor="organge"
+      rounded="xl"
+      size="x-large"
+      text="Voltar"
+      :click="() => props.click()"
+    />
+  </v-container>
 </template>
 
 <script setup>
@@ -11,10 +18,10 @@ const props = defineProps({
   click: Function,
 })
 </script>
+
 <style lang="scss">
 .about-modal {
-  box-sizing: border-box;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
   width: 100%;
@@ -63,8 +70,6 @@ const props = defineProps({
     text-align: left;
   }
 }
-
-
 
 @media (min-width: 600px) {
   .about-modal {
