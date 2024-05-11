@@ -26,22 +26,20 @@ const dadosGerais = computed(() => {
   }, dadosDefault);
 });
 
-const closeModal = () => {
+function clearPopups() {
+  useMapbox("map", (map: any) => {
+    map._markers.forEach(({ _popup: popup }: any) => {
+      popup.remove();
+    });
+  });
+}
+
+function closeModal() {
   mostrarFiltros.value = false;
   mostrarInstrucoes.value = false;
 };
 
-watch(
-  [abrigosFiltrados],
-  () => {
-    useMapbox("map", (map: any) => {
-      map._markers.forEach(({ _popup: popup }: any) => {
-        popup.remove();
-      });
-    });
-  },
-  { deep: true }
-);
+watch(abrigosFiltrados, clearPopups);
 
 useHead({
   title: 'Localização dos abrigos',
