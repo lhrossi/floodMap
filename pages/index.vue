@@ -1,74 +1,3 @@
-<template>
-  <v-container>
-    <v-container>
-      <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
-      <Filtros
-        :abrigos="abrigos"
-        v-model="mostrarFiltros"
-        @closeFilters="() => (mostrarFiltros = false)"
-        @filterChange="(a) => (abrigosFiltrados = a)"
-      />
-      <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
-        <Instrucoes />
-      </Modal>
-      <div class="total-vagas w-full max-w-72 text-sm text-lg-sm flex flex-col gap-1">
-        <div class="total-vagas-percentage text-center" :style="{ backgroundColor: dadosGerais.cor }">
-          {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
-        </div>
-        <div class="statistic flex justify-between">
-          <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
-        </div>
-        <div class="statistic flex justify-between">
-          <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
-        </div>
-        <PrimaryButton class="primary-button" rounded="xl" color="primary" :click="() => (mostrarFiltros = true)" text="Encontrar abrigo" />
-        <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
-      </div>
-      <v-row class="mt-4">
-        <v-col>
-          <MapboxMap
-            map-id="map"
-            style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; height: 100%"
-            :options="{
-              style: 'mapbox://styles/mapbox/streets-v12',
-              center: [-50.951117644156055, -30.744639003988283],
-              zoom: 7,
-            }"
-          >
-            <LazyMapboxDefaultMarker
-              v-for="abrigo of abrigosFiltrados"
-              :marker-id="`marker-${abrigo.id}`"
-              :key="abrigo.id"
-              :lnglat="[abrigo.longitude, abrigo.latitude]"
-              :options="{
-                color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
-              }"
-            >
-              <LazyMapboxDefaultPopup
-                :popup-id="`popup-${abrigo.id}`"
-                :lnglat="[abrigo.longitude, abrigo.latitude]"
-                :options="{ closeOnClick: true, closeButton: true }"
-              >
-                <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
-                <p v-if="abrigo.address">{{ abrigo.address }}</p>
-                <p v-if="abrigo.nome_contato || abrigo.telefone">
-                  {{ abrigo.nome_contato }}
-                  <span v-show="abrigo.telefone">- {{ abrigo.telefone }}</span>
-                </p>
-                <v-divider class="my-2" />
-                <ContagemVagas :abrigo="abrigo" />
-                <Necessidades :abrigo="abrigo" />
-                <ComoChegar :abrigo="abrigo" />
-              </LazyMapboxDefaultPopup>
-            </LazyMapboxDefaultMarker>
-            <MapboxGeolocateControl position="bottom-right" />
-          </MapboxMap>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-container>
-</template>
-
 <script setup lang="ts">
 import calcularCor from "../utils/calcularCor";
 
@@ -97,9 +26,10 @@ const dadosGerais = computed(() => {
   }, dadosDefault);
 });
 
-useHead({ titleTemplate: () => "Localização dos abrigos" });
-
-const mapRef = useMapboxRef("map");
+const closeModal = () => {
+  mostrarFiltros.value = false;
+  mostrarInstrucoes.value = false;
+};
 
 watch(
   [abrigosFiltrados],
@@ -113,12 +43,89 @@ watch(
   { deep: true }
 );
 
-const closeModal = () => {
-  console.log("callued");
-  mostrarFiltros.value = false;
-  mostrarInstrucoes.value = false;
-};
+useHead({
+  title: 'Localização dos abrigos',
+});
 </script>
+
+<template>
+  <div>
+    <MapboxMap
+      map-id="map"
+      :options="{
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-50.951117644156055, -30.744639003988283],
+        zoom: 7,
+      }"
+    >
+      <LazyMapboxDefaultMarker
+        v-for="abrigo of abrigosFiltrados"
+        :marker-id="`marker-${abrigo.id}`"
+        :key="abrigo.id"
+        :lnglat="[abrigo.longitude, abrigo.latitude]"
+        :options="{
+          color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
+        }"
+      >
+        <LazyMapboxDefaultPopup
+          :popup-id="`popup-${abrigo.id}`"
+          :lnglat="[abrigo.longitude, abrigo.latitude]"
+          :options="{ closeOnClick: true, closeButton: true }"
+        >
+          <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
+
+          <p v-if="abrigo.address">{{ abrigo.address }}</p>
+
+          <p v-if="abrigo.nome_contato || abrigo.telefone">
+            {{ abrigo.nome_contato }}
+            <span v-show="abrigo.telefone">- {{ abrigo.telefone }}</span>
+          </p>
+
+          <v-divider class="my-2" />
+
+          <ContagemVagas :abrigo="abrigo" />
+
+          <Necessidades :abrigo="abrigo" />
+
+          <ComoChegar :abrigo="abrigo" />
+        </LazyMapboxDefaultPopup>
+      </LazyMapboxDefaultMarker>
+
+      <MapboxGeolocateControl position="bottom-right" />
+    </MapboxMap>
+
+    <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
+
+    <Filtros
+      :abrigos="abrigos"
+      v-model="mostrarFiltros"
+      @closeFilters="() => (mostrarFiltros = false)"
+      @filterChange="(a) => (abrigosFiltrados = a)"
+    />
+
+    <div class="total-vagas w-full max-w-72 text-sm text-lg-sm flex flex-col gap-1">
+      <div class="total-vagas-percentage text-center" :style="{ backgroundColor: dadosGerais.cor }">
+        {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
+      </div>
+
+      <div class="statistic flex justify-between">
+        <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
+      </div>
+
+      <div class="statistic flex justify-between">
+        <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
+      </div>
+
+      <PrimaryButton class="primary-button" rounded="xl" color="primary" :click="() => (mostrarFiltros = true)" text="Encontrar abrigo" />
+
+      <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
+    </div>
+
+    <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
+      <Instrucoes />
+    </Modal>
+  </div>
+</template>
 
 <style lang="scss">
 .mapboxgl-popup-content {
