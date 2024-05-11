@@ -6,8 +6,9 @@
       :city="filterByCity"
       @closeFilters="() => (mostrarFiltros = false)"
       @filterChange="(a) => (abrigosFiltrados = a)"
+      @cityChange="centerMap"
     />
-    
+
     <MapboxMap
       map-id="map"
       :options="{
@@ -79,7 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import calcularCor from "../utils/calcularCor";
+import calcularCor from "~/utils/calcularCor";
+import { defaultCenter } from "~/config";
 
 type Props = {
   mapCenter: number[];
@@ -88,7 +90,7 @@ type Props = {
 }
 
 withDefaults(defineProps<Props>(), {
-  mapCenter: () => [-50.951117644156055, -30.744639003988283],
+  mapCenter: () => defaultCenter,
   mapZoom: 7
 });
 
@@ -116,8 +118,21 @@ const dadosGerais = computed(() => {
   }, dadosDefault);
 });
 
+function centerMap(city: string) {
+  const [first] = abrigosFiltrados.value;
+  const all = city === 'Todos';
+
+  useMapbox("map", (map) => {
+    map.flyTo({
+      center: all ? defaultCenter : [first.longitude, first.latitude],
+      zoom: all ? 7 : 12,
+      speed: 1,
+    });
+  });
+}
+
 function clearPopups() {
-  useMapbox("map", (map: any) => {
+  useMapbox("map", (map) => {
     map._markers.forEach(({ _popup: popup }: any) => {
       popup.remove();
     });
