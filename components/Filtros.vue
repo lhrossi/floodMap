@@ -28,10 +28,11 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ abrigos: any[] }>();
+const props = defineProps<{ abrigos: any[]; city?: string }>();
+
 const emit = defineEmits(["filterChange", "closeFilters"]);
 
-const cidade = ref("Todos");
+const cidade = ref(props.city || "Todos");
 
 const cidades = computed(() => {
   if (!props.abrigos) return [];
@@ -70,7 +71,6 @@ const abrigosPorCidade = computed(() => {
   if (!props.abrigos) return [];
 
   return props.abrigos.filter((abrigo) => cidade.value == "Todos" || abrigo.city == cidade.value) || [];
-
 });
 
 const filtrarDados = () => {
