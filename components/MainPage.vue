@@ -3,7 +3,7 @@
     <Filtros
       v-model="mostrarFiltros"
       :abrigos="abrigos"
-      :city="filterByCity"
+      :initialCity="initialCity"
       @closeFilters="() => (mostrarFiltros = false)"
       @filterChange="(a) => (abrigosFiltrados = a)"
       @cityChange="centerMap"
@@ -17,38 +17,11 @@
         zoom: mapZoom,
       }"
     >
-      <LazyMapboxDefaultMarker
+      <Marker
         v-for="abrigo in abrigosFiltrados"
-        :marker-id="`marker-${abrigo.id}`"
         :key="abrigo.id"
-        :lnglat="[abrigo.longitude, abrigo.latitude]"
-        :options="{
-          color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
-        }"
-      >
-        <LazyMapboxDefaultPopup
-          :popup-id="`popup-${abrigo.id}`"
-          :lnglat="[abrigo.longitude, abrigo.latitude]"
-          :options="{ closeOnClick: true, closeButton: true }"
-        >
-          <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
-
-          <p v-if="abrigo.address">{{ abrigo.address }}</p>
-
-          <p v-if="abrigo.nome_contato || abrigo.telefone">
-            {{ abrigo.nome_contato }}
-            <span v-show="abrigo.telefone">- {{ abrigo.telefone }}</span>
-          </p>
-
-          <v-divider class="my-2" />
-
-          <ContagemVagas :abrigo="abrigo" />
-
-          <Necessidades :abrigo="abrigo" />
-
-          <ComoChegar :abrigo="abrigo" />
-        </LazyMapboxDefaultPopup>
-      </LazyMapboxDefaultMarker>
+        :abrigo="abrigo"
+      />
 
       <MapboxGeolocateControl position="bottom-right" />
     </MapboxMap>
@@ -84,9 +57,9 @@ import calcularCor from "~/utils/calcularCor";
 import { defaultCenter } from "~/config";
 
 type Props = {
-  mapCenter: number[];
-  mapZoom: number;
-  filterByCity?: string;
+  mapCenter?: number[];
+  mapZoom?: number;
+  initialCity?: string;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -132,12 +105,8 @@ function centerMap(city: string) {
 }
 
 async function clearPopups() {
-  await nextTick();
-
-  useMapbox("map", (map) => {
-    map._markers.forEach(({ _popup: popup }: any) => {
-      popup.remove();
-    });
+  abrigosFiltrados.value.forEach((abrigo: any) => {
+    abrigo.showPopup = false;
   });
 }
 
@@ -154,6 +123,10 @@ useHead({
 </script>
 
 <style lang="scss">
+.mapboxgl-marker {
+  cursor: pointer;
+}
+
 .mapboxgl-popup-content {
   min-width: 250px;
 }

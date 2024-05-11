@@ -28,11 +28,11 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ abrigos: any[]; city?: string }>();
+const props = defineProps<{ abrigos: any[]; initialCity?: string }>();
 
 const emit = defineEmits(["filterChange", "cityChange", "closeFilters"]);
 
-const cidade = ref(props.city || "Todos");
+const cidade = ref(props.initialCity || "Todos");
 
 const cidades = computed(() => {
   if (!props.abrigos) return [];
@@ -88,7 +88,8 @@ function onCityChange(value: string) {
 }
 
 watch([cidade, filtrosPreDefinidos], filtrarDados, { deep: true });
-watch(cidade, onCityChange)
+
+watch(cidade, onCityChange);
 
 filtrarDados();
 </script>
