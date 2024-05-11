@@ -62,12 +62,12 @@ useHead({
       map-id="map"
       :options="{
         style: 'mapbox://styles/mapbox/streets-v12',
-        center: props.mapCenter,
-        zoom: props.mapZoom,
+        center: mapCenter,
+        zoom: mapZoom,
       }"
     >
       <LazyMapboxDefaultMarker
-        v-for="abrigo of abrigosFiltrados"
+        v-for="abrigo in abrigosFiltrados"
         :marker-id="`marker-${abrigo.id}`"
         :key="abrigo.id"
         :lnglat="[abrigo.longitude, abrigo.latitude]"
