@@ -7,7 +7,6 @@ export default defineEventHandler(async (event) => {
     body,
     headers: {
       'Content-Type': 'application/json',
-      // Authorization: config.API_TOKEN
     }
   })
 

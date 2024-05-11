@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     body,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: cookies.access_token
+      Authorization: `Bearer ${cookies.access_token}`
     }
   })
 
