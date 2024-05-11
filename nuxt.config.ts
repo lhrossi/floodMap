@@ -12,7 +12,7 @@ const normalTheme: ThemeDefinition = {
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
   runtimeConfig: {
     API_TOKEN: process.env.NUXT_PUBLIC_API_TOKEN,
