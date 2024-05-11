@@ -4,6 +4,7 @@
       <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
       <Filtros
         :abrigos="abrigos"
+        :city="props.filterByCity"
         v-model="mostrarFiltros"
         @closeFilters="() => (mostrarFiltros = false)"
         @filterChange="(a) => (abrigosFiltrados = a)"
@@ -75,6 +76,7 @@ import calcularCor from "../utils/calcularCor";
 type Props = {
   mapCenter: number[];
   mapZoom: number;
+  filterByCity?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
