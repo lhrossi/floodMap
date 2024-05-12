@@ -1,4 +1,6 @@
 import { ThemeDefinition } from 'vuetify';
+import Resolver from 'unplugin-icons/resolver';
+import Components from 'unplugin-vue-components/vite';
 
 const normalTheme: ThemeDefinition = {
   dark: false,
@@ -28,6 +30,7 @@ export default defineNuxtConfig({
     'dayjs-nuxt', // https://github.com/fumeapp/dayjs
     '@vueuse/nuxt', // https://vueuse.org/guide/
     'nuxt-mapbox', // https://alexlavoie42.github.io/Nuxt-Mapbox/
+    'unplugin-icons/nuxt',
   ],
 
   app: {
@@ -71,5 +74,19 @@ export default defineNuxtConfig({
     moduleOptions: {
       useVuetifyLabs: true,
     }
+  },
+
+  vite: {
+    plugins: [
+      Components({
+        dts: '.nuxt/icons.d.ts',
+        resolvers: [
+          Resolver({
+            prefix: false,
+            enabledCollections: ['ion'],
+          }),
+        ],
+      }),
+    ]
   }
 })
