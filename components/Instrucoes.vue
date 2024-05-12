@@ -72,7 +72,7 @@
 <script setup>
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 h3 {
   font-size: 1.5rem;
   font-weight: 600;

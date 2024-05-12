@@ -1,5 +1,5 @@
 <template>
-  <v-divider class="my-2" />
+  <v-divider class="my-4" />
   <a
     class="d-flex justify-center gap-2 py-3 px-3 bg-sky-600 rounded-lg text-white items-center text-center font-bold"
     :href="`https://www.google.com/maps/dir//${abrigo.latitude},${abrigo.longitude}`"

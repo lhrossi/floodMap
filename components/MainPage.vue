@@ -138,7 +138,9 @@ useHead({
 }
 
 .mapboxgl-popup-content {
-  min-width: 250px;
+  min-width: 280px;
+  border-radius: 5px;
+  padding: 14px 16px;
 }
 
 .privacy-policy-button {
