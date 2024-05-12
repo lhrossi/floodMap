@@ -46,8 +46,16 @@
       <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
     </div>
 
+    <div class="privacy-policy-button">
+      <h2 @click="() => (mostrarPrivacyPolicy = true)">Política de privacidade</h2>
+    </div>
+
     <Modal v-if="mostrarInstrucoes" :click="() => closeModal()">
       <Instrucoes />
+    </Modal>
+
+    <Modal v-if="mostrarPrivacyPolicy" :click="() => closeModal()">
+      <PrivacyPolicy />
     </Modal>
   </div>
 </template>
@@ -76,6 +84,7 @@ const { data: abrigos, error } = await useFetch<any>(requestUrl, {});
 const abrigosFiltrados = ref(abrigos.value);
 const mostrarFiltros = ref(false);
 const mostrarInstrucoes = ref(false);
+const mostrarPrivacyPolicy = ref(false);
 
 const dadosGerais = computed(() => {
   const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#007972" };
@@ -113,6 +122,7 @@ async function clearPopups() {
 function closeModal() {
   mostrarFiltros.value = false;
   mostrarInstrucoes.value = false;
+  mostrarPrivacyPolicy.value = false;
 };
 
 watch(abrigosFiltrados, clearPopups);
@@ -129,6 +139,33 @@ useHead({
 
 .mapboxgl-popup-content {
   min-width: 250px;
+}
+
+.privacy-policy-button {
+  cursor: pointer;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  bottom: 0;
+  left: 120px;
+  border-radius: 8px 8px 0 0;
+
+  h2 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 768px) {
+  .privacy-policy-button {
+    left: 50%;
+    transform: translateX(-50%);
+
+    h2 {
+      font-size: 14px;
+      margin-bottom: -2px;
+    }
+  }   
 }
 
 .mapboxgl-popup-close-button {
