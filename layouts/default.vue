@@ -1,50 +1,71 @@
 <template>
   <v-layout>
-    <v-app-bar flat class="border-b">
-      <v-toolbar-title class="mr-4">
+    <v-app-bar class="border-b">
+      <v-toolbar-title>
         <div class="flex">
-          <div class="flex items-end">
-            <div class="mr-2">
-              <v-icon size="large">mdi-home-map-marker</v-icon>
-            </div>
-            Localização dos abrigos
-          </div>
-          <div class="flex flex-auto"></div>
-          <div class="flex">
-            <v-btn
-              color="primary"
-              text
-              href="https://abrigospoa.web.app/home"
-              target="_blank"
-              >Abrigos PoA</v-btn
-            >
+          <AbrigaRsLogo />
+          <div class="flex align-center">
+            <v-btn color="dark" text :class="{ active: currentButton === 'mapa', 'menu-item': true }" @click="() => selectButton('mapa')">
+              <span>Mapa</span>
+              <div class="underline"></div>
+            </v-btn>
+            <v-btn color="dark" text :class="{ active: currentButton === 'sobre', 'menu-item': true }" @click="() => selectButton('sobre')"
+              >Sobre
+              <div class="underline"></div>
+            </v-btn>
+            <v-btn color="dark" text href="https://abrigospoa.web.app/login" target="_blank">Login</v-btn>
           </div>
         </div>
       </v-toolbar-title>
     </v-app-bar>
-
     <v-main>
+      <Modal v-if="currentButton === 'sobre'" :click="() => selectButton('mapa')">
+        <AboutModal />
+      </Modal>
       <slot></slot>
     </v-main>
   </v-layout>
-  <!-- <v-footer app name="nav" class="pa-0">
-    <v-bottom-navigation
-      class="w-100"
-      :elevation="3"
-      mandatory
-      grow
-    >
-      <v-btn value="deliveries" rounded="lg" to="/">
-        <v-icon size="large">mdi-home-map-marker</v-icon>
-        <span>Albergues</span>
-      </v-btn>
-
-      <v-btn value="favorites" rounded="lg" to="/resgates">
-        <v-icon size="large">mdi-map-marker-multiple</v-icon>
-        <span>Resgates</span>
-      </v-btn>
-    </v-bottom-navigation>
-  </v-footer> -->
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+const currentButton = ref("mapa");
+const selectButton = (button) => {
+  currentButton.value = button;
+};
+</script>
+
+<style lang="scss">
+.menu-item {
+  .underline {
+    display: none;
+  }
+}
+
+.v-toolbar {
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.v-btn__content {
+  position: relative;
+  display: flex;
+}
+
+.active {
+  color: #1351b4 !important;
+
+  .underline {
+    height: 3px;
+    position: absolute;
+    display: block;
+    border-radius: 100px;
+    background-color: #4e9fff;
+    bottom: -6px;
+    width: 100%;
+    max-width: 100%;
+    opacity: 0.25;
+  }
+}
+</style>

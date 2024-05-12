@@ -3,15 +3,16 @@ import { ThemeDefinition } from 'vuetify';
 const normalTheme: ThemeDefinition = {
   dark: false,
   colors: {
-    primary: '#074b66',
+    primary: '#1351B4',
     secondary: '#d92344',
     background: '#f5f4f4',
+    dark: '#020202',
   },
 }
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
   runtimeConfig: {
     API_TOKEN: process.env.NUXT_PUBLIC_API_TOKEN,
