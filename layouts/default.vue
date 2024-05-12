@@ -1,35 +1,37 @@
 <template>
-  <v-layout>
-    <v-app-bar flat class="border-b" title="Localização das tropas">
+  <v-app>
+
+    <v-app-bar flat title="Localização das tropas" color="white">
+
       <template v-slot:prepend>
         <v-icon size="40">mdi-home-map-marker</v-icon>
       </template>
+        
+        <v-btn icon @click="logout" color="primary">
+          <v-icon>mdi-logout</v-icon>
+          <!-- <v-tooltip location="bottom" activator="parent">Logout</v-tooltip> -->
+        </v-btn>
+
     </v-app-bar>
 
     <v-main>
       <slot></slot>
-    </v-main>
-  </v-layout>
-  <!-- <v-footer app name="nav" class="pa-0">
-    <v-bottom-navigation
-      class="w-100"
-      :elevation="3"
-      mandatory
-      grow
-    >
-      <v-btn value="deliveries" rounded="lg" to="/">
-        <v-icon size="large">mdi-home-map-marker</v-icon>
-        <span>Albergues</span>
-      </v-btn>
 
-      <v-btn value="favorites" rounded="lg" to="/resgates">
-        <v-icon size="large">mdi-map-marker-multiple</v-icon>
-        <span>Resgates</span>
-      </v-btn>
-    </v-bottom-navigation>
-  </v-footer> -->
+    </v-main>
+  </v-app>
+
 </template>
 
-<script setup></script>
+<script setup>
+const auth = useUserAuth();
+
+const logout = () => {
+  auth.logout();
+  navigateTo({ path: "/login" });
+};
+
+// const isLoggedIn = computed(() => auth.isLoggedIn());
+
+</script>
 
 <style lang="scss"></style>

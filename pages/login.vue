@@ -71,6 +71,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'fullscreen'
+})
+
 const config = useRuntimeConfig()
 
 // const { name } = useDisplay()
@@ -101,6 +105,8 @@ let regras = {
 
 onMounted(() => {
   form.value.reset();
+  usuario.email = "army.teste@gmail.com"
+  usuario.password = "army.teste@gmail.com"
 });
 
 const login = async () => {
