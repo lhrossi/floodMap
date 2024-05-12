@@ -1,6 +1,6 @@
 <template>
   <LazyMapboxDefaultPopup
-    :popup-id="`popup-${abrigo.id}`"
+    :popup-id="`popup-${abrigo.id}-${Math.random()}`"
     :lnglat="[abrigo.longitude, abrigo.latitude]"
     :options="{ closeOnClick: true, closeButton: true }"
   >
