@@ -30,7 +30,7 @@ const props = defineProps({
   padding: 32px 25px;
   border-radius: 16px 16px 0px 0px;
   gap: 20px;
-  max-height: 90vh;
+  max-height: 90svh;
 
   .text {
     max-height: 90%;
