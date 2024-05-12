@@ -147,8 +147,10 @@ useHead({
   background: rgba(255, 255, 255, 0.5);
   position: absolute;
   bottom: 0;
-  left: 120px;
   border-radius: 8px 8px 0 0;
+  left: 50%;
+  transform: translateX(-50%);
+
 
   h2 {
     font-size: 14px;
@@ -158,9 +160,6 @@ useHead({
 
 @media (max-width: 768px) {
   .privacy-policy-button {
-    left: 50%;
-    transform: translateX(-50%);
-
     h2 {
       font-size: 14px;
       margin-bottom: -2px;
