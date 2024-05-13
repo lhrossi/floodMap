@@ -3,7 +3,7 @@
     <Filtros
       v-model="mostrarFiltros"
       :abrigos="abrigos"
-      :initialCity="initialCity"
+      :initialCity="currentCity"
       @closeFilters="() => (mostrarFiltros = false)"
       @filterChange="(a) => (abrigosFiltrados = a)"
     />
