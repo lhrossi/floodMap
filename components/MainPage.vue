@@ -16,11 +16,19 @@
         zoom: mapZoom,
       }"
     >
-      <Marker
+      <CustomMarker
         v-for="abrigo in abrigosFiltrados"
         :key="abrigo.id"
         :abrigo="abrigo"
+        :marker-id="`marker-${abrigo.id}`"
+        @on-click="selectedShelter = abrigo; showShelterModal = true"
       />
+
+      <!-- <ShelterModal
+        v-if="showShelterModal"
+        :shelter="selectedShelter"
+        @close="showShelterModal = false; selectedShelter = null"
+      /> -->
 
       <MapboxGeolocateControl position="bottom-right" />
     </MapboxMap>
@@ -109,6 +117,9 @@ const cities = computed(() => {
       })
   );
 });
+
+const showShelterModal = ref(false);
+const selectedShelter = ref(null);
 
 const dadosGerais = computed(() => {
   const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#02952B" };
