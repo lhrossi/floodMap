@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import calcularCor from "~/utils/calcularCor";
 import { defaultCenter } from "~/config";
+import citiesCoordinates from "~/config/citiesCoordinates";
 
 type Props = {
   mapCenter?: number[];
@@ -100,14 +101,48 @@ const dadosGerais = computed(() => {
   }, dadosDefault);
 });
 
+function getCityCoordinatesAndZoom(city: string) {
+  const defaultData = {
+    lat: defaultCenter[1],
+    lng: defaultCenter[0],
+    zoom: 7,
+  };
+
+  if (city === "Todos") {
+    return defaultData;
+  }
+
+  const citySlug = city.replaceAll(/[^A-z]/g, '').toLowerCase();
+  const cityData = citiesCoordinates[citySlug];
+
+  if (cityData) {
+    return {
+      lat: cityData.lat,
+      lng: cityData.lng,
+      zoom: cityData.initialZoom,
+    };
+  }
+
+  if (abrigosFiltrados.value?.length) {
+    const [first] = abrigosFiltrados.value;
+  
+    return {
+      lat: first.latitude,
+      lng: first.longitude,
+      zoom: 12,
+    };
+  }
+
+  return defaultData;
+}
+
 function centerMap(city: string) {
-  const [first] = abrigosFiltrados.value;
-  const all = city === 'Todos';
+  const flyData = getCityCoordinatesAndZoom(city);
 
   useMapbox("map", (map) => {
     map.flyTo({
-      center: all ? defaultCenter : [first.longitude, first.latitude],
-      zoom: all ? 7 : 12,
+      center: [flyData.lng, flyData.lat],
+      zoom: flyData.zoom,
       speed: 1,
     });
   });
