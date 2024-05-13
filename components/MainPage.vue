@@ -28,23 +28,15 @@
 
     <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
 
-    <div class="total-vagas w-full max-w-72 text-sm text-lg-sm flex flex-col gap-1">
-      <div class="total-vagas-percentage text-center" :style="{ backgroundColor: dadosGerais.cor }">
-        {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
-      </div>
+    <FloatingBar
+      :data="dadosGerais"
+      :city="currentCity"
+      :cities="cities"
+      @show-filters="() => (mostrarFiltros = true)"
+      @update-city="filterByCity"
+    />
 
-      <div class="statistic flex justify-between">
-        <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
-      </div>
-
-      <div class="statistic flex justify-between">
-        <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
-      </div>
-
-      <PrimaryButton class="primary-button" rounded="xl" color="primary" :click="() => (mostrarFiltros = true)" text="Encontrar abrigo" />
-
-      <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
-    </div>
+    <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
 
     <div class="privacy-policy-button">
       <h2 @click="() => (mostrarPrivacyPolicy = true)">Política de privacidade</h2>
@@ -70,7 +62,7 @@ type Props = {
   initialCity?: string;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   mapCenter: () => defaultCenter,
   mapZoom: 7
 });
@@ -79,19 +71,31 @@ const token = useRoute().query.token as string;
 
 const requestUrl = token ? `/api/abrigos?token=${new URLSearchParams(token).toString()}` : "/api/abrigos";
 
-const { data: abrigos, error } = await useFetch<any>(requestUrl, {});
+const { data: abrigos, error } = await useFetch<any[]>(requestUrl, {});
 
 const abrigosFiltrados = ref(abrigos.value);
 const mostrarFiltros = ref(false);
 const mostrarInstrucoes = ref(false);
 const mostrarPrivacyPolicy = ref(false);
+const currentCity = ref(props.initialCity || 'Todos');
+
+const cities = computed(() => {
+  if (!abrigos.value) return [];
+
+  return ["Todos"].concat(
+    abrigos.value
+      .map((item) => item.city)
+      .filter((city, index, self) => self.indexOf(city) === index)
+      .filter((city) => city && city != "")
+  );
+});
 
 const dadosGerais = computed(() => {
   const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#007972" };
 
   if (!abrigos.value) return dadosDefault;
 
-  return abrigosFiltrados.value.reduce((acc, item) => {
+  return abrigosFiltrados.value?.reduce((acc, item) => {
     acc.totalVagas += parseInt(item.vagas ?? "0");
     acc.totalVagasOcupadas += parseInt(item.vagas_ocupadas ?? "0");
     acc.percentualOcupacao = (acc.totalVagasOcupadas * 100) / acc.totalVagas;
@@ -100,7 +104,14 @@ const dadosGerais = computed(() => {
   }, dadosDefault);
 });
 
+function filterByCity(city: string) {
+  abrigosFiltrados.value = abrigos.value?.filter((abrigo) => city == "Todos" || abrigo.city == city) || [];
+  currentCity.value = city;
+}
+
 function centerMap(city: string) {
+  if (!abrigosFiltrados.value) return;
+
   const [first] = abrigosFiltrados.value;
   const all = city === 'Todos';
 
@@ -113,8 +124,8 @@ function centerMap(city: string) {
   });
 }
 
-async function clearPopups() {
-  abrigosFiltrados.value.forEach((abrigo: any) => {
+function clearPopups() {
+  abrigosFiltrados.value?.forEach((abrigo: any) => {
     abrigo.showPopup = false;
   });
 }
@@ -180,40 +191,6 @@ useHead({
 
   &:focus {
     outline: none;
-  }
-}
-
-.total-vagas {
-  position: fixed;
-  z-index: 3;
-  bottom: 1%;
-  left: 50%;
-  transform: translate(-50%, -10%);
-  background: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #ddd;
-
-  &-percentage {
-    padding: 4px 8px 4px 8px;
-    border-radius: 50px;
-    width: fit-content;
-    color: white;
-    font-weight: 500;
-  }
-
-  .statistic {
-    font-weight: 400;
-    line-height: 1.5rem;
-    letter-spacing: 0.005em;
-    text-align: left;
-  }
-
-  .instructions b {
-    line-height: 1.5rem;
-    letter-spacing: 0.005em;
-    text-align: left;
-    cursor: pointer;
   }
 }
 
