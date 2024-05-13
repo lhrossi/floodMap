@@ -92,8 +92,8 @@ const dadosGerais = computed(() => {
   if (!abrigos.value) return dadosDefault;
 
   return abrigosFiltrados.value.reduce((acc, item) => {
-    acc.totalVagas += parseInt(item.vagas ?? "0");
-    acc.totalVagasOcupadas += parseInt(item.vagas_ocupadas ?? "0");
+    acc.totalVagas += parseInt((item.vagas || 0) ?? "0");
+    acc.totalVagasOcupadas += parseInt((item.vagas_ocupadas || 0) ?? "0");
     acc.percentualOcupacao = (acc.totalVagasOcupadas * 100) / acc.totalVagas;
     acc.cor = calcularCor(acc.totalVagas, acc.totalVagasOcupadas);
     return acc;
