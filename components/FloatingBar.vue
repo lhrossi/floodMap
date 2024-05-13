@@ -47,6 +47,7 @@ function showFilters() {
     bottom-0
     left-0
     bg-white
+    z-10
     md:w-[600px]
     md:bottom-9
     md:left-1/2
