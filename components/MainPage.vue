@@ -24,11 +24,11 @@
         @on-click="selectedShelter = abrigo; showShelterModal = true"
       />
 
-      <!-- <ShelterModal
+      <ShelterModal
         v-if="showShelterModal"
-        :shelter="selectedShelter"
+        :abrigo="selectedShelter"
         @close="showShelterModal = false; selectedShelter = null"
-      /> -->
+      />
 
       <MapboxGeolocateControl position="bottom-right" />
     </MapboxMap>
