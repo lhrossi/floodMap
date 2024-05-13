@@ -9,7 +9,7 @@
       </p>
       <p v-else>
         Para doações para esse abrigo, por favor, verifique as
-        <a href="http://bit.ly/4ae0oCi%E2%80%9D" target="_blank">informações nesse link.</a>
+        <a href="https://sos-rs.com/" target="_blank">informações nesse link.</a>
       </p>
     </div>
     <ul v-else class="necessidades-list overflow-auto max-h-40" tabindex="1">
