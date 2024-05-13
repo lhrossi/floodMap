@@ -1,35 +1,37 @@
 <template>
   <LazyMapboxDefaultPopup
-    :popup-id="`popup-${abrigo.id}-${Math.random()}`"
-    :lnglat="[abrigo.longitude, abrigo.latitude]"
+    :popup-id="`popup-${shelter.id}-${Math.random()}`"
+    :lnglat="[shelter.longitude, shelter.latitude]"
     :options="{ closeOnClick: true, closeButton: true }"
   >
-    <h3 v-if="abrigo.nome">{{ abrigo.nome }}</h3>
+    <h3 v-if="shelter.nome">{{ shelter.nome }}</h3>
 
-    <p v-if="abrigo.address">{{ abrigo.address }}</p>
+    <p v-if="shelter.address">{{ shelter.address }}</p>
 
-    <p v-if="abrigo.nome_contato || abrigo.telefone" :style="!abrigo.vagas ? 'margin-bottom: 8px' : ''">
-      {{ abrigo.nome_contato }}
-      <span v-show="abrigo.telefone">
+    <p v-if="shelter.nome_contato || shelter.telefone" :style="!shelter.vagas ? 'margin-bottom: 8px' : ''">
+      {{ shelter.nome_contato }}
+      <span v-show="shelter.telefone">
         -
-        <a :href="`tel:+55${SanitizedPhone}`">{{ abrigo.telefone }}</a>
+        <a :href="`tel:+55${SanitizedPhone}`">{{ shelter.telefone }}</a>
       </span>
     </p>
 
-    <ContagemVagas :abrigo="abrigo" />
+    <ContagemVagas :abrigo="shelter" />
 
-    <Necessidades :abrigo="abrigo" />
+    <Necessidades :abrigo="shelter" />
 
-    <ComoChegar :abrigo="abrigo" />
+    <ComoChegar :abrigo="shelter" />
   </LazyMapboxDefaultPopup>
 </template>
 
 <script setup lang="ts">
-const { abrigo } = defineProps<{ abrigo: any }>();
+import type { Shelter } from '~/models/Shelter';
+
+const { shelter } = defineProps<{ shelter: Shelter }>();
 
 const SanitizedPhone = computed(() => {
-  if (abrigo && abrigo.telefone) {
-    return String(abrigo.telefone).replace(/\D/g, '');
+  if (shelter && shelter.telefone) {
+    return String(shelter.telefone).replace(/\D/g, '');
   }
   return null;
 });
