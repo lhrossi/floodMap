@@ -1,34 +1,40 @@
 <template>
-  <div class="bg-white p-4 shadow rounded-lg w-[375px] h-[650px] absolute bottom-[40px] left-[24px] z-50">
+  <div class="
+    mobile:left-0 mobile:w-full mobile:bottom-0 mobile:transform mobile:animate-appear-from-bottom
+    laptop:left-[24px] laptop:bottom-[40px] laptop:w-[375px]
+    bg-white p-4 shadow-lg rounded-lg absolute bottom-[40px] pb-[40px] z-50"
+  >
     <!-- Header -->
     <div class="flex align-center justify-between">
       <div class="bg-[#F1F1F1] px-3 py-2 align-center justify-center rounded-xl flex">
         <Icon icon="flowbite:refresh-outline" height="12px" color="#3E3E3E"/>
-        <p class="text-[#3E3E3E] text-sm ml-2">Atualizado 10:48</p>
+        <p class="text-[#3E3E3E] text-sm ml-2">{{ `Atualizado ${formattedLastUpdated}` }}</p>
       </div>
 
       <!-- CloseButton -->
-      <div class="flex w-[24px] h-[24px] rounded-full align-center justify-center cursor-pointer bg-[#E0E0E0]">
+      <button @click="handleClose" class="flex w-[24px] h-[24px] rounded-full align-center justify-center cursor-pointer bg-[#E0E0E0] hover:opacity-90">
         <Icon icon="material-symbols:close" height="16px" color="#3E3E3E"/>
-      </div>
+      </button>
     </div>
 
     <!-- Content Table -->
     <div class="mt-4">
-      <h2 class="text-xl font-bold">Igreja Lagoinha Pelotas</h2>
+      <h2 class="text-xl font-bold">{{ abrigo?.nome }}</h2>
 
       <div class="mt-4">
-        <div class="flex align-center mb-[16px]">
+        <div v-if="!!abrigo?.address" class="flex align-center mb-[16px]">
           <Icon icon="majesticons:map-marker" color="#3E3E3E" class="min-w-[24px]"/>
-          <p class="ml-[6px] text-[#3E3E3E]">Rua Professor Doutor Araújo, 711 - Centro, Pelotas - RS, CEP: 96020-360</p>
+          <p class="ml-[6px] text-[#3E3E3E]">{{abrigo?.address }}</p>
         </div>
 
-        <div class="flex align-start mb-[16px]">
+        <div v-if="hasPhoneNumber" class="flex align-start mb-[16px]">
           <Icon icon="carbon:phone-filled" class="min-w-[24px]" color="#3E3E3E"/>
-          <p class="ml-[6px] text-[#3E3E3E]">(53) 98135-0728 88 / Nome</p>
+          <p class="ml-[6px] text-[#3E3E3E]">
+            {{ `${abrigo?.telefone} ${abrigo?.nome_contato ? `/ ${abrigo?.nome_contato}` : ''}` }}
+          </p>
         </div>
 
-        <div class="flex align-start">
+        <div v-if="!!abrigo?.vagas_pet" class="flex align-start">
           <Icon icon="material-symbols:pets" class="min-w-[24px]" color="#3E3E3E"/>
           <p class="ml-[6px] text-[#3E3E3E]">Aceita animais</p>
         </div>
@@ -42,46 +48,124 @@
         <p class="ml-2 text-[#3E3E3E] font-semibold">Pessoas</p>
       </div>
 
-      <div class="flex flex-1 bg-[#E3FBEA] align-center justify-center">
-        <p class="text-[#02952B] font-semibold text-sm">20% ocupado</p>
-        <div class="w-1 h-1 rounded-full bg-[#02952B] mx-2"/>
-        <p class="text-[#02952B] font-semibold text-sm">78 Vagas Livres</p>
-        <p class="text-[#3E3E3E] font-semibold text-sm ml-1">de 1234</p>
+      <div :class="`flex flex-1 align-center justify-center ${occupationColor.background}`" >
+        <p :class="`text-[#02952B] font-semibold text-sm ${occupationColor.text}`">
+          {{ `${occupationPercentage.replace('.', ',')}% ocupado`  }}
+        </p>
+        <div :class="`w-1 h-1 rounded-full mx-2 ${occupationColor.bullet}`"/>
+        <p :class="`font-semibold text-sm ${occupationColor.text}`">{{ `${availableSlots} Vagas Livres` }}</p>
+        <p class="text-[#3E3E3E] font-semibold text-sm ml-1">{{ `de ${abrigo?.vagas || 0}` }}</p>
       </div>
     </div>
 
-    <h3 class="mt-4 text-lg text-[#020202] font-bold">Necessidades</h3>
+    <!-- <h3 class="mt-4 text-lg text-[#020202] font-bold">Necessidades</h3> -->
 
     <!-- TODO: Accordion -->
-    <div class="w-full bg-red-500 h-[100px]"></div>
+    <!-- <div class="w-full bg-red-500 h-[100px]"></div> -->
 
     <!-- Footer -->
     <div class="mt-5 border-t border-[#F1F1F1] pt-4">
-      <button class="flex w-full h-[40px] rounded-xl bg-[#02952B] relative align-center justify-center hover:opacity-90">
+      <button @click="handleLinkToWhatsapp" v-if="hasPhoneNumber" class="flex w-full h-[40px] rounded-xl bg-[#02952B] relative align-center justify-center hover:opacity-90">
         <Icon icon="mingcute:whatsapp-fill" height="20px" class="absolute left-4" color="#FFF"/>
         <p class="font-semibold text-white">Whatsapp</p>
       </button>
 
-      <div class="flex mt-4 gap-3">
-        <button class="relative flex-1 bg-[#E3EDFD] rounded-xl h-[40px] align-center justify-center">
+      <div :class="`flex gap-3 ${hasPhoneNumber ? 'mt-4' : ''}`">
+        <button @click="handleLinkToMaps" class="relative flex-1 bg-[#E3EDFD] rounded-xl h-[40px] align-center justify-center hover:opacity-90">
           <Icon icon="tabler:location-filled" height="20px" class="absolute left-4 top-[calc(50%-10px)]" color="#114DE6"/>
           <p class="font-semibold text-[#114DE6]">Direções</p>
         </button>
-        <button class="relative flex-1 bg-[#E3EDFD] rounded-xl h-[40px] align-center justify-center">
+
+        <button @click="handleCallToPhone" v-if="hasPhoneNumber" class="relative flex-1 bg-[#E3EDFD] rounded-xl h-[40px] align-center justify-center hover:opacity-90">
           <Icon icon="carbon:phone-filled" height="20px" class="absolute left-4 top-[calc(50%-10px)]" color="#114DE6"/>
           <p class="font-semibold text-[#114DE6]">Ligar</p>
         </button>
       </div>
     </div>
   </div>
+
+  <div v-if="isMobile" @click="handleClose" class="fixed top-0 left-0 right-0 bottom-0 bg-black/50" />
 </template>
 
 <script setup lang="ts">
   import { Icon } from '@iconify/vue';
   import type { Abrigo } from '~/models/Abrigo';
+  import { useDayjs } from '#imports';
+
+  const dayjs = useDayjs()
 
   const { abrigo } = defineProps<{ abrigo: Abrigo | null }>();
 
+  const emit = defineEmits(['onClose'])
+
+  const hasPhoneNumber = computed(() => !!abrigo?.telefone)
+  const formattedLastUpdated = computed(() => {
+    return dayjs(abrigo?.update_in.seconds).utc().format('HH:mm')
+  })
+
+  const userAgent = navigator.userAgent;
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+
+  const sanitizedPhone = String(abrigo?.telefone)?.replace(/\D/g, '');
+  const occupationPercentage = computed(() => {
+    if (abrigo?.vagas === '0' || abrigo?.vagas === null || abrigo?.vagas === 0) return '100'
+
+    const totalSlots = Number(abrigo?.vagas || '0')
+    const occupiedSlots = parseInt(abrigo?.vagas_ocupadas || '0')
+    const percentage = (occupiedSlots / totalSlots) * 100
+    return percentage > 0 ? percentage.toFixed(0) : '0'
+  })
+
+  const availableSlots = computed(() => {
+    const totalSlots = Number(abrigo?.vagas || '0')
+    const occupiedSlots = parseInt(abrigo?.vagas_ocupadas || '0')
+    return totalSlots - occupiedSlots
+  })
+
+  const occupationColor = computed(() => {
+    const percentage = parseFloat(occupationPercentage.value)
+
+    if (percentage < 50) {
+      return {
+      background: 'bg-[#E3FBEA]',
+      bullet: 'bg-[#02952B]',
+      text: 'text-[#02952B]'
+      }
+    }
+
+    if (percentage < 75) {
+      return {
+        background: 'bg-[#FFF5EC]',
+        bullet: 'bg-[#E37000]',
+        text: 'text-[#E37000]'
+      }
+    }
+
+    return {
+      background: 'bg-[#FDDDE0]',
+      bullet: 'bg-[#E61226]',
+      text: 'text-[#E61226]'
+    }
+  })
+
+  const handleLinkToWhatsapp = () => {
+    if (!abrigo?.telefone) return
+    window.open(`https://api.whatsapp.com/send?phone=${sanitizedPhone}`)
+  }
+
+  const handleCallToPhone = () => {
+    if (!abrigo?.telefone) return
+    window.open(`tel:${sanitizedPhone}`)
+  }
+
+  const handleLinkToMaps = () => {
+    if (!abrigo?.latitude || !abrigo?.longitude) return
+    window.open(`https://www.google.com/maps/search/?api=1&query=${abrigo?.latitude},${abrigo?.longitude}`)
+  }
+
+  const handleClose = () => {
+    emit('onClose')
+  }
 </script>
 
 <style>

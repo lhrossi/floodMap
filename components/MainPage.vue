@@ -21,13 +21,13 @@
         :key="abrigo.id"
         :abrigo="abrigo"
         :marker-id="`marker-${abrigo.id}`"
-        @on-click="selectedShelter = abrigo; showShelterModal = true"
+        @on-click="() => handleMarkerClick(abrigo)"
       />
 
       <ShelterModal
-        v-if="showShelterModal"
+        v-if="!!selectedShelter"
         :abrigo="selectedShelter"
-        @close="showShelterModal = false; selectedShelter = null"
+        @on-close="handleCloseShelterModal"
       />
 
       <MapboxGeolocateControl position="bottom-right" />
@@ -74,6 +74,7 @@
 import calcularCor from "~/utils/calcularCor";
 import { defaultCenter } from "~/config";
 import citiesCoordinates from "~/config/citiesCoordinates";
+import type { Abrigo } from "~/models/Abrigo";
 
 type Props = {
   mapCenter?: number[];
@@ -118,8 +119,15 @@ const cities = computed(() => {
   );
 });
 
-const showShelterModal = ref(false);
-const selectedShelter = ref(null);
+const selectedShelter = ref<Abrigo | null>(null);
+
+const handleMarkerClick = (shelter: Abrigo | null) => {
+  selectedShelter.value = shelter
+}
+
+const handleCloseShelterModal = () => {
+  selectedShelter.value = null
+}
 
 const dadosGerais = computed(() => {
   const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#02952B" };
