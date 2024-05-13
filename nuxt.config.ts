@@ -36,6 +36,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      title: 'AbrigosRS | Mapeando e organizando ajuda!',
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon-logi.png' }
       ]

@@ -55,6 +55,7 @@
 <script setup lang="ts">
 import calcularCor from "~/utils/calcularCor";
 import { defaultCenter } from "~/config";
+import citiesCoordinates from "~/config/citiesCoordinates";
 
 type Props = {
   mapCenter?: number[];
@@ -95,30 +96,57 @@ const dadosGerais = computed(() => {
 
   if (!abrigos.value) return dadosDefault;
 
-  return abrigosFiltrados.value?.reduce((acc, item) => {
-    acc.totalVagas += parseInt(item.vagas ?? "0");
-    acc.totalVagasOcupadas += parseInt(item.vagas_ocupadas ?? "0");
+  return abrigosFiltrados.value.reduce((acc, item) => {
+    acc.totalVagas += parseInt((item.vagas || 0) ?? "0");
+    acc.totalVagasOcupadas += parseInt((item.vagas_ocupadas || 0) ?? "0");
     acc.percentualOcupacao = (acc.totalVagasOcupadas * 100) / acc.totalVagas;
     acc.cor = calcularCor(acc.totalVagas, acc.totalVagasOcupadas);
     return acc;
   }, dadosDefault);
 });
 
-function filterByCity(city: string) {
-  abrigosFiltrados.value = abrigos.value?.filter((abrigo) => city == "Todos" || abrigo.city == city) || [];
-  currentCity.value = city;
+function getCityCoordinatesAndZoom(city: string) {
+  const defaultData = {
+    lat: defaultCenter[1],
+    lng: defaultCenter[0],
+    zoom: 7,
+  };
+
+  if (city === "Todos") {
+    return defaultData;
+  }
+
+  const citySlug = city.replaceAll(/[^A-z]/g, '').toLowerCase();
+  const cityData = citiesCoordinates[citySlug];
+
+  if (cityData) {
+    return {
+      lat: cityData.lat,
+      lng: cityData.lng,
+      zoom: cityData.initialZoom,
+    };
+  }
+
+  if (abrigosFiltrados.value?.length) {
+    const [first] = abrigosFiltrados.value;
+  
+    return {
+      lat: first.latitude,
+      lng: first.longitude,
+      zoom: 12,
+    };
+  }
+
+  return defaultData;
 }
 
 function centerMap(city: string) {
-  if (!abrigosFiltrados.value) return;
-
-  const [first] = abrigosFiltrados.value;
-  const all = city === 'Todos';
+  const flyData = getCityCoordinatesAndZoom(city);
 
   useMapbox("map", (map) => {
     map.flyTo({
-      center: all ? defaultCenter : [first.longitude, first.latitude],
-      zoom: all ? 7 : 12,
+      center: [flyData.lng, flyData.lat],
+      zoom: flyData.zoom,
       speed: 1,
     });
   });
@@ -137,10 +165,6 @@ function closeModal() {
 };
 
 watch(abrigosFiltrados, clearPopups);
-
-useHead({
-  title: 'Localização dos abrigos',
-});
 </script>
 
 <style lang="scss">
