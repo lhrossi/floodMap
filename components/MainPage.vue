@@ -6,7 +6,6 @@
       :initialCity="initialCity"
       @closeFilters="() => (mostrarFiltros = false)"
       @filterChange="(a) => (abrigosFiltrados = a)"
-      @cityChange="centerMap"
     />
 
     <MapboxMap
@@ -26,7 +25,18 @@
       <MapboxGeolocateControl position="bottom-right" />
     </MapboxMap>
 
-    <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
+    <v-chip
+      class="fixed top-6 left-4 md:top-8 md:left-6"
+      color="white"
+      variant="flat"
+      @click="() => (mostrarInstrucoes = !mostrarInstrucoes)"
+    >
+      <div class="flex items-center gap-2">
+        <span class="text-base leading-4">Como usar o mapa</span>
+
+        <ion-help-circle-outline class="size-4" />
+      </div>
+    </v-chip>
 
     <FloatingBar
       :data="dadosGerais"
@@ -36,7 +46,7 @@
       @update-city="filterByCity"
     />
 
-    <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
+    <v-snackbar v-if="error" multi-line> Falha ao carregar abrigos </v-snackbar>
 
     <div class="privacy-policy-button">
       <h2 @click="() => (mostrarPrivacyPolicy = true)">Política de privacidade</h2>
@@ -74,7 +84,7 @@ const requestUrl = token ? `/api/abrigos?token=${new URLSearchParams(token).toSt
 
 const { data: abrigos, error } = await useFetch<any[]>(requestUrl, {});
 
-const abrigosFiltrados = ref(abrigos.value);
+const abrigosFiltrados = ref(getFilteredSheltersByCity(props.initialCity));
 const mostrarFiltros = ref(false);
 const mostrarInstrucoes = ref(false);
 const mostrarPrivacyPolicy = ref(false);
@@ -88,13 +98,22 @@ const cities = computed(() => {
       .map((item) => ({ value: item.city, label: item.city }))
       .filter((city, index, self) => self.findIndex(({ value }) => value === city.value) === index)
       .filter(({ value }) => value && value != "")
+      .sort((a, b) => {
+        if (b.value === 'Todos') return -1;
+
+        if (a.value < b.value) return -1;
+
+        if (a.value > b.value) return 1;
+
+        return 0;
+      })
   );
 });
 
 const dadosGerais = computed(() => {
   const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#02952B" };
 
-  if (!abrigos.value) return dadosDefault;
+  if (!abrigos.value) return dadosDefault;  
 
   return abrigosFiltrados.value.reduce((acc, item) => {
     acc.totalVagas += parseInt((item.vagas || 0) ?? "0");
@@ -104,6 +123,23 @@ const dadosGerais = computed(() => {
     return acc;
   }, dadosDefault);
 });
+
+function getFilteredSheltersByCity(city?: string) {
+  if (!abrigos.value) return [];
+
+  if (!city) return abrigos.value;
+
+  return abrigos.value.filter((abrigo) => city == "Todos" || abrigo.city == city);
+}
+
+async function filterByCity(city: string) {
+  abrigosFiltrados.value = getFilteredSheltersByCity(city);
+  currentCity.value = city;
+
+  await nextTick();
+  
+  centerMap(city);
+}
 
 function getCityCoordinatesAndZoom(city: string) {
   const defaultData = {
@@ -182,12 +218,11 @@ watch(abrigosFiltrados, clearPopups);
   cursor: pointer;
   padding: 4px;
   background: rgba(255, 255, 255, 0.5);
-  position: absolute;
+  position: fixed;
   bottom: 0;
   border-radius: 8px 8px 0 0;
-  left: 50%;
-  transform: translateX(-50%);
-
+  right: 50%;
+  translate: 50% 0;
 
   h2 {
     font-size: 14px;
@@ -197,6 +232,14 @@ watch(abrigosFiltrados, clearPopups);
 
 @media (max-width: 768px) {
   .privacy-policy-button {
+    bottom: 50svh;
+    right: 0;
+    border-radius: 8px;
+    translate: 0 50%;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    rotate: 180deg;
+
     h2 {
       font-size: 14px;
       margin-bottom: -2px;
@@ -221,5 +264,17 @@ watch(abrigosFiltrados, clearPopups);
 .filtros {
   padding: 1rem;
   gap: 0.5rem;
+}
+
+.mapboxgl-ctrl-group {
+  @apply fixed left-3 bottom-32 [&:not(:empty)]:shadow md:bottom-7 md:left-auto md:right-3;
+
+  button.mapboxgl-ctrl-geolocate {
+    @apply size-12 rounded-lg;
+
+    .mapboxgl-ctrl-icon {
+      @apply size-8 mx-auto;
+    }
+  }
 }
 </style>
