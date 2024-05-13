@@ -2,7 +2,9 @@ export default function calcularCor(vagas: any, vagasOcupadas: any) {
   if (isNaN(vagas) || isNaN(vagasOcupadas) || vagas <= 0) {
     return "#007972";
   }
+  
   const percentual = (vagasOcupadas * 100) / vagas;
+
   if (percentual < 0) {
     return "#007972";
   }
