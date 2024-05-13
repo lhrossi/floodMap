@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onClickOutside } from '@vueuse/core';
+
 interface CustomSelectProps {
   value: string;
   items: Array<CustomSelectItem>;
@@ -20,6 +22,8 @@ const props = withDefaults(defineProps<CustomSelectProps>(), {
 
 const emit = defineEmits<CustomSelectEmits>();
 
+const button = ref<HTMLButtonElement | null>(null);
+const list = ref<HTMLUListElement | null>(null);
 const open = ref<boolean>(false);
 
 const label = computed<string>(() => {
@@ -41,12 +45,17 @@ function change(value: string) {
 
   close();
 }
+
+onClickOutside(list, close, {
+  ignore: [button],
+});
 </script>
 
 <template>
   <div class="w-full relative">
     <button
-      class="w-full flex items-center gap-2 p-2 relative bg-neutral-100 rounded-3xl font-bold text-neutral-600 text-left"
+      ref="button"
+      class="w-full flex items-center gap-4 px-4 py-2 relative bg-neutral-100 rounded-3xl font-bold text-neutral-600 text-left"
       @click="toggle"
     >
       <ion-location-outline />
@@ -64,6 +73,7 @@ function change(value: string) {
 
     <ul
       v-if="open"
+      ref="list"
       class="w-full absolute left-0 bg-neutral-100 shadow rounded-3xl overflow-hidden"
       :class="{
         'bottom-full': placement === 'top',
@@ -71,7 +81,10 @@ function change(value: string) {
       }"
     >
       <li v-for="item in items" :key="item.value">
-        <button class="w-full px-8 py-2 text-left" @click="change(item.value)">
+        <button
+          class="w-full px-12 py-2 text-left transition-colors hover:bg-neutral-200"
+          @click="change(item.value)"
+        >
           {{ item.label }}
         </button>
       </li>
