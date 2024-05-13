@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const props = defineProps<{
   data: Record<string, any>;
-  city?: string;
-  cities: Array<string>;
+  city: string;
+  cities: Array<any>;
 }>();
 
 const emit = defineEmits(['show-filters', 'update-city']);
 
-const background = computed(() => hexToRGBA(props.data.cor, 0.3));
+const background = computed(() => hexToRGBA(props.data.cor, 0.15));
 
 function updateCity(value: string) {
   emit('update-city', value);
