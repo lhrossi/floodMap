@@ -126,10 +126,6 @@ function closeModal() {
 };
 
 watch(abrigosFiltrados, clearPopups);
-
-useHead({
-  title: 'Localização dos abrigos',
-});
 </script>
 
 <style lang="scss">
