@@ -82,16 +82,16 @@ const currentCity = ref(props.initialCity || 'Todos');
 const cities = computed(() => {
   if (!abrigos.value) return [];
 
-  return ["Todos"].concat(
+  return [{ value: "Todos", label: "Todas as cidades"}].concat(
     abrigos.value
-      .map((item) => item.city)
-      .filter((city, index, self) => self.indexOf(city) === index)
-      .filter((city) => city && city != "")
+      .map((item) => ({ value: item.city, label: item.city }))
+      .filter((city, index, self) => self.findIndex(({ value }) => value === city.value) === index)
+      .filter(({ value }) => value && value != "")
   );
 });
 
 const dadosGerais = computed(() => {
-  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#007972" };
+  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#02952B" };
 
   if (!abrigos.value) return dadosDefault;
 
