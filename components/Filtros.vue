@@ -6,7 +6,6 @@
         <v-btn elevation="0" rounded="xl" size="x-small" class="flex items-center justify-center" @click="() => emit('closeFilters')">&#x2715; </v-btn>
       </div>
       <span class="px-4 flex flex-col gap-1 pt-8">
-        <v-select :label="'Cidades'" :items="cidades" v-model="cidade" class="w-full" />
         <v-chip
           v-for="filtro of filtrosPreDefinidos"
           v-on:click="filtro.habilitado = !filtro.habilitado"
@@ -16,7 +15,7 @@
           :key="filtro.nome"
         >
           {{ filtro.nome }}:
-          {{ abrigosPorCidade?.filter(filtro.filtro)?.length }}
+          {{ abrigosPorCidade.filter(filtro.filtro)?.length }}
         </v-chip>
       </span>
       <div class="px-4 flex gap-2 w-full pt-12 border-t mt-12">
@@ -30,19 +29,7 @@
 <script setup lang="ts">
 const props = defineProps<{ abrigos: any[]; initialCity?: string }>();
 
-const emit = defineEmits(["filterChange", "cityChange", "closeFilters"]);
-
-const cidade = ref(props.initialCity || "Todos");
-
-const cidades = computed(() => {
-  if (!props.abrigos) return [];
-  return ["Todos"].concat(
-    props.abrigos
-      .map((item) => item.city)
-      .filter((city, index, self) => self.indexOf(city) === index)
-      .filter((city) => city && city != "")
-  );
-});
+const emit = defineEmits(["filterChange", "closeFilters"]);
 
 const filtrosPreDefinidos = ref([
   {
@@ -70,7 +57,7 @@ const filtrosPreDefinidos = ref([
 const abrigosPorCidade = computed(() => {
   if (!props.abrigos) return [];
 
-  return props.abrigos.filter((abrigo) => cidade.value == "Todos" || abrigo.city == cidade.value) || [];
+  return props.abrigos.filter((abrigo) => props.initialCity == "Todos" || abrigo.city == props.initialCity) || [];
 });
 
 const filtrarDados = () => {
@@ -83,15 +70,7 @@ const filtrarDados = () => {
   emit("filterChange", abrigosFiltrados);
 };
 
-function onCityChange(value: string) {
-  emit("cityChange", value);
-}
-
-watch([cidade, filtrosPreDefinidos], filtrarDados, { deep: true });
-
-watch(cidade, onCityChange);
-
-filtrarDados();
+watch([filtrosPreDefinidos], filtrarDados, { deep: true });
 </script>
 
 <style lang="scss">
