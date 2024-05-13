@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
     const response = await axios.get(`${config.API_URL}/abrigos`, {
       headers: {
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
       },
     });
 
