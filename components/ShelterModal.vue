@@ -80,7 +80,7 @@
             class="flex align-start justify-between mb-[12px]"
           >
             <p class="text-small text-[#020202]">{{ eachNeed.item }}</p>
-            <p class="text-small ml-2 text-[#020202] pr-1">{{ eachNeed.quantidade }}</p>
+            <p v-if="eachNeed.quantidade > 0" class="text-small ml-2 text-[#020202] pr-1">{{ eachNeed.quantidade }}</p>
           </li>
         </ul>
 
