@@ -18,7 +18,7 @@ importers:
         specifier: ^4.35.2
         version: 4.37.1(vue@3.4.27)
       '@vueuse/core':
-        specifier: ^10.4.0
+        specifier: ^10.9.0
         version: 10.9.0(vue@3.4.27)
       axios:
         specifier: ^1.5.0
@@ -33,6 +33,9 @@ importers:
         specifier: ^1.0.3
         version: 1.0.4(rollup@4.17.2)(vue@3.4.27)
     devDependencies:
+      '@iconify-json/ion':
+        specifier: ^1.1.18
+        version: 1.1.18
       '@invictus.codes/nuxt-vuetify':
         specifier: ^0.3.0
         version: 0.3.0(rollup@4.17.2)(vite@5.2.11(@types/node@20.12.11)(sass@1.77.1)(terser@5.31.0))(vue@3.4.27)
@@ -72,6 +75,12 @@ importers:
       tailwindcss:
         specifier: ^3.4.3
         version: 3.4.3
+      unplugin-icons:
+        specifier: ^0.19.0
+        version: 0.19.0(@vue/compiler-sfc@3.4.27)
+      unplugin-vue-components:
+        specifier: ^0.27.0
+        version: 0.27.0(@babel/parser@7.24.5)(@nuxt/kit@3.11.2(rollup@4.17.2))(rollup@4.17.2)(vue@3.4.27)
 
 packages:
 
@@ -85,6 +94,9 @@ packages:
 
   '@antfu/install-pkg@0.1.1':
     resolution: {integrity: sha512-LyB/8+bSfa0DFGC06zpCEfs89/XoWZwws5ygEa5D+Xsm3OfI+aXQ86VgVG7Acyef+rSZ5HE7J8rrxzrQeM3PjQ==}
+
+  '@antfu/install-pkg@0.3.3':
+    resolution: {integrity: sha512-nHHsk3NXQ6xkCfiRRC8Nfrg8pU5kkr3P3Y9s9dKqiuRmBD0Yap7fymNDjGFKeWhZQHqqbCS5CfeMy9wtExM24w==}
 
   '@antfu/utils@0.7.8':
     resolution: {integrity: sha512-rWQkqXRESdjXtc+7NRfK9lASQjpXJu1ayp7qi1d23zZorY+wBHVLHHoVcMsEnkqEBWTFqbztO7/QdJFzyEcLTg==}
@@ -568,6 +580,9 @@ packages:
       '@tanstack/vue-query': ^4.33.1
       nuxt: ^3.6.5
 
+  '@iconify-json/ion@1.1.18':
+    resolution: {integrity: sha512-iS4PRBySPnTqz4IyNGc62KtNs4mG9oh/mXyVXcMDluxGOz7W4MSnKeazz23x7aQLHAx/JhbFStl9YMSt2z3AQg==}
+
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
 
@@ -610,6 +625,10 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@jsdevtools/ez-spawn@3.0.4':
+    resolution: {integrity: sha512-f5DRIOZf7wxogefH03RjMPMdBF7ADTWUMoOs9kaJo06EfwF+aFhMZMDZxHg/Xe12hptN9xoZjGso2fdjapBRIA==}
+    engines: {node: '>=10'}
 
   '@kwsites/file-exists@1.1.1':
     resolution: {integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==}
@@ -1699,6 +1718,9 @@ packages:
   cacheable-request@7.0.4:
     resolution: {integrity: sha512-v+p6ongsrp0yTGbJXjgxPow2+DL93DASP4kXCDKb8/bwRtt9OEF3whggkkDkGNzgcWy2XaF4a8nZglC7uElscg==}
     engines: {node: '>=8'}
+
+  call-me-maybe@1.0.2:
+    resolution: {integrity: sha512-HpX65o1Hnr9HH25ojC1YGs7HCQLq0GCOibSaWER0eNpgJ/Z1MZv2mTc7+xh6WOPxbRVcmgbv4hGU+uSQ/2xFZQ==}
 
   camelcase-css@2.0.1:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
@@ -3896,6 +3918,10 @@ packages:
   strict-event-emitter@0.5.1:
     resolution: {integrity: sha512-vMgjE/GGEPEFnhFub6pa4FmJBRBVOLpIII2hvCZ8Kzb7K0hlHo7mQv6xYrBvCL2LtAIBwFUK8wvuJgTVSQ5MFQ==}
 
+  string-argv@0.3.2:
+    resolution: {integrity: sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==}
+    engines: {node: '>=0.6.19'}
+
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
     engines: {node: '>=8'}
@@ -4068,6 +4094,10 @@ packages:
   tweakpane@4.0.3:
     resolution: {integrity: sha512-BlcWOAe8oe4c+k9pmLBARGdWB6MVZMszayekkixQXTgkxTaYoTUpHpwVEp+3HkoamZkomodpbBf0CkguIHTgLg==}
 
+  type-detect@4.0.8:
+    resolution: {integrity: sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==}
+    engines: {node: '>=4'}
+
   type-fest@0.18.1:
     resolution: {integrity: sha512-OIAYXk8+ISY+qTOwkHtKqzAuxchoMiD9Udx+FSGQDuiRR+PJKJHc2NJAXlbhkGwTt/4/nKZxELY1w3ReWOL8mw==}
     engines: {node: '>=10'}
@@ -4145,6 +4175,39 @@ packages:
       '@unocss/webpack':
         optional: true
       vite:
+        optional: true
+
+  unplugin-icons@0.19.0:
+    resolution: {integrity: sha512-u5g/gIZPZEj1wUGEQxe9nzftOSqmblhusc+sL3cawIRoIt/xWpE6XYcPOfAeFTYNjSbRrX/3QiX89PFiazgU1w==}
+    peerDependencies:
+      '@svgr/core': '>=7.0.0'
+      '@svgx/core': ^1.0.1
+      '@vue/compiler-sfc': ^3.0.2 || ^2.7.0
+      vue-template-compiler: ^2.6.12
+      vue-template-es2015-compiler: ^1.9.0
+    peerDependenciesMeta:
+      '@svgr/core':
+        optional: true
+      '@svgx/core':
+        optional: true
+      '@vue/compiler-sfc':
+        optional: true
+      vue-template-compiler:
+        optional: true
+      vue-template-es2015-compiler:
+        optional: true
+
+  unplugin-vue-components@0.27.0:
+    resolution: {integrity: sha512-77eTEy23sQ0UpzGWnZ9I2mY3cnmXwklz4ITcn3JfxjCoX643ghImkiZ4nFm58sxbdVcc4Fo/o4LIoFnlqEqsSg==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@babel/parser': ^7.15.8
+      '@nuxt/kit': ^3.2.2
+      vue: 2 || 3
+    peerDependenciesMeta:
+      '@babel/parser':
+        optional: true
+      '@nuxt/kit':
         optional: true
 
   unplugin-vue-router@0.7.0:
@@ -4552,6 +4615,10 @@ snapshots:
       execa: 5.1.1
       find-up: 5.0.0
 
+  '@antfu/install-pkg@0.3.3':
+    dependencies:
+      '@jsdevtools/ez-spawn': 3.0.4
+
   '@antfu/utils@0.7.8': {}
 
   '@babel/code-frame@7.24.2':
@@ -4946,6 +5013,10 @@ snapshots:
       - rollup
       - supports-color
 
+  '@iconify-json/ion@1.1.18':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify/types@2.0.0': {}
 
   '@iconify/utils@2.1.23':
@@ -5012,6 +5083,13 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@jsdevtools/ez-spawn@3.0.4':
+    dependencies:
+      call-me-maybe: 1.0.2
+      cross-spawn: 7.0.3
+      string-argv: 0.3.2
+      type-detect: 4.0.8
 
   '@kwsites/file-exists@1.1.1':
     dependencies:
@@ -6526,6 +6604,8 @@ snapshots:
       lowercase-keys: 2.0.0
       normalize-url: 6.1.0
       responselike: 2.0.1
+
+  call-me-maybe@1.0.2: {}
 
   camelcase-css@2.0.1: {}
 
@@ -9004,6 +9084,8 @@ snapshots:
 
   strict-event-emitter@0.5.1: {}
 
+  string-argv@0.3.2: {}
+
   string-width@4.2.3:
     dependencies:
       emoji-regex: 8.0.0
@@ -9200,6 +9282,8 @@ snapshots:
 
   tweakpane@4.0.3: {}
 
+  type-detect@4.0.8: {}
+
   type-fest@0.18.1: {}
 
   type-fest@0.21.3: {}
@@ -9306,6 +9390,40 @@ snapshots:
       vite: 5.2.11(@types/node@20.12.11)(sass@1.77.1)(terser@5.31.0)
     transitivePeerDependencies:
       - postcss
+      - rollup
+      - supports-color
+
+  unplugin-icons@0.19.0(@vue/compiler-sfc@3.4.27):
+    dependencies:
+      '@antfu/install-pkg': 0.3.3
+      '@antfu/utils': 0.7.8
+      '@iconify/utils': 2.1.23
+      debug: 4.3.4
+      kolorist: 1.8.0
+      local-pkg: 0.5.0
+      unplugin: 1.10.1
+    optionalDependencies:
+      '@vue/compiler-sfc': 3.4.27
+    transitivePeerDependencies:
+      - supports-color
+
+  unplugin-vue-components@0.27.0(@babel/parser@7.24.5)(@nuxt/kit@3.11.2(rollup@4.17.2))(rollup@4.17.2)(vue@3.4.27):
+    dependencies:
+      '@antfu/utils': 0.7.8
+      '@rollup/pluginutils': 5.1.0(rollup@4.17.2)
+      chokidar: 3.6.0
+      debug: 4.3.4
+      fast-glob: 3.3.2
+      local-pkg: 0.5.0
+      magic-string: 0.30.10
+      minimatch: 9.0.4
+      resolve: 1.22.8
+      unplugin: 1.10.1
+      vue: 3.4.27
+    optionalDependencies:
+      '@babel/parser': 7.24.5
+      '@nuxt/kit': 3.11.2(rollup@4.17.2)
+    transitivePeerDependencies:
       - rollup
       - supports-color
 

@@ -3,10 +3,9 @@
     <Filtros
       v-model="mostrarFiltros"
       :abrigos="abrigos"
-      :initialCity="initialCity"
+      :initialCity="currentCity"
       @closeFilters="() => (mostrarFiltros = false)"
       @filterChange="(a) => (abrigosFiltrados = a)"
-      @cityChange="centerMap"
     />
 
     <MapboxMap
@@ -22,37 +21,40 @@
         :key="abrigo.id"
         :abrigo="abrigo"
         :marker-id="`marker-${abrigo.id}`"
-        @on-click="selectedShelter = abrigo; showShelterModal = true"
+        @on-click="() => handleMarkerClick(abrigo)"
       />
 
-      <!-- <ShelterModal
-        v-if="showShelterModal"
-        :shelter="selectedShelter"
-        @close="showShelterModal = false; selectedShelter = null"
-      /> -->
+      <ShelterModal
+        v-if="!!selectedShelter"
+        :abrigo="selectedShelter"
+        @on-close="handleCloseShelterModal"
+      />
 
       <MapboxGeolocateControl position="bottom-right" />
     </MapboxMap>
 
-    <v-snackbar v-model="error" multi-line> Falha ao carregar abrigos </v-snackbar>
+    <v-chip
+      class="fixed top-6 left-4 md:top-8 md:left-6"
+      color="white"
+      variant="flat"
+      @click="() => (mostrarInstrucoes = !mostrarInstrucoes)"
+    >
+      <div class="flex items-center gap-2">
+        <span class="text-base leading-4">Como usar o mapa</span>
 
-    <div class="total-vagas w-full max-w-72 text-sm text-lg-sm flex flex-col gap-1">
-      <div class="total-vagas-percentage text-center" :style="{ backgroundColor: dadosGerais.cor }">
-        {{ Math.round(dadosGerais.percentualOcupacao) }}% de ocupação
+        <ion-help-circle-outline class="size-4" />
       </div>
+    </v-chip>
 
-      <div class="statistic flex justify-between">
-        <span>Total de vagas:</span> <b>{{ dadosGerais.totalVagas }}</b>
-      </div>
+    <FloatingBar
+      :data="dadosGerais"
+      :city="currentCity"
+      :cities="cities"
+      @show-filters="() => (mostrarFiltros = true)"
+      @update-city="filterByCity"
+    />
 
-      <div class="statistic flex justify-between">
-        <span>Vagas ocupadas:</span> <b>{{ dadosGerais.totalVagasOcupadas }}</b>
-      </div>
-
-      <PrimaryButton class="primary-button" rounded="xl" color="primary" :click="() => (mostrarFiltros = true)" text="Encontrar abrigo" />
-
-      <div class="instructions text-center w-full"><b @click="() => (mostrarInstrucoes = true)">Como utilizar o mapa?</b></div>
-    </div>
+    <v-snackbar v-if="error" multi-line> Falha ao carregar abrigos </v-snackbar>
 
     <div class="privacy-policy-button">
       <h2 @click="() => (mostrarPrivacyPolicy = true)">Política de privacidade</h2>
@@ -72,6 +74,7 @@
 import calcularCor from "~/utils/calcularCor";
 import { defaultCenter } from "~/config";
 import citiesCoordinates from "~/config/citiesCoordinates";
+import type { Abrigo } from "~/models/Abrigo";
 
 type Props = {
   mapCenter?: number[];
@@ -79,7 +82,7 @@ type Props = {
   initialCity?: string;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   mapCenter: () => defaultCenter,
   mapZoom: 7
 });
@@ -88,20 +91,47 @@ const token = useRoute().query.token as string;
 
 const requestUrl = token ? `/api/abrigos?token=${new URLSearchParams(token).toString()}` : "/api/abrigos";
 
-const { data: abrigos, error } = await useFetch<any>(requestUrl, {});
+const { data: abrigos, error } = await useFetch<any[]>(requestUrl, {});
 
-const abrigosFiltrados = ref(abrigos.value);
+const abrigosFiltrados = ref(getFilteredSheltersByCity(props.initialCity));
+const selectedShelter = ref<Abrigo | null>(null);
 const mostrarFiltros = ref(false);
 const mostrarInstrucoes = ref(false);
 const mostrarPrivacyPolicy = ref(false);
+const currentCity = ref(props.initialCity || 'Todos');
 
-const showShelterModal = ref(false);
-const selectedShelter = ref(null);
+const cities = computed(() => {
+  if (!abrigos.value) return [];
+
+  return [{ value: "Todos", label: "Todas as cidades"}].concat(
+    abrigos.value
+      .map((item) => ({ value: item.city, label: item.city }))
+      .filter((city, index, self) => self.findIndex(({ value }) => value === city.value) === index)
+      .filter(({ value }) => value && value != "")
+      .sort((a, b) => {
+        if (b.value === 'Todos') return -1;
+
+        if (a.value < b.value) return -1;
+
+        if (a.value > b.value) return 1;
+
+        return 0;
+      })
+  );
+});
+
+const handleMarkerClick = (shelter: Abrigo | null) => {
+  selectedShelter.value = shelter
+}
+
+const handleCloseShelterModal = () => {
+  selectedShelter.value = null
+}
 
 const dadosGerais = computed(() => {
-  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#007972" };
+  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#02952B" };
 
-  if (!abrigos.value) return dadosDefault;
+  if (!abrigos.value) return dadosDefault;  
 
   return abrigosFiltrados.value.reduce((acc, item) => {
     acc.totalVagas += parseInt((item.vagas || 0) ?? "0");
@@ -111,6 +141,23 @@ const dadosGerais = computed(() => {
     return acc;
   }, dadosDefault);
 });
+
+function getFilteredSheltersByCity(city?: string) {
+  if (!abrigos.value) return [];
+
+  if (!city) return abrigos.value;
+
+  return abrigos.value.filter((abrigo) => city == "Todos" || abrigo.city == city);
+}
+
+async function filterByCity(city: string) {
+  abrigosFiltrados.value = getFilteredSheltersByCity(city);
+  currentCity.value = city;
+
+  await nextTick();
+  
+  centerMap(city);
+}
 
 function getCityCoordinatesAndZoom(city: string) {
   const defaultData = {
@@ -159,8 +206,8 @@ function centerMap(city: string) {
   });
 }
 
-async function clearPopups() {
-  abrigosFiltrados.value.forEach((abrigo: any) => {
+function clearPopups() {
+  abrigosFiltrados.value?.forEach((abrigo: any) => {
     abrigo.showPopup = false;
   });
 }
@@ -189,12 +236,11 @@ watch(abrigosFiltrados, clearPopups);
   cursor: pointer;
   padding: 4px;
   background: rgba(255, 255, 255, 0.5);
-  position: absolute;
+  position: fixed;
   bottom: 0;
   border-radius: 8px 8px 0 0;
-  left: 50%;
-  transform: translateX(-50%);
-
+  right: 50%;
+  translate: 50% 0;
 
   h2 {
     font-size: 14px;
@@ -204,6 +250,14 @@ watch(abrigosFiltrados, clearPopups);
 
 @media (max-width: 768px) {
   .privacy-policy-button {
+    bottom: 50svh;
+    right: 0;
+    border-radius: 8px;
+    translate: 0 50%;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    rotate: 180deg;
+
     h2 {
       font-size: 14px;
       margin-bottom: -2px;
@@ -225,42 +279,20 @@ watch(abrigosFiltrados, clearPopups);
   }
 }
 
-.total-vagas {
-  position: fixed;
-  z-index: 3;
-  bottom: 1%;
-  left: 50%;
-  transform: translate(-50%, -10%);
-  background: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #ddd;
-
-  &-percentage {
-    padding: 4px 8px 4px 8px;
-    border-radius: 50px;
-    width: fit-content;
-    color: white;
-    font-weight: 500;
-  }
-
-  .statistic {
-    font-weight: 400;
-    line-height: 1.5rem;
-    letter-spacing: 0.005em;
-    text-align: left;
-  }
-
-  .instructions b {
-    line-height: 1.5rem;
-    letter-spacing: 0.005em;
-    text-align: left;
-    cursor: pointer;
-  }
-}
-
 .filtros {
   padding: 1rem;
   gap: 0.5rem;
+}
+
+.mapboxgl-ctrl-group {
+  @apply fixed left-3 bottom-32 [&:not(:empty)]:shadow md:bottom-7 md:left-auto md:right-3;
+
+  button.mapboxgl-ctrl-geolocate {
+    @apply size-12 rounded-lg;
+
+    .mapboxgl-ctrl-icon {
+      @apply size-8 mx-auto;
+    }
+  }
 }
 </style>
