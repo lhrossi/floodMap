@@ -94,6 +94,7 @@ const requestUrl = token ? `/api/abrigos?token=${new URLSearchParams(token).toSt
 const { data: abrigos, error } = await useFetch<any[]>(requestUrl, {});
 
 const abrigosFiltrados = ref(getFilteredSheltersByCity(props.initialCity));
+const selectedShelter = ref<Abrigo | null>(null);
 const mostrarFiltros = ref(false);
 const mostrarInstrucoes = ref(false);
 const mostrarPrivacyPolicy = ref(false);
@@ -118,8 +119,6 @@ const cities = computed(() => {
       })
   );
 });
-
-const selectedShelter = ref<Abrigo | null>(null);
 
 const handleMarkerClick = (shelter: Abrigo | null) => {
   selectedShelter.value = shelter
