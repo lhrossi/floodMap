@@ -58,11 +58,36 @@
       </div>
     </div>
 
-    <!-- <h3 class="mt-4 text-lg text-[#020202] font-bold">Necessidades</h3> -->
+    <!-- List of needs -->
+    <div v-if="!!abrigo?.itensUteis?.length" class="mt-4 relative">
+      <h3 class="text-lg text-[#020202] font-bold mb-3">Necessidades</h3>
 
-    <!-- TODO: Accordion -->
-    <!-- <div class="w-full bg-red-500 h-[100px]"></div> -->
+      <div v-if="isCityCentralizedDonations">
+        <p v-if="isManagedByGovern">
+          Para doações aos abrigos gerenciados pela prefeitura, por favor, saiba os locais de doação acessando
+          <a href="https://prefeitura.poa.br/" target="_blank">https://prefeitura.poa.br/</a>
+        </p>
+        <p v-else>
+          Para doações para esse abrigo, por favor, verifique as
+          <a href="https://sos-rs.com/" target="_blank">informações nesse link.</a>
+        </p>
+      </div>
 
+      <div v-else>
+        <ul  class="w-full max-h-[180px] overflow-y-auto ">
+          <li v-for="eachNeed in abrigo.itensUteis.filter((eachItem) => eachItem.item)"
+            :key="eachNeed.item"
+            class="flex align-start justify-between mb-[12px]"
+          >
+            <p class="text-small text-[#020202]">{{ eachNeed.item }}</p>
+            <p class="text-small ml-2 text-[#020202] pr-1">{{ eachNeed.quantidade }}</p>
+          </li>
+        </ul>
+
+        <div v-if="abrigo.itensUteis.length >= 4" class="absolute bottom-0 left-0 w-full h-[40px] bg-gradient-to-t from-white to-white/20 "/>
+      </div>
+    </div>
+    
     <!-- Footer -->
     <div class="mt-5 border-t border-[#F1F1F1] pt-4">
       <button @click="handleLinkToWhatsapp" v-if="hasPhoneNumber" class="flex w-full h-[40px] rounded-xl bg-[#02952B] relative align-center justify-center hover:opacity-90">
@@ -91,34 +116,38 @@
   import { Icon } from '@iconify/vue';
   import type { Abrigo } from '~/models/Abrigo';
   import { useDayjs } from '#imports';
+  import { citiesWithCentralizedDonations } from '~/config/citiesWithCentralizedDonations';
 
   const dayjs = useDayjs()
 
-  const { abrigo } = defineProps<{ abrigo: Abrigo | null }>();
-
+  const props = defineProps<{ abrigo: Abrigo | null }>();
   const emit = defineEmits(['onClose'])
 
-  const hasPhoneNumber = computed(() => !!abrigo?.telefone)
-  const formattedLastUpdated = computed(() => {
-    return dayjs(abrigo?.update_in.seconds).utc().format('HH:mm')
-  })
+  const abrigo = toRef(props, 'abrigo')
+
+  const hasPhoneNumber = !!abrigo.value?.telefone
+  const formattedLastUpdated = dayjs(abrigo.value?.update_in.nanoseconds).format('D/MM - HH:mm')
 
   const userAgent = navigator.userAgent;
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 
-  const sanitizedPhone = String(abrigo?.telefone)?.replace(/\D/g, '');
-  const occupationPercentage = computed(() => {
-    if (abrigo?.vagas === '0' || abrigo?.vagas === null || abrigo?.vagas === 0) return '100'
+  const isCityCentralizedDonations = computed(() => citiesWithCentralizedDonations.includes(abrigo.value?.city ?? ''));
+  const isManagedByGovern = computed(() => abrigo.value?.abrigopm && abrigo.value.pmpa === abrigo.value.city);
 
-    const totalSlots = Number(abrigo?.vagas || '0')
-    const occupiedSlots = parseInt(abrigo?.vagas_ocupadas || '0')
+  const sanitizedPhone = String(abrigo.value?.telefone)?.replace(/\D/g, '');
+
+  const occupationPercentage = computed(() => {
+    if (abrigo.value?.vagas === '0' || abrigo.value?.vagas === null || abrigo.value?.vagas === 0) return '100'
+
+    const totalSlots = Number(abrigo.value?.vagas || '0')
+    const occupiedSlots = parseInt(abrigo.value?.vagas_ocupadas || '0')
     const percentage = (occupiedSlots / totalSlots) * 100
     return percentage > 0 ? percentage.toFixed(0) : '0'
   })
 
   const availableSlots = computed(() => {
-    const totalSlots = Number(abrigo?.vagas || '0')
-    const occupiedSlots = parseInt(abrigo?.vagas_ocupadas || '0')
+    const totalSlots = Number(abrigo.value?.vagas || '0')
+    const occupiedSlots = parseInt(abrigo.value?.vagas_ocupadas || '0')
     return totalSlots - occupiedSlots
   })
 
@@ -149,25 +178,21 @@
   })
 
   const handleLinkToWhatsapp = () => {
-    if (!abrigo?.telefone) return
+    if (!abrigo.value?.telefone) return
     window.open(`https://api.whatsapp.com/send?phone=${sanitizedPhone}`)
   }
 
   const handleCallToPhone = () => {
-    if (!abrigo?.telefone) return
+    if (!abrigo.value?.telefone) return
     window.open(`tel:${sanitizedPhone}`)
   }
 
   const handleLinkToMaps = () => {
-    if (!abrigo?.latitude || !abrigo?.longitude) return
-    window.open(`https://www.google.com/maps/search/?api=1&query=${abrigo?.latitude},${abrigo?.longitude}`)
+    if (!abrigo.value?.latitude || !abrigo.value?.longitude) return
+    window.open(`https://www.google.com/maps/search/?api=1&query=${abrigo.value?.latitude},${abrigo.value?.longitude}`)
   }
 
   const handleClose = () => {
     emit('onClose')
   }
 </script>
-
-<style>
- 
-</style>
