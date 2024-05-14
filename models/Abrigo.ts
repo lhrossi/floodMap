@@ -36,4 +36,6 @@ export interface Abrigo {
   vagas_pet?: string | null;
   vagas_pet_ocupadas?: string | null;
   itensUteis?: Necessidade[] | null;
+  city?: string;
+  abrigopm?: string;
 }
