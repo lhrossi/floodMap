@@ -71,7 +71,7 @@ onClickOutside(list, close, {
     <ul
       v-if="open"
       ref="list"
-      class="w-full absolute mobile:bottom-10 laptop:bottom-12 left-0 bg-neutral-100 shadow rounded-3xl overflow-y-auto mobile:max-h-[50vh] laptop:max-h-[80vh] pt-2"
+      class="w-full absolute mobile:bottom-10 laptop:bottom-12 left-0 bg-neutral-100 shadow rounded-3xl overflow-y-auto mobile:max-h-[310px] laptop:max-h-[80vh] pt-2"
       :class="{
         'bottom-full': placement === 'top',
         'top-full': placement === 'bottom',
