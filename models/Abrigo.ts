@@ -9,8 +9,8 @@ export interface Abrigo {
   vagas: string | number | null;
   roupa_cama: null;
   update_in: {
-    seconds: number;
-    nanoseconds: number;
+    _seconds: number;
+    _nanoseconds: number;
   };
   longitude: number;
   latitude: number;
@@ -28,8 +28,8 @@ export interface Abrigo {
   nome: string;
   estrutura_pessoas: null;
   create_in: {
-    seconds: number;
-    nanoseconds: number;
+    _seconds: number;
+    _nanoseconds: number;
   };
   vagas_ocupadas: string;
   showPopup?: boolean;
