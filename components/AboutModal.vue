@@ -43,7 +43,7 @@
       Junto aos profissionais, as organizações que estão apoiando esta iniciativa são Tecnopuc,
       Instituto Caldeira, Wine Valley Hub, Gx2, Stefanini, SUCESU, Agidesk, Cognitiva Brasil,
       Painel Constru, Navi - Hub de Inteligência Artifical do Tecnopuc, Decola, Volters, Ventiur,
-      OvinoPro, Green Thinking, DGM, DSA Engenharia, Procempa, Prefeitura de Porto Alegre,
+      OvinoPro, Be220, DGM, DSA Engenharia, Procempa, Prefeitura de Porto Alegre,
       Governo do Estado do RS, Procergs, PUCRS, Ministério Público do RS, Datacentrics e
       TecnoUCS.
     </p>
