@@ -60,21 +60,18 @@ onClickOutside(list, close, {
     >
       <ion-location-outline />
 
-      <strong class="flex-1 text-neutral-600">{{ label }}</strong>
+      <strong class="flex-1 text-neutral-600 mobile:text-sm laptop:text-base">{{ label }}</strong>
 
       <ion-chevron-down
         class="transition-transform"
-        :class="{
-          'rotate-180': (open && placement === 'bottom') || placement === 'top',
-          'rotate-0': (open && placement === 'top') || placement === 'bottom'
-        }"
+        :class="`${open ? 'rotate-180' : 'rotate-0'}`"
       />
     </button>
 
     <ul
       v-if="open"
       ref="list"
-      class="w-full absolute left-0 bg-neutral-100 shadow rounded-3xl overflow-hidden"
+      class="w-full absolute mobile:bottom-10 laptop:bottom-12 left-0 bg-neutral-100 shadow rounded-3xl overflow-y-auto mobile:max-h-[50vh] laptop:max-h-[80vh] pt-2"
       :class="{
         'bottom-full': placement === 'top',
         'top-full': placement === 'bottom',
@@ -83,6 +80,10 @@ onClickOutside(list, close, {
       <li v-for="item in items" :key="item.value">
         <button
           class="w-full px-12 py-2 text-left transition-colors hover:bg-neutral-200"
+          :class="{
+            'font-bold text-neutral-600': item.value === value,
+            'text-neutral-500': item.value !== value,
+          }"
           @click="change(item.value)"
         >
           {{ item.label }}
