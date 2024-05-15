@@ -166,13 +166,13 @@
     const totalSlots = Number(abrigo.value?.vagas || '0')
     const occupiedSlots = parseInt(abrigo.value?.vagas_ocupadas || '0')
     const percentage = (occupiedSlots / totalSlots) * 100
-    return percentage > 0 ? percentage.toFixed(0) : '0'
+    return percentage > 0 ? Math.min(percentage, 100).toFixed(0) : '0'
   })
 
   const availableSlots = computed(() => {
     const totalSlots = Number(abrigo.value?.vagas || '0')
     const occupiedSlots = parseInt(abrigo.value?.vagas_ocupadas || '0')
-    return totalSlots - occupiedSlots
+    return Math.max(totalSlots - occupiedSlots, 0);
   })
 
   const occupationColor = computed(() => {
