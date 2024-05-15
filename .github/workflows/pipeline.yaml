@@ -3,16 +3,16 @@ run-name: ${{github.actor}} is testing out GitHub Actions
 on: 
   push:
     branches:
-      - develop
+      - main
   pull_request:
     branches:
-       - develop
+       - main
 
 jobs: 
     production:
         runs-on: ubuntu-latest
         environment:
-            name: develop
+            name: prod
         steps:
             - name: Setup SSH
               run: |
@@ -22,4 +22,4 @@ jobs:
                 ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
             - name: Deploy
               run: |
-                 ssh ${{ secrets.USER_IP }} 'whoami && sudo bash /var/www/update.sh floodMap'
+                 ssh ${{ secrets.USER_IP }} 'whoami && bash /var/www/update.sh floodMap'
