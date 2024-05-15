@@ -7,8 +7,8 @@
   >
     <!-- Header -->
     <div class="flex align-center mb-4" 
-        :class="formattedLastUpdated ? 'justify-between' : 'justify-end'">
-      <div v-if="!!formattedLastUpdated" class="bg-[#F1F1F1] px-3 py-2 align-center justify-center rounded-xl flex">
+        :class="shouldShowLastUpdatedTag ? 'justify-between' : 'justify-end'">
+      <div v-if="shouldShowLastUpdatedTag" class="bg-[#F1F1F1] px-3 py-2 align-center justify-center rounded-xl flex">
         <Icon icon="flowbite:refresh-outline" height="12px" color="#3E3E3E"/>
         <p class="text-[#3E3E3E] text-sm ml-2">{{ `Atualizado ${formattedLastUpdated}` }}</p>
       </div>
@@ -143,7 +143,14 @@
   const abrigo = toRef(props, 'abrigo')
 
   const hasPhoneNumber = !!abrigo.value?.telefone
-  const formattedLastUpdated = dayjs(abrigo.value?.update_in?.nanoseconds).format('D/MM - HH:mm')
+  const formattedLastUpdated = dayjs(abrigo.value?.update_in?._nanoseconds).format('DD/MM - HH:mm')
+
+  const shouldShowLastUpdatedTag = computed(() => {
+    const isNotUpdatedYet = abrigo.value?.update_in?._nanoseconds === abrigo.value?.create_in?._nanoseconds
+    return !!abrigo.value?.update_in?._nanoseconds && !isNotUpdatedYet
+  })
+
+  console.log(abrigo.value)
 
   const userAgent = navigator.userAgent;
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
