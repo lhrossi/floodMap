@@ -19,7 +19,12 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     API_TOKEN: process.env.NUXT_PUBLIC_API_TOKEN,
-    API_URL: process.env.NUXT_PUBLIC_API_URL || '/api/mock'
+    API_URL: process.env.NUXT_PUBLIC_API_URL || '/api/mock',
+
+    public: {
+      NUXT_PUBLIC_GTAG_ID: process.env.NUXT_PUBLIC_GTAG_ID,
+      NUXT_PUBLIC_GTAG_ENABLED: process.env.NUXT_PUBLIC_GTAG_ENABLED
+    }
   },
 
   modules: [
@@ -32,6 +37,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt', // https://vueuse.org/guide/
     'nuxt-mapbox', // https://alexlavoie42.github.io/Nuxt-Mapbox/
     'unplugin-icons/nuxt',
+    'nuxt-gtag'
   ],
 
   app: {
@@ -76,6 +82,11 @@ export default defineNuxtConfig({
     moduleOptions: {
       useVuetifyLabs: true,
     }
+  },
+
+  gtag: {
+    id: process.env.NUXT_PUBLIC_GTAG_ID,
+    enabled: process.env.NUXT_PUBLIC_GTAG_ENABLED === 'true'
   },
 
   vite: {
