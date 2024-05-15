@@ -1,11 +1,12 @@
 <template>
   <div class="
-    mobile:left-0 mobile:w-full mobile:bottom-0 mobile:transform mobile:animate-appear-from-bottom
+    flex flex-column
+    mobile:left-0 mobile:w-full mobile:max-h-[80vh] mobile:bottom-0 mobile:transform mobile:animate-appear-from-bottom
     laptop:left-[24px] laptop:bottom-[40px] laptop:w-[375px]
     bg-white p-4 shadow-lg rounded-lg absolute bottom-[40px] pb-[40px] z-50"
   >
     <!-- Header -->
-    <div class="flex align-center justify-between">
+    <div class="flex align-center justify-between mb-4">
       <div class="bg-[#F1F1F1] px-3 py-2 align-center justify-center rounded-xl flex">
         <Icon icon="flowbite:refresh-outline" height="12px" color="#3E3E3E"/>
         <p class="text-[#3E3E3E] text-sm ml-2">{{ `Atualizado ${formattedLastUpdated}` }}</p>
@@ -17,79 +18,86 @@
       </button>
     </div>
 
-    <!-- Content Table -->
-    <div class="mt-4">
-      <h2 class="text-xl font-bold">{{ abrigo?.nome }}</h2>
+    <div class="flex-1 overflow-auto relative pb-[20px]">
+      <!-- Content Table -->
+      <div>
+        <h2 class="text-xl font-bold">{{ abrigo?.nome }}</h2>
 
-      <div class="mt-4">
-        <div v-if="!!abrigo?.address" class="flex align-center mb-[16px]">
-          <Icon icon="majesticons:map-marker" color="#3E3E3E" class="min-w-[24px]"/>
-          <p class="ml-[6px] text-[#3E3E3E]">{{abrigo?.address }}</p>
+        <div class="mt-4">
+          <div v-if="!!abrigo?.address" class="flex align-center mb-[16px]">
+            <Icon icon="majesticons:map-marker" color="#3E3E3E" class="min-w-[24px]"/>
+            <p class="ml-[6px] text-[#3E3E3E]">{{abrigo?.address }}</p>
+          </div>
+
+          <div v-if="hasPhoneNumber" class="flex align-start mb-[16px]">
+            <Icon icon="carbon:phone-filled" class="min-w-[24px]" color="#3E3E3E"/>
+            <p class="ml-[6px] text-[#3E3E3E]">
+              {{ `${abrigo?.telefone} ${abrigo?.nome_contato ? `/ ${abrigo?.nome_contato}` : ''}` }}
+            </p>
+          </div>
+
+          <div v-if="!!abrigo?.vagas_pet" class="flex align-start">
+            <Icon icon="material-symbols:pets" class="min-w-[24px]" color="#3E3E3E"/>
+            <p class="ml-[6px] text-[#3E3E3E]">Aceita animais</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Slots Card -->
+      <div class="flex flex-column mt-4 rounded-lg overflow-hidden h-[80px]">
+        <div class="flex flex-1 bg-[#F1F1F1] align-center justify-center">
+          <Icon icon="carbon:user-filled" class="min-h-[20px]" color="#3E3E3E"/>
+          <p class="ml-2 text-[#3E3E3E] font-semibold">Pessoas</p>
         </div>
 
-        <div v-if="hasPhoneNumber" class="flex align-start mb-[16px]">
-          <Icon icon="carbon:phone-filled" class="min-w-[24px]" color="#3E3E3E"/>
-          <p class="ml-[6px] text-[#3E3E3E]">
-            {{ `${abrigo?.telefone} ${abrigo?.nome_contato ? `/ ${abrigo?.nome_contato}` : ''}` }}
+        <div :class="`flex flex-1 align-center justify-center ${occupationColor.background}`" >
+          <p :class="`text-[#02952B] font-semibold text-sm ${occupationColor.text}`">
+            {{ `${occupationPercentage.replace('.', ',')}% ocupado`  }}
+          </p>
+          <div :class="`w-1 h-1 rounded-full mx-2 ${occupationColor.bullet}`"/>
+          <p :class="`font-semibold text-sm ${occupationColor.text}`">{{ `${availableSlots} Vagas Livres` }}</p>
+          <p class="text-[#3E3E3E] font-semibold text-sm ml-1">{{ `de ${abrigo?.vagas || 0}` }}</p>
+        </div>
+      </div>
+
+      <!-- List of needs -->
+      <div 
+        v-if="!!abrigo?.itensUteis?.length || (isCityCentralizedDonations || isManagedByGovern)"
+        class="mt-4 relative"
+      >
+        <h3 class="text-lg text-[#020202] font-bold mb-3">Necessidades</h3>
+
+        <div v-if="isCityCentralizedDonations">
+          <p v-if="isManagedByGovern">
+            Para doações aos abrigos gerenciados pela prefeitura, por favor, saiba os locais de doação acessando
+            <a href="https://prefeitura.poa.br/" target="_blank">https://prefeitura.poa.br/</a>
+          </p>
+          <p v-else>
+            Para doações para esse abrigo, por favor, verifique as
+            <a href="https://sos-rs.com/" target="_blank">informações nesse link.</a>
           </p>
         </div>
 
-        <div v-if="!!abrigo?.vagas_pet" class="flex align-start">
-          <Icon icon="material-symbols:pets" class="min-w-[24px]" color="#3E3E3E"/>
-          <p class="ml-[6px] text-[#3E3E3E]">Aceita animais</p>
+        <div v-else>
+          <ul class="w-full">
+            <li v-for="eachNeed in abrigo.itensUteis.filter((eachItem) => eachItem.item)"
+              :key="eachNeed.item"
+              class="flex align-start justify-between mb-[12px]"
+            >
+              <p class="text-small text-[#020202]">{{ eachNeed.item }}</p>
+              <p v-if="eachNeed.quantidade > 0" class="text-small ml-2 text-[#020202] pr-1">{{ eachNeed.quantidade }}</p>
+            </li>
+          </ul>
+
+          <div v-if="abrigo.itensUteis.length >= 4" class="absolute bottom-0 left-0 w-full h-[40px]"/>
         </div>
       </div>
     </div>
 
-    <!-- Available Slots Card -->
-    <div class="flex flex-column mt-4 rounded-lg overflow-hidden h-[80px]">
-      <div class="flex flex-1 bg-[#F1F1F1] align-center justify-center">
-        <Icon icon="carbon:user-filled" class="min-h-[20px]" color="#3E3E3E"/>
-        <p class="ml-2 text-[#3E3E3E] font-semibold">Pessoas</p>
-      </div>
-
-      <div :class="`flex flex-1 align-center justify-center ${occupationColor.background}`" >
-        <p :class="`text-[#02952B] font-semibold text-sm ${occupationColor.text}`">
-          {{ `${occupationPercentage.replace('.', ',')}% ocupado`  }}
-        </p>
-        <div :class="`w-1 h-1 rounded-full mx-2 ${occupationColor.bullet}`"/>
-        <p :class="`font-semibold text-sm ${occupationColor.text}`">{{ `${availableSlots} Vagas Livres` }}</p>
-        <p class="text-[#3E3E3E] font-semibold text-sm ml-1">{{ `de ${abrigo?.vagas || 0}` }}</p>
-      </div>
-    </div>
-
-    <!-- List of needs -->
-    <div v-if="!!abrigo?.itensUteis?.length" class="mt-4 relative">
-      <h3 class="text-lg text-[#020202] font-bold mb-3">Necessidades</h3>
-
-      <div v-if="isCityCentralizedDonations">
-        <p v-if="isManagedByGovern">
-          Para doações aos abrigos gerenciados pela prefeitura, por favor, saiba os locais de doação acessando
-          <a href="https://prefeitura.poa.br/" target="_blank">https://prefeitura.poa.br/</a>
-        </p>
-        <p v-else>
-          Para doações para esse abrigo, por favor, verifique as
-          <a href="https://sos-rs.com/" target="_blank">informações nesse link.</a>
-        </p>
-      </div>
-
-      <div v-else>
-        <ul  class="w-full max-h-[180px] overflow-y-auto ">
-          <li v-for="eachNeed in abrigo.itensUteis.filter((eachItem) => eachItem.item)"
-            :key="eachNeed.item"
-            class="flex align-start justify-between mb-[12px]"
-          >
-            <p class="text-small text-[#020202]">{{ eachNeed.item }}</p>
-            <p v-if="eachNeed.quantidade > 0" class="text-small ml-2 text-[#020202] pr-1">{{ eachNeed.quantidade }}</p>
-          </li>
-        </ul>
-
-        <div v-if="abrigo.itensUteis.length >= 4" class="absolute bottom-0 left-0 w-full h-[40px] bg-gradient-to-t from-white to-white/20 "/>
-      </div>
-    </div>
-    
     <!-- Footer -->
-    <div class="mt-5 border-t border-[#F1F1F1] pt-4">
+    <div class="mt-5 border-t border-[#F1F1F1] pt-4 relative" >
+      <div class="absolute bg-gradient-to-t from-white to-white/30 w-full h-[30px] top-[-40px] left-0" />
+
       <button @click="handleLinkToWhatsapp" v-if="hasPhoneNumber" class="flex w-full h-[40px] rounded-xl bg-[#02952B] relative align-center justify-center hover:opacity-90">
         <Icon icon="mingcute:whatsapp-fill" height="20px" class="absolute left-4" color="#FFF"/>
         <p class="font-semibold text-white">Whatsapp</p>
@@ -126,7 +134,7 @@
   const abrigo = toRef(props, 'abrigo')
 
   const hasPhoneNumber = !!abrigo.value?.telefone
-  const formattedLastUpdated = dayjs(abrigo.value?.update_in.nanoseconds).format('D/MM - HH:mm')
+  const formattedLastUpdated = dayjs(abrigo.value?.update_in?.nanoseconds).format('D/MM - HH:mm')
 
   const userAgent = navigator.userAgent;
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
