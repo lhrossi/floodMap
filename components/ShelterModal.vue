@@ -63,8 +63,9 @@
 
       <!-- List of needs -->
       <div 
-        v-if="!!abrigo?.itensUteis?.length || (isCityCentralizedDonations || isManagedByGovern)"
+        v-if="!!abrigo?.itensUteis?.length || isCityCentralizedDonations"
         class="mt-4 relative"
+        :class="{ 'pb-[10px]': isCityCentralizedDonations }"
       >
         <h3 class="text-lg text-[#020202] font-bold mb-3">Necessidades</h3>
 
@@ -79,7 +80,7 @@
           </p>
         </div>
 
-        <div v-if="!!abrigo?.itensUteis?.length">
+        <div v-else-if="!!abrigo?.itensUteis?.length">
           <ul class="w-full">
             <li v-for="eachNeed in abrigo.itensUteis.filter((eachItem) => eachItem.item)"
               :key="eachNeed.item"
@@ -97,7 +98,14 @@
 
     <!-- Footer -->
     <div class="mt-5 border-t border-[#F1F1F1] pt-4 relative" >
-      <div class="absolute bg-gradient-to-t from-white to-white/30 w-full h-[30px] top-[-40px] left-0" />
+      <div
+        class="absolute bg-gradient-to-t from-white to-white/30 w-full h-[40px] left-0"
+        :class="{
+          'h-[20px]': isCityCentralizedDonations,
+          'top-[-45px]': isCityCentralizedDonations,
+          'top-[-60px]': !isCityCentralizedDonations,
+        }"
+      />
 
       <button @click="handleLinkToWhatsapp" v-if="hasPhoneNumber" class="flex w-full h-[40px] rounded-xl bg-[#02952B] relative align-center justify-center hover:opacity-90">
         <Icon icon="mingcute:whatsapp-fill" height="20px" class="absolute left-4" color="#FFF"/>
