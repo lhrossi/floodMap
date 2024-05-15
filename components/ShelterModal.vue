@@ -6,8 +6,9 @@
     bg-white p-4 shadow-lg rounded-lg absolute bottom-[40px] pb-[40px] z-50"
   >
     <!-- Header -->
-    <div class="flex align-center justify-between mb-4">
-      <div class="bg-[#F1F1F1] px-3 py-2 align-center justify-center rounded-xl flex">
+    <div class="flex align-center mb-4" 
+        :class="formattedLastUpdated ? 'justify-between' : 'justify-end'">
+      <div v-if="!!formattedLastUpdated" class="bg-[#F1F1F1] px-3 py-2 align-center justify-center rounded-xl flex">
         <Icon icon="flowbite:refresh-outline" height="12px" color="#3E3E3E"/>
         <p class="text-[#3E3E3E] text-sm ml-2">{{ `Atualizado ${formattedLastUpdated}` }}</p>
       </div>
@@ -78,7 +79,7 @@
           </p>
         </div>
 
-        <div v-else>
+        <div v-if="!!abrigo?.itensUteis?.length">
           <ul class="w-full">
             <li v-for="eachNeed in abrigo.itensUteis.filter((eachItem) => eachItem.item)"
               :key="eachNeed.item"
