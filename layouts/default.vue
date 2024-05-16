@@ -19,7 +19,7 @@
       </v-toolbar-title>
     </v-app-bar>
     <v-main>
-      <Modal v-if="currentButton === 'sobre'" :click="() => selectButton('mapa')">
+      <Modal v-if="currentButton === 'sobre'" @close="selectButton('mapa')">
         <AboutModal />
       </Modal>
       <slot></slot>
