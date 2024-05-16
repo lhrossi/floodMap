@@ -1,22 +1,30 @@
 <template>
-  <v-container class="about-modal flex flex-col" max-width="500px">
+  <div ref="modal" class="about-modal max-w-[500px] flex flex-col">
     <slot></slot>
     
     <PrimaryButton
       color="primary"
-      hoverColor="organge"
+      hoverColor="orange"
       rounded="xl"
       size="x-large"
       text="Voltar"
-      :click="() => props.click()"
+      :click="close"
     />
-  </v-container>
+  </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  click: Function,
-})
+<script setup lang="ts">
+import { onClickOutside } from '@vueuse/core';
+
+const emit = defineEmits(['close']);
+
+const modal = ref<HTMLDivElement | null>(null);
+
+function close() {
+  emit('close');
+}
+
+onClickOutside(modal, close);
 </script>
 
 <style lang="scss">
