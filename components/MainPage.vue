@@ -60,11 +60,11 @@
       <h2 @click="() => (mostrarPrivacyPolicy = true)">Política de privacidade</h2>
     </div>
 
-    <Modal :open="mostrarInstrucoes" @close="closeModal">
+    <Modal v-if="mostrarInstrucoes" @close="closeModal">
       <Instrucoes />
     </Modal>
 
-    <Modal :open="mostrarPrivacyPolicy" @close="closeModal">
+    <Modal v-if="mostrarPrivacyPolicy" @close="closeModal">
       <PrivacyPolicy />
     </Modal>
   </div>
