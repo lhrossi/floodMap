@@ -50,6 +50,7 @@ function showFilters() {
     z-10
     md:w-[40vw]
     md:min-w-[400px]
+    md:max-w-[600px]
     md:bottom-9
     md:left-1/2
     md:rounded-3xl
