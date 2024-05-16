@@ -1,30 +1,38 @@
 <template>
-  <div ref="modal" class="about-modal max-w-[500px] flex flex-col">
-    <slot></slot>
-    
-    <PrimaryButton
-      color="primary"
-      hoverColor="orange"
-      rounded="xl"
-      size="x-large"
-      text="Voltar"
-      :click="close"
-    />
-  </div>
+  <transition name="modal">
+    <div
+      v-if="open"
+      class="w-full h-full flex items-end justify-center bg-black/50 fixed top-0 left-0 z-[1000] md:items-center"
+      @click="close"
+    >
+      <div class="about-modal flex flex-col">
+        <slot></slot>
+        
+        <PrimaryButton
+          color="primary"
+          hoverColor="orange"
+          rounded="xl"
+          size="x-large"
+          text="Voltar"
+          :click="close"
+        />
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core';
+interface ModalProps {
+  open: boolean;
+}
+
+defineProps<ModalProps>();
 
 const emit = defineEmits(['close']);
-
-const modal = ref<HTMLDivElement | null>(null);
 
 function close() {
   emit('close');
 }
-
-onClickOutside(modal, close);
 </script>
 
 <style lang="scss">
