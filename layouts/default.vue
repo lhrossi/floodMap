@@ -1,71 +1,74 @@
 <template>
-  <v-layout>
-    <v-app-bar class="border-b">
-      <v-toolbar-title>
-        <div class="flex">
-          <AbrigaRsLogo />
-          <div class="flex align-center">
-            <v-btn color="dark" text :class="{ active: currentButton === 'mapa', 'menu-item': true }" @click="() => selectButton('mapa')">
-              <span>Mapa</span>
-              <div class="underline"></div>
-            </v-btn>
-            <v-btn color="dark" text :class="{ active: currentButton === 'sobre', 'menu-item': true }" @click="() => selectButton('sobre')"
-              >Sobre
-              <div class="underline"></div>
-            </v-btn>
-            <v-btn color="dark" text href="https://abrigospoa.web.app/login" target="_blank">Login</v-btn>
-          </div>
-        </div>
-      </v-toolbar-title>
-    </v-app-bar>
+  <div class="flex flex-column">
+    <Header />
+
+        <!-- <div class="flex align-center">
+          <button v-if="!isSmallScreen" class="mr-4 relative" @click="() => selectMenuItem('map')">
+            <p class="text-base hover:text-[#1351B4] laptop:text-lg transition-all duration-100"
+              :class="selectedMenuItem === 'map' ? 'text-[#1351B4] font-bold' : 'text-[#020202]'"
+            >
+              Mapa
+            </p>
+            <div 
+              v-if="selectedMenuItem === 'map'"
+              class="absolute left-0 bottom-[-2px] h-[3px] w-full bg-[#1351B4]/25"
+            />
+          </button>
+
+          <button class="mr-4 relative" @click="() => selectMenuItem('shelter')">
+            <p class="text-base hover:text-[#1351B4] laptop:text-lg transition-all duration-100"
+              :class="selectedMenuItem === ('shelter' || isSmallScreen && 'map') ? 'text-[#1351B4] font-bold' : 'text-[#020202]'"
+            >
+              {{ isSmallScreen ? 'Abrigos' : 'Lista de abrigos' }}
+            </p>
+            <div 
+              v-if="selectedMenuItem === 'shelter'"
+              class="absolute left-0 bottom-[-2px] h-[3px] w-full bg-[#1351B4]/25"
+            />
+          </button>
+
+          <button class="mr-4 relative" @click="() => selectMenuItem('about')">
+            <p class="text-base  hover:text-[#1351B4] laptop:text-lg transition-all duration-100"
+              :class="selectedMenuItem === 'about' ? 'text-[#1351B4] font-bold' : 'text-[#020202]'"
+            >
+              Sobre
+            </p>
+            <div 
+              v-if="selectedMenuItem === 'about'"
+              class="absolute left-0 bottom-[-2px] h-[3px] w-full bg-[#1351B4]/25"
+            />
+          </button>
+
+          <button class="relative" @click="handleLogin">
+            <p class="text-base  hover:text-[#1351B4] laptop:text-lg"
+              :class="selectedMenuItem === 'login' ? 'text-[#1351B4] font-bold' : 'text-[#020202]'"
+            >
+              Login
+            </p>
+            <div 
+              v-if="selectedMenuItem === 'login'"
+              class="absolute left-0 bottom-[-2px] h-[3px] w-full bg-[#1351B4]/25"
+            />
+          </button>
+        </div> -->
+    
     <v-main>
       <Modal :open="currentButton === 'sobre'" @close="selectButton('mapa')">
         <AboutModal />
       </Modal>
       <slot></slot>
     </v-main>
-  </v-layout>
+  </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+  const selectedMenuItem = ref<'map' | 'about' | 'login' | 'shelter'>('shelter');
 
-const currentButton = ref("mapa");
-const selectButton = (button) => {
-  currentButton.value = button;
-};
+  const selectMenuItem = (item: 'map' | 'about' | 'login' | 'shelter') => {
+    selectedMenuItem.value = item;
+  };
+
+  const handleLogin = () => {
+    window.open('https://abrigospoa.web.app/login');
+  };
 </script>
-
-<style lang="scss">
-.menu-item {
-  .underline {
-    display: none;
-  }
-}
-
-.v-toolbar {
-  border-radius: 0 0 16px 16px;
-  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.16);
-}
-
-.v-btn__content {
-  position: relative;
-  display: flex;
-}
-
-.active {
-  color: #1351b4 !important;
-
-  .underline {
-    height: 3px;
-    position: absolute;
-    display: block;
-    border-radius: 100px;
-    background-color: #4e9fff;
-    bottom: -6px;
-    width: 100%;
-    max-width: 100%;
-    opacity: 0.25;
-  }
-}
-</style>
