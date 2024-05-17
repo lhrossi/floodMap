@@ -150,8 +150,6 @@
     return !!abrigo.value?.update_in?._nanoseconds && !isNotUpdatedYet
   })
 
-  console.log(abrigo.value)
-
   const userAgent = navigator.userAgent;
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 

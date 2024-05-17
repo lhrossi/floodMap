@@ -1,31 +1,43 @@
 <template>
-  <v-container class="about-modal flex flex-col" max-width="500px">
-    <slot></slot>
-    
-    <PrimaryButton
-      color="primary"
-      hoverColor="organge"
-      rounded="xl"
-      size="x-large"
-      text="Voltar"
-      :click="() => props.click()"
-    />
-  </v-container>
+  <transition name="modal">
+    <div
+      v-if="open"
+      class="w-full h-full flex items-end justify-center bg-black/50 fixed top-0 left-0 z-[1000] md:items-center"
+      @click="close"
+    >
+      <div class="about-modal flex flex-col">
+        <slot></slot>
+        
+        <PrimaryButton
+          color="primary"
+          hoverColor="orange"
+          rounded="xl"
+          size="x-large"
+          text="Voltar"
+          :click="close"
+        />
+      </div>
+    </div>
+  </transition>
 </template>
 
-<script setup>
-const props = defineProps({
-  click: Function,
-})
+<script setup lang="ts">
+interface ModalProps {
+  open: boolean;
+}
+
+defineProps<ModalProps>();
+
+const emit = defineEmits(['close']);
+
+function close() {
+  emit('close');
+}
 </script>
 
 <style lang="scss">
 .about-modal {
-  position: fixed;
-  bottom: 0;
-  right: 0;
   width: 100%;
-  z-index: 20;
   background-color: white;
   padding: 32px 25px;
   border-radius: 16px 16px 0px 0px;
@@ -71,12 +83,9 @@ const props = defineProps({
   }
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   .about-modal {
     width: 500px;
-    top: 50%;
-    right: 50%;
-    transform: translate(50%, -50%);
     padding: 50px 40px;
     border-radius: 16px;
     height: max-content;

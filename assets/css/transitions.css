@@ -1,0 +1,17 @@
+.modal-enter-active,
+.modal-leave-active {
+  @apply transition-all;
+
+  .about-modal {
+    @apply transition-all;
+  }
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  @apply opacity-0;
+
+  .about-modal {
+    @apply opacity-0 translate-y-1/3 md:translate-y-0 md:scale-90;
+  }
+}

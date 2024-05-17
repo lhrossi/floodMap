@@ -2,7 +2,7 @@
   <div hidden>
     <div 
       ref="markerRef"
-      class="w-[44px] h-[44px] rounded-full relative flex align-center justify-center"
+      class="w-[44px] h-[44px] rounded-full relative flex align-center justify-center shadow-[0_0_2px_#000]"
       :style="{ 
           backgroundColor: markerProps.backgroundColor,
         }"
