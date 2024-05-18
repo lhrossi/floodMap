@@ -11,6 +11,8 @@
         @on-select="handleSelect"
         @on-close="onCloseMenu"
       />
+
+      <DesktopMenu @on-select="handleSelect" />
   </header>
 </template>
 
@@ -43,7 +45,8 @@
       items-center
       flex
       z-[30]
-      px-4
+      mobile:px-4
+      laptop:px-8
       relative
       mobile:justify-center
       laptop:justify-between

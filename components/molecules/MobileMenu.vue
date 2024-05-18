@@ -53,6 +53,7 @@
       px-4
       pb-5
       z-10
+      laptop:hidden
   }
 
   .menu-container__active {

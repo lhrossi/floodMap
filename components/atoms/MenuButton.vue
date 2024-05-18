@@ -20,6 +20,13 @@
     @apply
       absolute
       left-4
+      laptop:hidden
+      w-[24px]
+      h-[24px]
+      flex
+      justify-center
+      items-center
+      cursor-pointer
   }
 
   .menu-button {
