@@ -2,7 +2,7 @@
   <div>
     <Filtros
       v-model="mostrarFiltros"
-      :abrigos="abrigos"
+      :abrigos="abrigos || []"
       :initialCity="currentCity"
       @closeFilters="() => (mostrarFiltros = false)"
       @filterChange="(a) => (abrigosFiltrados = a)"
@@ -71,7 +71,6 @@
 </template>
 
 <script setup lang="ts">
-import calcularCor from "~/utils/calcularCor";
 import { defaultCenter } from "~/config";
 import citiesCoordinates from "~/config/citiesCoordinates";
 import type { Abrigo } from "~/models/Abrigo";
@@ -130,7 +129,7 @@ const handleCloseShelterModal = () => {
 }
 
 const dadosGerais = computed(() => {
-  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#02952B" };
+  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0 };
 
   if (!abrigos.value) return dadosDefault;  
 
@@ -138,7 +137,7 @@ const dadosGerais = computed(() => {
     acc.totalVagas += parseInt((item.vagas || 0) ?? "0");
     acc.totalVagasOcupadas += parseInt((item.vagas_ocupadas || 0) ?? "0");
     acc.percentualOcupacao = (acc.totalVagasOcupadas * 100) / acc.totalVagas;
-    acc.cor = calcularCor(acc.totalVagas, acc.totalVagasOcupadas);
+
     return acc;
   }, dadosDefault);
 });
