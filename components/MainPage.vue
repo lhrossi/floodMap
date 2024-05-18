@@ -43,6 +43,10 @@
 
     <v-snackbar v-if="error" multi-line> Falha ao carregar abrigos </v-snackbar>
 
+    <div class="privacy-policy-button">
+      <h2 @click="() => (mostrarPrivacyPolicy = true)">Política de privacidade</h2>
+    </div>
+
     <Modal :open="mostrarInstrucoes" @close="closeModal">
       <Instrucoes />
     </Modal>
@@ -71,15 +75,18 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const selectedMenuItem = inject('selectedMenuItem');
+const resetMenuItem = inject('resetMenuItem');
 
 watch(selectedMenuItem, (value) => {
   switch (value) {
     case 'how_to_use':
       mostrarInstrucoes.value = true;
+      resetMenuItem()
       break;
 
     case 'privacy_policy':
       mostrarPrivacyPolicy.value = true;
+      resetMenuItem()
       break;
 
     case 'login':
@@ -235,6 +242,38 @@ watch(abrigosFiltrados, clearPopups);
   min-width: 280px;
   border-radius: 5px;
   padding: 14px 16px;
+}
+
+.privacy-policy-button {
+  cursor: pointer;
+  padding: 4px 24px;
+  background: #C3C3C3;
+  position: fixed;
+  bottom: 0;
+  border-radius: 8px 8px 0 0;
+  right: 50%;
+  translate: 50% 0;
+
+  h2 {
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
+@media (max-width: 768px) {
+  .privacy-policy-button {
+    display: none;
+    bottom: 50svh;
+    right: 0;
+    border-radius: 8px;
+    translate: 0 50%;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    rotate: 180deg;
+    h2 {
+      font-size: 14px;
+      margin-bottom: -2px;
+    }
+  }   
 }
 
 .mapboxgl-popup-close-button {

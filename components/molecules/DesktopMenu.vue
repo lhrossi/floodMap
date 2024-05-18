@@ -12,10 +12,6 @@
       <p>Sobre</p>
       <div class="underline"/>
     </li>
-    <li @click="() => handleSelect('privacy_policy')" class="menu-item mb-0">
-      <p>Política de privacidade</p>
-      <div class="underline"/>
-    </li>
 
     <div class="divider"/>
 
