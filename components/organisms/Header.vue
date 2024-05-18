@@ -7,7 +7,7 @@
 
       <MobileMenu
         :isOpen="isOpen"
-        :selectedItem="selectedItem"
+        :selectedItem="props.selectedItem"
         @on-select="handleSelect"
         @on-close="onCloseMenu"
       />
@@ -16,11 +16,12 @@
 
 <script setup lang="ts">
   const isOpen = ref(false);
-  const selectedItem = ref('shelter_map'); 
+
+  const props = defineProps<{ selectedItem: string, onChangeItem: (value: string) => void }>();
 
   const handleSelect = (item: MenuItem) => {
-    selectedItem.value = item;
     isOpen.value = false;
+    props.onChangeItem(item)
   }
 
   const handleMenuPress = () => {
@@ -30,7 +31,6 @@
   const onCloseMenu = () => {
     isOpen.value = false;
   }
-
 </script>
 
 <style lang="scss" scoped>
@@ -42,7 +42,7 @@
       bg-white
       items-center
       flex
-      z-50
+      z-[30]
       px-4
       relative
       mobile:justify-center

@@ -1,29 +1,22 @@
 <template>
   <div class="menu-container" :class="isOpen ? 'menu-container__active' : ''">
     <ul>
-      <li @click="() => handleSelect('shelter_map')" 
-        class="menu-item" :class="selectedItem === 'shelter_map' ? 'menu-item__selected' : ''"
-      >
+      <li @click="() => handleSelect('shelter_map')" class="menu-item menu-item__selected">
         Mapa de abrigos
       </li>
-      <li @click="() => handleSelect('how_to_use')" 
-        class="menu-item" :class="selectedItem === 'how_to_use' ? 'menu-item__selected' : ''"
-      >
+      <li @click="() => handleSelect('how_to_use')" class="menu-item">
         Como usar o mapa
       </li>
-      <li @click="() => handleSelect('about')"
-        class="menu-item" :class="selectedItem === 'about' ? 'menu-item__selected' : ''"
-      >
+      <li @click="() => handleSelect('about')" class="menu-item">
         Sobre
       </li>
-      <li @click="() => handleSelect('about')"
-        class="menu-item mb-0" :class="selectedItem === 'policy_privacy' ? 'menu-item__selected' : ''"
-      >
+      <li @click="() => handleSelect('privacy_policy')" class="menu-item mb-0">
         Política de privacidade
       </li>
       <div class="divider"/>
-      <li @click="() => handleSelect('about')" class="menu-item mb-0">
-        Login
+      <li @click="() => handleSelect('login')" class="menu-item login-button">
+        <Icon icon="tabler:login-2" height="20px" color="#434343" />
+        <p class="ml-2 text-[#434343]">Login</p>
       </li>
     </ul>
   </div>
@@ -31,8 +24,8 @@
 
 <script setup lang="ts">
   import { defineProps, defineEmits } from 'vue';
-
-  type MenuItem = 'shelter_map' | 'how_to_use' | 'about' | 'policy_privacy' | 'login';
+  import { Icon } from '@iconify/vue'; 
+  import type { MenuItem } from '~/models/MenuItem';
 
   const props = defineProps<{ selectedItem: MenuItem, isOpen: boolean }>();
   const emit = defineEmits(['onSelect'])
@@ -90,5 +83,13 @@
       my-[24px]
       h-[1px]
       bg-[#C3C3C3]
+  }
+
+  .login-button {
+    @apply
+      flex
+      items-center
+      justify-center
+      mb-0
   }
 </style>

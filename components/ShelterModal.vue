@@ -126,7 +126,7 @@
     </div>
   </div>
 
-  <div v-if="isMobile" @click="handleClose" class="fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-20" />
+  <div v-if="isMobile" @click="handleClose" class="fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[40]" />
 </template>
 
 <script setup lang="ts">
