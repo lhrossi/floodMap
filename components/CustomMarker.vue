@@ -8,6 +8,7 @@
         }"
     >
       <Icon v-if="markerProps.type !== 'both'" :icon="markerProps.iconName" height="24px" color="#fff"/>
+
       <div v-else class="flex relative align-center justify-center">
         <Icon icon="carbon:user-filled" height="20px" color="#fff" class="absolute left-[calc(50%-7px)] translate-x-[-50%]"/>
         <div>
@@ -27,32 +28,30 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
+  import { Icon } from '@iconify/vue';
   import { defineMapboxMarker } from '#imports';
   import type { Abrigo } from '~/models/Abrigo';
-  import { Icon } from '@iconify/vue';
+  import { OccupationType } from '~/models/Occupation';
+  import OccupationUtils from '~/utils/occupationUtils';
   
   const { abrigo, markerId } = defineProps<{ abrigo: Abrigo, markerId: string }>();
-  const emit = defineEmits(['onClick'])
 
-  const markerProps = computed(() => {
-    const isPerson = abrigo.vagas_ocupadas && parseInt(abrigo.vagas_ocupadas) > 0;
-    const isPet = abrigo?.vagas_pet && parseInt(abrigo.vagas_pet) > 0; 
-    const isBoth = isPerson && isPet;
+  const emit = defineEmits(['onClick']);
 
-    const backgroundColor = isBoth ? "#FF1183" : isPet ? "#9747FF" : "#4759FF";
+  const occupationUtils = computed(() => new OccupationUtils(abrigo));
 
-    return {
-      type: isBoth ? "both" : isPet ? "pet" : "person",
-      iconName: isPet ? "material-symbols:pets" : "carbon:user-filled",
-      statusColor: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
-      backgroundColor: backgroundColor,
-    }
-  })
+  const markerProps = computed(() => ({
+    type: occupationUtils.value.abrigoOccupationType,
+    iconName: occupationUtils.value.abrigoOccupationType === OccupationType.Pet
+      ? "material-symbols:pets" : "carbon:user-filled",
+    statusColor: occupationUtils.value.abrigoStatusColor.marker,
+    backgroundColor: occupationUtils.value.abrigoMarkerColor,
+  }));
 
   const latAndLng = [abrigo.longitude, abrigo.latitude]
 
   const options = {
-    color: calcularCor(abrigo.vagas, abrigo.vagas_ocupadas),
+    color: markerProps.value.statusColor,
     lnglat: latAndLng,
   }
 

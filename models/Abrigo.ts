@@ -4,9 +4,12 @@ export interface Necessidade {
   type: string | null;
 }
 
+export type Vaga = string | number | null;
+
 export interface Abrigo {
   id: string;
-  vagas: string | number | null;
+  vagas: Vaga;
+  vagas_ocupadas: Vaga;
   roupa_cama: null;
   update_in: {
     _seconds: number;
@@ -31,10 +34,8 @@ export interface Abrigo {
     _seconds: number;
     _nanoseconds: number;
   };
-  vagas_ocupadas: string;
-  showPopup?: boolean;
-  vagas_pet?: string | null;
-  vagas_pet_ocupadas?: string | null;
+  vagas_pet?: Vaga;
+  vagas_pet_ocupadas?: Vaga;
   itensUteis?: Necessidade[] | null;
   city?: string;
   abrigopm?: string;
