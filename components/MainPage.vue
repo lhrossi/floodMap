@@ -33,19 +33,6 @@
       <MapboxGeolocateControl position="bottom-right" />
     </MapboxMap>
 
-    <v-chip
-      class="fixed top-6 left-4 md:top-8 md:left-6"
-      color="white"
-      variant="flat"
-      @click="() => (mostrarInstrucoes = !mostrarInstrucoes)"
-    >
-      <div class="flex items-center gap-2">
-        <span class="text-base leading-4">Como usar o mapa</span>
-
-        <ion-help-circle-outline class="size-4" />
-      </div>
-    </v-chip>
-
     <FloatingBar
       :data="dadosGerais"
       :city="currentCity"
@@ -83,8 +70,32 @@ type Props = {
 
 const props = withDefaults(defineProps<Props>(), {
   mapCenter: () => defaultCenter,
-  mapZoom: 7
+  mapZoom: 7,
 });
+
+const selectedMenuItem = inject('selectedMenuItem');
+const resetMenuItem = inject('resetMenuItem');
+
+watch(selectedMenuItem, (value) => {
+  switch (value) {
+    case 'how_to_use':
+      mostrarInstrucoes.value = true;
+      resetMenuItem()
+      break;
+
+    case 'privacy_policy':
+      mostrarPrivacyPolicy.value = true;
+      resetMenuItem()
+      break;
+
+    case 'login':
+      window.open('https://abrigospoa.web.app/login');
+      break;
+
+    default:
+      break;
+  }
+})
 
 const token = useRoute().query.token as string;
 
@@ -234,8 +245,8 @@ watch(abrigosFiltrados, clearPopups);
 
 .privacy-policy-button {
   cursor: pointer;
-  padding: 4px;
-  background: rgba(255, 255, 255, 0.5);
+  padding: 4px 24px;
+  background: #C3C3C3;
   position: fixed;
   bottom: 0;
   border-radius: 8px 8px 0 0;
@@ -244,12 +255,12 @@ watch(abrigosFiltrados, clearPopups);
 
   h2 {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
   }
 }
-
 @media (max-width: 768px) {
   .privacy-policy-button {
+    display: none;
     bottom: 50svh;
     right: 0;
     border-radius: 8px;
@@ -257,7 +268,6 @@ watch(abrigosFiltrados, clearPopups);
     writing-mode: vertical-lr;
     text-orientation: mixed;
     rotate: 180deg;
-
     h2 {
       font-size: 14px;
       margin-bottom: -2px;
