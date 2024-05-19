@@ -45,19 +45,46 @@
       </div>
 
       <!-- Available Slots Card -->
-      <div class="flex flex-column mt-4 rounded-lg overflow-hidden h-[80px]">
-        <div class="flex flex-1 bg-[#F1F1F1] align-center justify-center">
-          <Icon icon="carbon:user-filled" class="min-h-[20px]" color="#3E3E3E"/>
-          <p class="ml-2 text-[#3E3E3E] font-semibold">Pessoas</p>
-        </div>
+      <div class="flex flex-row gap-4 mt-4" v-if="occupationsList.length">
+        <div
+          class="flex flex-1 flex-column rounded-lg overflow-hidden h-[80px]"
+          v-for="occupation in occupationsList"
+          :key="occupation.type"
+        >
+          <div class="flex flex-1 bg-[#F1F1F1] align-center justify-center h-[40px]">
+            <Icon :icon="occupation.icon" class="min-h-[20px]" color="#3E3E3E"/>
+            <p class="ml-2 text-[#3E3E3E] font-semibold">{{ occupation.label }}</p>
+          </div>
+  
+          <div
+            :class="`flex flex-1 align-center justify-center ${occupationsUISpecifications.textContainer}`"
+            :style="{ backgroundColor: occupation.colors.background }"
+          >
+            <p
+              :class="`font-semibold ${occupationsUISpecifications.textSize}`"
+              :style="{ color: occupation.colors.text }"
+            >
+              {{ `${occupation.occupiedPercentage.replace('.', ',')}% ocupado`  }}
+            </p>
 
-        <div :class="`flex flex-1 align-center justify-center ${occupationColor.background}`" >
-          <p :class="`text-[#02952B] font-semibold text-sm ${occupationColor.text}`">
-            {{ `${occupationPercentage.replace('.', ',')}% ocupado`  }}
-          </p>
-          <div :class="`w-1 h-1 rounded-full mx-2 ${occupationColor.bullet}`"/>
-          <p :class="`font-semibold text-sm ${occupationColor.text}`">{{ `${availableSlots} Vagas Livres` }}</p>
-          <p class="text-[#3E3E3E] font-semibold text-sm ml-1">{{ `de ${abrigo?.vagas || 0}` }}</p>
+            <div
+              v-if="occupationsUISpecifications.showBullet"
+              class="w-1 h-1 rounded-full mx-2"
+              :style="{ backgroundColor: occupation.colors.text }"
+            />
+
+            <div class="flex align-center">
+              <p
+                :class="`font-semibold ${occupationsUISpecifications.textSize}`"
+                :style="{ color: occupation.colors.text }">
+                {{ `${occupation.availableSlots} Vagas Livres` }}
+              </p>
+  
+              <p :class="`text-[#3E3E3E] font-semibold ${occupationsUISpecifications.textSize} ml-1`">
+                {{ `de ${occupation.totalSlots}` }}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -99,6 +126,7 @@
     <!-- Footer -->
     <div class="mt-5 border-t border-[#F1F1F1] pt-4 relative" >
       <div
+        v-if="!!abrigo?.itensUteis?.length || isCityCentralizedDonations"
         class="absolute bg-gradient-to-t from-white to-white/30 w-full h-[40px] left-0"
         :class="{
           'h-[20px]': isCityCentralizedDonations,
@@ -126,14 +154,15 @@
     </div>
   </div>
 
-  <div v-if="isMobile" @click="handleClose" class="fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-20" />
+  <div v-if="isMobile" @click="handleClose" class="fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[40]" />
 </template>
 
 <script setup lang="ts">
   import { Icon } from '@iconify/vue';
-  import type { Abrigo } from '~/models/Abrigo';
   import { useDayjs } from '#imports';
   import { citiesWithCentralizedDonations } from '~/config/citiesWithCentralizedDonations';
+  import type { Abrigo } from '~/models/Abrigo';
+  import OccupationUtils from '~/utils/occupationUtils';
 
   const dayjs = useDayjs()
 
@@ -142,12 +171,11 @@
 
   const abrigo = toRef(props, 'abrigo')
 
-  const hasPhoneNumber = !!abrigo.value?.telefone
-  const formattedLastUpdated = dayjs(abrigo.value?.update_in?._nanoseconds).format('DD/MM - HH:mm')
+  const hasPhoneNumber = computed(() => !!abrigo.value?.telefone);
+  const formattedLastUpdated = computed(() => dayjs(abrigo.value?.update_in?._seconds! * 1000).format('DD/MM - HH:mm'));
 
   const shouldShowLastUpdatedTag = computed(() => {
-    const isNotUpdatedYet = abrigo.value?.update_in?._nanoseconds === abrigo.value?.create_in?._nanoseconds
-    return !!abrigo.value?.update_in?._nanoseconds && !isNotUpdatedYet
+    return !!abrigo.value?.update_in?._seconds;
   })
 
   const userAgent = navigator.userAgent;
@@ -158,46 +186,17 @@
 
   const sanitizedPhone = String(abrigo.value?.telefone)?.replace(/\D/g, '');
 
-  const occupationPercentage = computed(() => {
-    if (abrigo.value?.vagas === '0' || abrigo.value?.vagas === null || abrigo.value?.vagas === 0) return '100'
+  const occupationUtils = computed(() => new OccupationUtils(abrigo.value));
 
-    const totalSlots = Number(abrigo.value?.vagas || '0')
-    const occupiedSlots = parseInt(abrigo.value?.vagas_ocupadas || '0')
-    const percentage = (occupiedSlots / totalSlots) * 100
-    return percentage > 0 ? Math.min(percentage, 100).toFixed(0) : '0'
-  })
+  const occupationsList = computed(() => occupationUtils.value.occupations);
 
-  const availableSlots = computed(() => {
-    const totalSlots = Number(abrigo.value?.vagas || '0')
-    const occupiedSlots = parseInt(abrigo.value?.vagas_ocupadas || '0')
-    return Math.max(totalSlots - occupiedSlots, 0);
-  })
-
-  const occupationColor = computed(() => {
-    const percentage = parseFloat(occupationPercentage.value)
-
-    if (percentage < 50) {
-      return {
-      background: 'bg-[#E3FBEA]',
-      bullet: 'bg-[#02952B]',
-      text: 'text-[#02952B]'
-      }
-    }
-
-    if (percentage < 75) {
-      return {
-        background: 'bg-[#FFF5EC]',
-        bullet: 'bg-[#E37000]',
-        text: 'text-[#E37000]'
-      }
-    }
-
+  const occupationsUISpecifications = computed(() => {
     return {
-      background: 'bg-[#FDDDE0]',
-      bullet: 'bg-[#E61226]',
-      text: 'text-[#E61226]'
+      textContainer: occupationsList.value.length > 1 ? 'flex-col' : 'flex-row',
+      textSize: occupationsList.value.length > 1 ? 'text-[10px]' : 'text-sm',
+      showBullet: occupationsList.value.length === 1,
     }
-  })
+  });
 
   const handleLinkToWhatsapp = () => {
     if (!abrigo.value?.telefone) return

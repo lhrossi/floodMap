@@ -2,7 +2,7 @@
   <div>
     <Filtros
       v-model="mostrarFiltros"
-      :abrigos="abrigos"
+      :abrigos="abrigos || []"
       :initialCity="currentCity"
       @closeFilters="() => (mostrarFiltros = false)"
       @filterChange="(a) => (abrigosFiltrados = a)"
@@ -33,19 +33,6 @@
       <MapboxGeolocateControl position="bottom-right" />
     </MapboxMap>
 
-    <v-chip
-      class="fixed top-6 left-4 md:top-8 md:left-6"
-      color="white"
-      variant="flat"
-      @click="() => (mostrarInstrucoes = !mostrarInstrucoes)"
-    >
-      <div class="flex items-center gap-2">
-        <span class="text-base leading-4">Como usar o mapa</span>
-
-        <ion-help-circle-outline class="size-4" />
-      </div>
-    </v-chip>
-
     <FloatingBar
       :data="dadosGerais"
       :city="currentCity"
@@ -71,7 +58,6 @@
 </template>
 
 <script setup lang="ts">
-import calcularCor from "~/utils/calcularCor";
 import { defaultCenter } from "~/config";
 import citiesCoordinates from "~/config/citiesCoordinates";
 import type { Abrigo } from "~/models/Abrigo";
@@ -84,7 +70,31 @@ type Props = {
 
 const props = withDefaults(defineProps<Props>(), {
   mapCenter: () => defaultCenter,
-  mapZoom: 7
+  mapZoom: 7,
+});
+
+const selectedMenuItem = inject('selectedMenuItem');
+const resetMenuItem = inject<() => void>('resetMenuItem');
+
+watch(selectedMenuItem, (value) => {
+  switch (value) {
+    case 'how_to_use':
+      mostrarInstrucoes.value = true;
+      if (resetMenuItem) resetMenuItem()
+      break;
+
+    case 'privacy_policy':
+      mostrarPrivacyPolicy.value = true;
+      if (resetMenuItem) resetMenuItem()
+      break;
+
+    case 'login':
+      window.open('https://abrigospoa.web.app/login');
+      break;
+
+    default:
+      break;
+  }
 });
 
 const token = useRoute().query.token as string;
@@ -130,15 +140,15 @@ const handleCloseShelterModal = () => {
 }
 
 const dadosGerais = computed(() => {
-  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0, cor: "#02952B" };
+  const dadosDefault = { totalVagas: 0, totalVagasOcupadas: 0, percentualOcupacao: 0 };
 
   if (!abrigos.value) return dadosDefault;  
 
   return abrigosFiltrados.value.reduce((acc, item) => {
-    acc.totalVagas += parseInt((item.vagas || 0) ?? "0");
-    acc.totalVagasOcupadas += parseInt((item.vagas_ocupadas || 0) ?? "0");
+    acc.totalVagas += parseInt((item.vagas || 0) ?? "0") || 0;
+    acc.totalVagasOcupadas += parseInt((item.vagas_ocupadas || 0) ?? "0") || 0;
     acc.percentualOcupacao = (acc.totalVagasOcupadas * 100) / acc.totalVagas;
-    acc.cor = calcularCor(acc.totalVagas, acc.totalVagasOcupadas);
+
     return acc;
   }, dadosDefault);
 });
@@ -235,8 +245,8 @@ watch(abrigosFiltrados, clearPopups);
 
 .privacy-policy-button {
   cursor: pointer;
-  padding: 4px;
-  background: rgba(255, 255, 255, 0.5);
+  padding: 4px 24px;
+  background: rgba(255, 255, 255, 0.8);
   position: fixed;
   bottom: 0;
   border-radius: 8px 8px 0 0;
@@ -245,12 +255,12 @@ watch(abrigosFiltrados, clearPopups);
 
   h2 {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
   }
 }
-
 @media (max-width: 768px) {
   .privacy-policy-button {
+    display: none;
     bottom: 50svh;
     right: 0;
     border-radius: 8px;
@@ -258,7 +268,6 @@ watch(abrigosFiltrados, clearPopups);
     writing-mode: vertical-lr;
     text-orientation: mixed;
     rotate: 180deg;
-
     h2 {
       font-size: 14px;
       margin-bottom: -2px;
