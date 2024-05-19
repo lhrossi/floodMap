@@ -17,9 +17,11 @@
 </template>
 
 <script setup lang="ts">
+  import type { MenuItem } from '~/models/MenuItem';
+
   const isOpen = ref(false);
 
-  const props = defineProps<{ selectedItem: string, onChangeItem: (value: string) => void }>();
+  const props = defineProps<{ selectedItem: MenuItem, onChangeItem: (value: string) => void }>();
 
   const handleSelect = (item: MenuItem) => {
     isOpen.value = false;

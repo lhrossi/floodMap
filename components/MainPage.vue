@@ -74,18 +74,18 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const selectedMenuItem = inject('selectedMenuItem');
-const resetMenuItem = inject('resetMenuItem');
+const resetMenuItem = inject<() => void>('resetMenuItem');
 
 watch(selectedMenuItem, (value) => {
   switch (value) {
     case 'how_to_use':
       mostrarInstrucoes.value = true;
-      resetMenuItem()
+      if (resetMenuItem) resetMenuItem()
       break;
 
     case 'privacy_policy':
       mostrarPrivacyPolicy.value = true;
-      resetMenuItem()
+      if (resetMenuItem) resetMenuItem()
       break;
 
     case 'login':
@@ -95,7 +95,7 @@ watch(selectedMenuItem, (value) => {
     default:
       break;
   }
-})
+});
 
 const token = useRoute().query.token as string;
 
@@ -145,8 +145,8 @@ const dadosGerais = computed(() => {
   if (!abrigos.value) return dadosDefault;  
 
   return abrigosFiltrados.value.reduce((acc, item) => {
-    acc.totalVagas += parseInt((item.vagas || 0) ?? "0");
-    acc.totalVagasOcupadas += parseInt((item.vagas_ocupadas || 0) ?? "0");
+    acc.totalVagas += parseInt((item.vagas || 0) ?? "0") || 0;
+    acc.totalVagasOcupadas += parseInt((item.vagas_ocupadas || 0) ?? "0") || 0;
     acc.percentualOcupacao = (acc.totalVagasOcupadas * 100) / acc.totalVagas;
 
     return acc;
@@ -246,7 +246,7 @@ watch(abrigosFiltrados, clearPopups);
 .privacy-policy-button {
   cursor: pointer;
   padding: 4px 24px;
-  background: #C3C3C3;
+  background: rgba(255, 255, 255, 0.8);
   position: fixed;
   bottom: 0;
   border-radius: 8px 8px 0 0;

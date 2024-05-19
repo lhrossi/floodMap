@@ -23,15 +23,10 @@
 </template>
 
 <script setup lang="ts">
-  import { defineProps, defineEmits } from 'vue';
-  import { Icon } from '@iconify/vue'; 
+  import { defineEmits } from 'vue';
   import type { MenuItem } from '~/models/MenuItem';
 
-  const props = defineProps<{ selectedItem: MenuItem }>();
   const emit = defineEmits(['onSelect'])
-
-  const selectedItem = toRef(props, 'selectedItem')
-  const isOpen = toRef(props, 'isOpen')
 
   const handleSelect = (item: MenuItem) => {
     emit('onSelect', item)

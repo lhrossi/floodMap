@@ -35,17 +35,12 @@ class OccupationUtils {
   }
 
   private getGeneralOccupationPercentage() {
-    if (this.abrigoOccupationType === OccupationType.Both) {
-      /**
-       * TODO: think a better way to calculate
-       * the occupation percentage when is both
-       */
-      const personOccupation = this.occupations.find(({ type }) => type === OccupationType.Person);
+    const { totalSlots, occupiedSlots } = this.occupations.reduce((total, occupation) => ({
+      totalSlots: total.totalSlots + occupation.totalSlots,
+      occupiedSlots: total.occupiedSlots + occupation.occupiedSlots
+    }), { totalSlots: 0, occupiedSlots: 0 });
 
-      return personOccupation?.occupiedPercentage || '100';
-    }
-
-    return this.occupations[0]?.occupiedPercentage || '100';
+    return this.getOccupationPercentage(totalSlots, occupiedSlots);
   }
 
   private setOccupations() {
