@@ -7,9 +7,9 @@ const props = defineProps<{
 
 const emit = defineEmits(['show-filters', 'update-city']);
 
-const color = occupationUtils.getOccupationColorByOccupationPercentage(props.data.percentualOcupacao).text;
+const color = computed(() => occupationUtils.getOccupationColorByOccupationPercentage(props.data.percentualOcupacao).text);
 
-const background = computed(() => hexToRGBA(color, 0.15));
+const backgroundColor = computed(() => hexToRGBA(color.value, 0.15));
 
 function updateCity(value: string) {
   emit('update-city', value);
@@ -29,7 +29,7 @@ function showFilters() {
         @click="showFilters">Filtros</v-btn>
     </div>
 
-    <div class="floating-bar__info">
+    <div class="floating-bar__info" :style="{ color, backgroundColor }">
       <strong class="font-bold text-current">{{ Math.round(data.percentualOcupacao) }}% Ocupado</strong>
       <span class="text-[10px]">●</span>
       <strong class="font-bold text-current">{{ data.totalVagas - data.totalVagasOcupadas }} Vagas Livres <span
@@ -38,16 +38,20 @@ function showFilters() {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .floating-bar {
   @apply w-full max-w-full fixed bottom-0 left-0 bg-white z-10 md:w-[40vw] md:min-w-[400px] md:max-w-[600px] md:bottom-9 md:left-1/2 md:rounded-3xl md:-translate-x-1/2;
 
   &__actions {
     @apply flex items-center gap-4 p-4;
+
+    .v-btn__content {
+      letter-spacing: 0;
+    }
   }
 
   &__info {
-    @apply flex justify-center gap-1 p-3 bg-[v-bind('background')] text-[v-bind('color')] text-xs md:rounded-b-3xl;
+    @apply flex justify-center gap-1 p-3 text-xs md:rounded-b-3xl;
   }
 }
 </style>

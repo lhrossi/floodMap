@@ -3,10 +3,11 @@
     flex flex-column
     mobile:left-0 mobile:w-full mobile:max-h-[80vh] mobile:bottom-0 mobile:transform mobile:animate-appear-from-bottom
     laptop:left-[24px] laptop:bottom-[40px] laptop:w-[375px]
-    bg-white p-4 shadow-lg rounded-lg absolute bottom-[40px] pb-[40px] z-50"
+    bg-white pt-5 shadow-[0_4px_20px_0_rgba(0,0,0,0.15)] rounded-[32px] absolute bottom-[40px] pb-[40px] z-50"
+
   >
     <!-- Header -->
-    <div class="flex align-center mb-4" 
+    <div class="flex align-center mb-5 px-5"
         :class="shouldShowLastUpdatedTag ? 'justify-between' : 'justify-end'">
       <div v-if="shouldShowLastUpdatedTag" class="bg-[#F1F1F1] px-3 py-2 align-center justify-center rounded-xl flex">
         <Icon icon="flowbite:refresh-outline" height="12px" color="#3E3E3E"/>
@@ -19,12 +20,12 @@
       </button>
     </div>
 
-    <div class="flex-1 overflow-auto relative pb-[20px]">
+    <div class="flex-1 overflow-auto relative pb-[20px] px-5">
       <!-- Content Table -->
       <div>
         <h2 class="text-xl font-bold">{{ abrigo?.nome }}</h2>
 
-        <div class="mt-4">
+        <div class="mt-5">
           <div v-if="!!abrigo?.address" class="flex align-center mb-[16px]">
             <Icon icon="majesticons:map-marker" color="#3E3E3E" class="min-w-[24px]"/>
             <p class="ml-[6px] text-[#3E3E3E]">{{abrigo?.address }}</p>
@@ -45,7 +46,7 @@
       </div>
 
       <!-- Available Slots Card -->
-      <div class="flex flex-row gap-4 mt-4" v-if="occupationsList.length">
+      <div class="flex flex-row gap-4 mt-5" v-if="occupationsList.length">
         <div
           class="flex flex-1 flex-column rounded-lg overflow-hidden h-[80px]"
           v-for="occupation in occupationsList"
@@ -91,10 +92,10 @@
       <!-- List of needs -->
       <div 
         v-if="!!abrigo?.itensUteis?.length || isCityCentralizedDonations"
-        class="mt-4 relative"
+        class="mt-5 relative"
         :class="{ 'pb-[10px]': isCityCentralizedDonations }"
       >
-        <h3 class="text-lg text-[#020202] font-bold mb-3">Necessidades</h3>
+        <h3 class="text-lg text-[#020202] font-bold mb-4">Necessidades</h3>
 
         <div v-if="isCityCentralizedDonations">
           <p v-if="isManagedByGovern">
@@ -124,7 +125,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="mt-5 border-t border-[#F1F1F1] pt-4 relative" >
+    <div class="mt-5 border-t border-[#F1F1F1] pt-4 px-5 relative">
       <div
         v-if="!!abrigo?.itensUteis?.length || isCityCentralizedDonations"
         class="absolute bg-gradient-to-t from-white to-white/30 w-full h-[40px] left-0"
@@ -169,7 +170,7 @@
   const props = defineProps<{ abrigo: Abrigo | null }>();
   const emit = defineEmits(['onClose'])
 
-  const abrigo = toRef(props, 'abrigo')
+  const abrigo = toRef(props, 'abrigo');
 
   const hasPhoneNumber = computed(() => !!abrigo.value?.telefone);
   const formattedLastUpdated = computed(() => dayjs(abrigo.value?.update_in?._seconds! * 1000).format('DD/MM - HH:mm'));
@@ -193,7 +194,7 @@
   const occupationsUISpecifications = computed(() => {
     return {
       textContainer: occupationsList.value.length > 1 ? 'flex-col' : 'flex-row',
-      textSize: occupationsList.value.length > 1 ? 'text-[10px]' : 'text-sm',
+      textSize: occupationsList.value.length > 1 ? 'text-[11px]' : 'text-sm',
       showBullet: occupationsList.value.length === 1,
     }
   });

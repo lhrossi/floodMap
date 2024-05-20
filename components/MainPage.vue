@@ -147,7 +147,8 @@ const dadosGerais = computed(() => {
   return abrigosFiltrados.value.reduce((acc, item) => {
     acc.totalVagas += parseInt((item.vagas || 0) ?? "0") || 0;
     acc.totalVagasOcupadas += parseInt((item.vagas_ocupadas || 0) ?? "0") || 0;
-    acc.percentualOcupacao = (acc.totalVagasOcupadas * 100) / acc.totalVagas;
+
+    acc.percentualOcupacao = acc.totalVagas === 0 ? 100 : (acc.totalVagasOcupadas * 100) / acc.totalVagas;
 
     return acc;
   }, dadosDefault);
