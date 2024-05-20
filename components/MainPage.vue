@@ -134,7 +134,7 @@ function getCityCoordinatesAndZoom(city: string) {
   if (city === 'Todos')
     return defaultData;
 
-  const citySlug = city.replaceAll(/[^A-z]/g, '').toLowerCase();
+  const citySlug = city.replaceAll(/[^A-Z]/gi, '').toLowerCase();
   const cityData = citiesCoordinates[citySlug];
 
   if (cityData) {
