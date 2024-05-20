@@ -1,9 +1,9 @@
-import type { Abrigo, Vaga } from "~/models/Abrigo"
-import { OccupationType, type Occupation, type RawOccupation } from "~/models/Occupation"
+import type { Abrigo, Vaga } from '~/models/Abrigo';
+import { type Occupation, OccupationType, type RawOccupation } from '~/models/Occupation';
 
 class OccupationUtils {
   constructor(
-    private readonly abrigo?: Abrigo | null
+    private readonly abrigo?: Abrigo | null,
   ) {
     this.occupations = this.setOccupations();
   }
@@ -37,8 +37,11 @@ class OccupationUtils {
   private getGeneralOccupationPercentage() {
     const { totalSlots, occupiedSlots } = this.occupations.reduce((total, occupation) => ({
       totalSlots: total.totalSlots + occupation.totalSlots,
-      occupiedSlots: total.occupiedSlots + occupation.occupiedSlots
-    }), { totalSlots: 0, occupiedSlots: 0 });
+      occupiedSlots: total.occupiedSlots + occupation.occupiedSlots,
+    }), {
+      totalSlots: 0,
+      occupiedSlots: 0,
+    });
 
     return this.getOccupationPercentage(totalSlots, occupiedSlots);
   }
@@ -46,19 +49,22 @@ class OccupationUtils {
   private setOccupations() {
     if (!this.abrigo) return [];
 
-    return [{
-      type: OccupationType.Person,
-      icon: 'carbon:user-filled',
-      label: 'Pessoas',
-      totalSlots: this.abrigo.vagas,
-      occupiedSlots: this.abrigo.vagas_ocupadas,
-    }, {
-      type: OccupationType.Pet,
-      icon: 'material-symbols:pets',
-      label: 'Animais',
-      totalSlots: this.abrigo.vagas_pet,
-      occupiedSlots: this.abrigo.vagas_pet_ocupadas,
-    }]
+    return [
+      {
+        type: OccupationType.Person,
+        icon: 'carbon:user-filled',
+        label: 'Pessoas',
+        totalSlots: this.abrigo.vagas,
+        occupiedSlots: this.abrigo.vagas_ocupadas,
+      },
+      {
+        type: OccupationType.Pet,
+        icon: 'material-symbols:pets',
+        label: 'Animais',
+        totalSlots: this.abrigo.vagas_pet,
+        occupiedSlots: this.abrigo.vagas_pet_ocupadas,
+      },
+    ]
       .map(this.formatOccupationData.bind(this))
       .filter(({ totalSlots }) => totalSlots > 0);
   }
@@ -76,16 +82,16 @@ class OccupationUtils {
       occupiedSlots,
       occupiedPercentage,
       availableSlots,
-      colors
-    }
+      colors,
+    };
   }
 
   private formatSlotsToNumber(vagas?: Vaga) {
-    return typeof vagas === 'number' ? vagas : (parseInt(vagas || '0') || 0)
+    return typeof vagas === 'number' ? vagas : (Number.parseInt(vagas || '0') || 0);
   }
 
   private getOccupationPercentage(totalSlots: number, occupiedSlots: number) {
-    if (isNaN(occupiedSlots) || isNaN(totalSlots) || totalSlots === 0) return '100';
+    if (Number.isNaN(occupiedSlots) || Number.isNaN(totalSlots) || totalSlots === 0) return '100';
 
     const percentage = (occupiedSlots / totalSlots) * 100;
     return percentage > 0 ? Math.min(percentage, 100).toFixed(0) : '0';
@@ -96,14 +102,14 @@ class OccupationUtils {
   }
 
   static getOccupationColorByOccupationPercentage(occupiedPercentage: string) {
-    const percentage = parseFloat(occupiedPercentage);
+    const percentage = Number.parseFloat(occupiedPercentage);
 
     if (percentage < 50) {
       return {
         background: '#E3FBEA',
         text: '#02952B',
         marker: '#02952B',
-      }
+      };
     }
 
     if (percentage < 75) {
@@ -111,14 +117,14 @@ class OccupationUtils {
         background: '#FFF5EC',
         text: '#E37000',
         marker: '#E37000',
-      }
+      };
     }
 
     return {
       background: '#FDDDE0',
       text: '#E61226',
       marker: '#E61226',
-    }
+    };
   }
 }
 

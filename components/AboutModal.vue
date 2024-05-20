@@ -1,10 +1,16 @@
 <template>
   <div class="text">
-    <h3> Voluntários de TI desenvolvem soluções para combater os atingidos pelas enchentes
+    <h3>
+      Voluntários de TI desenvolvem soluções para combater os atingidos pelas enchentes
     </h3>
-    <p >Soluções Abrigo RS e Apoio a Enchentes vão conectar as necessidades dos abrigos à
-      sociedade</p>
-      <br>
+
+    <p>
+      Soluções Abrigo RS e Apoio a Enchentes vão conectar as necessidades dos abrigos à
+      sociedade
+    </p>
+
+    <br>
+
     <p>
       No Rio Grande do Sul, são cerca de 315 abrigos ativos no momento. Em Porto Alegre, são
       mais de 100 locais de acolhimento. Esses números modificam a todo o momento devido a

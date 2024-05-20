@@ -6,7 +6,9 @@
     "dev": "nuxt dev -o",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "@hebilicious/vue-query-nuxt": "^0.2.0",

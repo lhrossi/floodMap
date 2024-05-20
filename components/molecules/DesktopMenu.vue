@@ -1,38 +1,56 @@
+<script setup lang="ts">
+import type { MenuItem } from '~/models/MenuItem';
+
+const emit = defineEmits([
+  'onSelect',
+]);
+
+function handleSelect(item: MenuItem) {
+  emit('onSelect', item);
+}
+</script>
+
 <template>
   <ul class="menu-container">
-    <li @click="() => handleSelect('shelter_map')" class="menu-item menu-item__selected">
+    <li
+      class="menu-item menu-item__selected"
+      @click="() => handleSelect('shelter_map')"
+    >
       <p>Mapa de abrigos</p>
-      <div class="underline"/>
+
+      <div class="underline" />
     </li>
-    <li @click="() => handleSelect('how_to_use')" class="menu-item">
+
+    <li
+      class="menu-item"
+      @click="() => handleSelect('how_to_use')"
+    >
       <p>Como usar o mapa</p>
-      <div class="underline"/>
+
+      <div class="underline" />
     </li>
-    <li @click="() => handleSelect('about')" class="menu-item">
+
+    <li
+      class="menu-item"
+      @click="() => handleSelect('about')"
+    >
       <p>Sobre</p>
-      <div class="underline"/>
+
+      <div class="underline" />
     </li>
 
-    <div class="divider"/>
+    <div class="divider" />
 
-    <li @click="() => handleSelect('login')" class="menu-item mr-0">
+    <li
+      class="menu-item mr-0"
+      @click="() => handleSelect('login')"
+    >
       <p>Login</p>
-      <div class="underline"/>
+
+      <div class="underline" />
     </li>
   </ul>
 </template>
-
-<script setup lang="ts">
-  import { defineEmits } from 'vue';
-  import type { MenuItem } from '~/models/MenuItem';
-
-  const emit = defineEmits(['onSelect'])
-
-  const handleSelect = (item: MenuItem) => {
-    emit('onSelect', item)
-  }
-
-</script>
 
 <style lang="scss" scoped>
   .menu-container {
@@ -44,13 +62,13 @@
 
   .menu-item {
     @apply
-      transition-all 
+      transition-all
       duration-100
       cursor-pointer
       text-[#020202]
       relative
       mr-6;
-    
+
     &:hover {
       @apply
         text-[#1351B4]
@@ -60,7 +78,7 @@
         @apply
           opacity-100
       }
-    } 
+    }
   }
 
   .menu-item__selected {

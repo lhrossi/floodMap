@@ -5,40 +5,58 @@ const props = defineProps<{
   cities: Array<any>;
 }>();
 
-const emit = defineEmits(['show-filters', 'update-city']);
+const emit = defineEmits([
+  'showFilters',
+  'updateCity',
+]);
 
 const color = computed(() => occupationUtils.getOccupationColorByOccupationPercentage(props.data.percentualOcupacao).text);
 
 const backgroundColor = computed(() => hexToRGBA(color.value, 0.15));
 
 function updateCity(value: string) {
-  emit('update-city', value);
+  emit('showFilters', value);
 }
 
 function showFilters() {
-  emit('show-filters');
+  emit('updateCity');
 }
 </script>
 
 <template>
   <div class="floating-bar">
     <div class="floating-bar__actions">
-      <CustomSelect :value="city" :items="cities" @change="updateCity" />
+      <CustomSelect
+        :value="city"
+        :items="cities"
+        @change="updateCity"
+      />
 
-      <v-btn color="#E3EDFD" rounded="xl" class="!text-base !text-[#114DE6] !normal-case" flat
-        @click="showFilters">Filtros</v-btn>
+      <v-btn
+        color="#E3EDFD"
+        rounded="xl"
+        class="!text-base !text-[#114DE6] !normal-case"
+        flat
+        @click="showFilters"
+      >
+        Filtros
+      </v-btn>
     </div>
 
-    <div class="floating-bar__info" :style="{ color, backgroundColor }">
+    <div
+      class="floating-bar__info"
+      :style="{ color, backgroundColor }"
+    >
       <strong class="font-bold text-current">{{ Math.round(data.percentualOcupacao) }}% Ocupado</strong>
+
       <span class="text-[10px]">●</span>
-      <strong class="font-bold text-current">{{ data.totalVagas - data.totalVagasOcupadas }} Vagas Livres <span
-          class="text-gray-700">de {{ data.totalVagas }}</span></strong>
+
+      <strong class="font-bold text-current">{{ data.totalVagas - data.totalVagasOcupadas }} Vagas Livres <span class="text-gray-700">de {{ data.totalVagas }}</span></strong>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .floating-bar {
   @apply w-full max-w-full fixed bottom-0 left-0 bg-white z-10 md:w-[40vw] md:min-w-[400px] md:max-w-[600px] md:bottom-9 md:left-1/2 md:rounded-3xl md:-translate-x-1/2;
 

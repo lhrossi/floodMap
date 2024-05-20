@@ -1,19 +1,23 @@
+<script setup lang="ts">
+const { isOpen } = defineProps<{ isOpen: boolean }>();
+const emit = defineEmits([
+  'onClick',
+]);
+
+function handleClick() {
+  emit('onClick');
+}
+</script>
+
 <template>
-  <div @click="handleClick" class="hamburger-menu" :class="isOpen ? 'hamburger-menu__active' : ''">
+  <div
+    class="hamburger-menu"
+    :class="isOpen ? 'hamburger-menu__active' : ''"
+    @click="handleClick"
+  >
     <div class="menu-button" />
   </div>
 </template>
-
-<script setup lang="ts">
-  import { defineProps, defineEmits } from 'vue';
-  
-  const { isOpen } = defineProps<{ isOpen: boolean }>();
-  const emit = defineEmits(['onClick'])
-
-  const handleClick = () => {
-    emit('onClick')
-  }
-</script>
 
 <style lang="scss" scoped>
   .hamburger-menu {
