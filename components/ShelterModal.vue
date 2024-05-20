@@ -3,11 +3,12 @@
     flex flex-column
     mobile:left-0 mobile:w-full mobile:max-h-[80vh] mobile:bottom-0 mobile:transform mobile:animate-appear-from-bottom
     laptop:left-[24px] laptop:bottom-[40px] laptop:w-[375px]
-    bg-white pt-5 shadow-[0_4px_20px_0_rgba(0,0,0,0.15)] rounded-[32px] absolute bottom-[40px] pb-[40px] z-50"
+    bg-white pt-5 shadow-[0_4px_20px_0_rgba(0,0,0,0.15)] laptop:rounded-[32px] mobile:rounded-t-[32px]
+    absolute bottom-[40px] pb-[40px] z-50"
 
   >
     <!-- Header -->
-    <div class="flex align-center mb-5 px-5"
+    <div class="flex align-center mb-3 px-5"
         :class="shouldShowLastUpdatedTag ? 'justify-between' : 'justify-end'">
       <div v-if="shouldShowLastUpdatedTag" class="bg-[#F1F1F1] px-3 py-2 align-center justify-center rounded-xl flex">
         <Icon icon="flowbite:refresh-outline" height="12px" color="#3E3E3E"/>
@@ -20,7 +21,10 @@
       </button>
     </div>
 
-    <div class="flex-1 overflow-auto relative pb-[20px] px-5">
+    <div
+      class="flex-1 overflow-auto relative pt-3 pb-[20px] px-5"
+      ref="scrollRef"
+    >
       <!-- Content Table -->
       <div>
         <h2 class="text-xl font-bold">{{ abrigo?.nome }}</h2>
@@ -48,7 +52,7 @@
       <!-- Available Slots Card -->
       <div class="flex flex-row gap-4 mt-5" v-if="occupationsList.length">
         <div
-          class="flex flex-1 flex-column rounded-lg overflow-hidden h-[80px]"
+          class="flex flex-1 flex-column rounded-[16px] overflow-hidden h-[80px]"
           v-for="occupation in occupationsList"
           :key="occupation.type"
         >
@@ -168,7 +172,9 @@
   const dayjs = useDayjs()
 
   const props = defineProps<{ abrigo: Abrigo | null }>();
-  const emit = defineEmits(['onClose'])
+  const emit = defineEmits(['onClose']);
+
+  const scrollRef = ref<HTMLDivElement | null>(null);
 
   const abrigo = toRef(props, 'abrigo');
 
@@ -185,7 +191,7 @@
   const isCityCentralizedDonations = computed(() => citiesWithCentralizedDonations.includes(abrigo.value?.city ?? ''));
   const isManagedByGovern = computed(() => abrigo.value?.abrigopm && abrigo.value.pmpa === abrigo.value.city);
 
-  const sanitizedPhone = String(abrigo.value?.telefone)?.replace(/\D/g, '');
+  const sanitizedPhone = computed(() => String(abrigo.value?.telefone)?.replace(/\D/g, ''));
 
   const occupationUtils = computed(() => new OccupationUtils(abrigo.value));
 
@@ -201,12 +207,12 @@
 
   const handleLinkToWhatsapp = () => {
     if (!abrigo.value?.telefone) return
-    window.open(`https://api.whatsapp.com/send?phone=${sanitizedPhone}`)
+    window.open(`https://api.whatsapp.com/send?phone=${sanitizedPhone.value}`)
   }
 
   const handleCallToPhone = () => {
     if (!abrigo.value?.telefone) return
-    window.open(`tel:${sanitizedPhone}`)
+    window.open(`tel:${sanitizedPhone.value}`)
   }
 
   const handleLinkToMaps = () => {
@@ -217,4 +223,10 @@
   const handleClose = () => {
     emit('onClose')
   }
+
+  watch(abrigo, () => {
+    if (scrollRef.value) {
+      scrollRef.value.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  });
 </script>
