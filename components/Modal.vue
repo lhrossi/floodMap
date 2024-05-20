@@ -3,7 +3,7 @@
     <div
       v-if="open"
       class="w-full h-full flex items-end justify-center bg-black/50 fixed top-0 left-0 z-[1000] md:items-center"
-      @click="close"
+      @click.self="close"
     >
       <div class="about-modal flex flex-col">
         <slot></slot>
