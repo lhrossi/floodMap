@@ -15,11 +15,11 @@ const color = computed(() => occupationUtils.getOccupationColorByOccupationPerce
 const backgroundColor = computed(() => hexToRGBA(color.value, 0.15));
 
 function updateCity(value: string) {
-  emit('showFilters', value);
+  emit('updateCity', value);
 }
 
 function showFilters() {
-  emit('updateCity');
+  emit('showFilters');
 }
 </script>
 
