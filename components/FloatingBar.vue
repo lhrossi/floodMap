@@ -63,7 +63,7 @@ function showFilters() {
   &__actions {
     @apply flex items-center gap-4 p-4;
 
-    .v-btn__content {
+    :deep(.v-btn__content) {
       letter-spacing: 0;
     }
   }
