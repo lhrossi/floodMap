@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - develop
+      - homolog
 
 jobs:
     develop:
+        if: github.ref == 'refs/heads/develop'
         runs-on: ubuntu-latest
         environment:
             name: develop
@@ -21,14 +23,9 @@ jobs:
               run: |
                  ssh ubuntu@18.231.210.229 'whoami && sudo bash /var/www/update.sh floodMap'
                  
-on:
-  push:
-    branches:
-      - homolog
-
-jobs:
     homolog:
         runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/homolog'
         environment:
             name: homolog
         steps:
@@ -42,23 +39,4 @@ jobs:
               run: |
                  ssh ubuntu@18.228.37.157 'whoami && sudo bash /var/www/update.sh floodMap'                 
                  
-on: 
-  push:
-    branches:
-      - main
-
-jobs: 
-    production:
-        runs-on: ubuntu-latest
-        environment:
-            name: prod
-        steps:
-            - name: Setup SSH
-              run: |
-                mkdir -p ~/.ssh/
-                echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
-                chmod 600 ~/.ssh/id_rsa
-                ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
-            - name: Deploy
-              run: |
-                 ssh ${{ secrets.USER_IP }} 'whoami && bash /var/www/update.sh floodMap'                 
+                 
