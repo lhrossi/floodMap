@@ -29,10 +29,15 @@ module.exports = {
             opacity: 1,
           },
         },
+        appearFromLeft: {
+          '0%': { transform: 'translateX(-50px)', opacity: 0 },
+          '100%': { transform: 'translateX(0)', opacity: 1 },
+        },
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
         'appear-from-bottom': 'appearFromBottom 0.3s ease-out',
+        'appear-from-left': 'appearFromLeft 0.3s ease-out',
       },
       screens: {
         mobile: '300px',
