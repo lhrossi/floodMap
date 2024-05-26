@@ -36,11 +36,16 @@
   .container {
     @apply
       max-w-full
-      min-h-[80vh]
+      min-h-[50vh]
       bg-[#F1F1F1]
       pt-[32px]
       pb-[32px]
       px-4
+      
+      laptop:flex
+      laptop:items-center
+      laptop:flex-col
+      laptop:px-[15%]
   }
 
   .header {
@@ -74,7 +79,9 @@
   .list-container {
     @apply
       overflow-scroll
-      max-h-[calc(100vh-160px)]
+      laptop:overflow-auto
+      mobile:max-h-[calc(100vh-160px)]
+      laptop:max-h-full
       animate-appear-from-left
       flex
       flex-col

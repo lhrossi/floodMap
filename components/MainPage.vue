@@ -200,7 +200,7 @@ watch(abrigosFiltrados, clearPopups);
 </script>
 
 <template>
-  <div>
+  <div class="bg-[#F1F1F1]">
     <Filtros
       v-model="mostrarFiltros"
       :abrigos="abrigos || []"
@@ -246,8 +246,10 @@ watch(abrigosFiltrados, clearPopups);
       :data="dadosGerais"
       :city="currentCity"
       :cities="cities"
+      :isMapShown="isMapShown"
       @show-filters="() => (mostrarFiltros = true)"
       @update-city="filterByCity"
+      @on-switch-map="handleSwitchMap"
     />
 
     <v-snackbar

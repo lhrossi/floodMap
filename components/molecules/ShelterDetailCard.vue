@@ -2,7 +2,7 @@
   <div class="card-container">
     <div class="card-header">
       <Capsule iconName="tabler:refresh" :content="formattedUpdatedAt"/>
-      <ShelterAvatar />
+      <ShelterAvatar :occupationUtils="occupationUtils"/>
     </div>
 
     <div class="card-content">
@@ -29,8 +29,8 @@
 
     <div class="card-footer">
       <button @click="linkToMaps" class="card-footer__button">Direções</button>
-      <button @click="callToPhone" class="card-footer__button">Ligar</button>
-      <button @click="linkToWhatsapp" class="card-footer__button whatsapp-button">Whatsapp</button>
+      <button v-if="!!shelter.telefone" @click="callToPhone" class="card-footer__button">Ligar</button>
+      <button v-if="!!shelter.telefone" @click="linkToWhatsapp" class="card-footer__button whatsapp-button">Whatsapp</button>
     </div>
   </div>
 </template>
@@ -53,8 +53,6 @@
   } = getShelterUtils(shelter);
 
   const occupationUtils = computed(() => new OccupationUtils(shelter));
-  const occupationsList = computed(() => occupationUtils.value.occupations);
-
   const formattedUpdatedAt = computed(() => `Atualizado ${getFormattedLastUpdated()}`)
   const needsList = computed(() => getNeedsList())
   const isManagedByGovern = computed(() => getIsManagedByGovern())
@@ -118,6 +116,8 @@
       items-center
       justify-between
       gap-[16px]
+      /* laptop:max-w-[60%]; */
+
   }
 
   .card-footer__button {
