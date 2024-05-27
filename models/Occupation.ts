@@ -1,4 +1,4 @@
-import type { Vaga } from "./Abrigo";
+import type { Vaga } from './Abrigo';
 
 export enum OccupationType {
   Person = 'person',
@@ -26,5 +26,5 @@ export interface Occupation {
     text: string;
     background: string;
     marker: string;
-  }
+  };
 }

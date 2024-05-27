@@ -1,1 +1,4 @@
-export const defaultCenter = [-50.951117644156055, -30.744639003988283];
+export const defaultCenter = [
+  -50.95111764415605,
+  -30.74463900398828,
+];

@@ -1,41 +1,49 @@
+<script setup lang="ts">
+import type { MenuItem } from '~/models/MenuItem';
+
+const props = defineProps<{ selectedItem: MenuItem; onChangeItem: (value: string) => void }>();
+
+const isOpen = ref(false);
+
+function handleSelect(item: MenuItem) {
+  isOpen.value = false;
+  props.onChangeItem(item);
+}
+
+function handleMenuPress() {
+  isOpen.value = !isOpen.value;
+}
+
+function onCloseMenu() {
+  isOpen.value = false;
+}
+</script>
+
 <template>
-  <div v-if="isOpen" class="background-layer" @click="onCloseMenu"/>
+  <div
+    v-if="isOpen"
+    class="background-layer"
+    @click="onCloseMenu"
+  />
 
-   <header class="header-wrapper">
-      <AbrigaRsLogo />
-      <MenuButton :isOpen="isOpen" @on-click="handleMenuPress"/>
+  <header class="header-wrapper">
+    <AbrigaRsLogo />
 
-      <MobileMenu
-        :isOpen="isOpen"
-        :selectedItem="props.selectedItem"
-        @on-select="handleSelect"
-        @on-close="onCloseMenu"
-      />
+    <MenuButton
+      :is-open="isOpen"
+      @on-click="handleMenuPress"
+    />
 
-      <DesktopMenu @on-select="handleSelect" />
+    <MobileMenu
+      :is-open="isOpen"
+      :selected-item="props.selectedItem"
+      @on-select="handleSelect"
+      @on-close="onCloseMenu"
+    />
+
+    <DesktopMenu @on-select="handleSelect" />
   </header>
 </template>
-
-<script setup lang="ts">
-  import type { MenuItem } from '~/models/MenuItem';
-
-  const isOpen = ref(false);
-
-  const props = defineProps<{ selectedItem: MenuItem, onChangeItem: (value: string) => void }>();
-
-  const handleSelect = (item: MenuItem) => {
-    isOpen.value = false;
-    props.onChangeItem(item)
-  }
-
-  const handleMenuPress = () => {
-    isOpen.value = !isOpen.value;
-  }
-
-  const onCloseMenu = () => {
-    isOpen.value = false;
-  }
-</script>
 
 <style lang="scss" scoped>
  .header-wrapper {

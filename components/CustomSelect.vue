@@ -14,7 +14,7 @@ interface CustomSelectItem {
 
 type CustomSelectEmits = {
   change: [value: string];
-}
+};
 
 const props = withDefaults(defineProps<CustomSelectProps>(), {
   placement: 'top',
@@ -27,7 +27,9 @@ const list = ref<HTMLUListElement | null>(null);
 const open = ref<boolean>(false);
 
 const label = computed<string>(() => {
-  const [first] = props.items;
+  const [
+    first,
+  ] = props.items;
 
   return props.items.find((item) => item.value === props.value)?.label || first.label;
 });
@@ -47,7 +49,9 @@ function change(value: string) {
 }
 
 onClickOutside(list, close, {
-  ignore: [button],
+  ignore: [
+    button,
+  ],
 });
 </script>
 
@@ -77,7 +81,10 @@ onClickOutside(list, close, {
         'top-full': placement === 'bottom',
       }"
     >
-      <li v-for="item in items" :key="item.value">
+      <li
+        v-for="item in items"
+        :key="item.value"
+      >
         <button
           class="w-full px-12 py-2 text-left transition-colors hover:bg-neutral-200"
           :class="{
