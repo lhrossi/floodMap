@@ -10,6 +10,15 @@
     "necessitam de caixa dagua e abastecimento",
     "precisa de agua para banhos e cadeira de rodas para banhos"
   ],
+  "Alimentos perecíveis": [
+    "alimentos pereciveis",
+    "alimentos carnes",
+    "banana kg",
+    "batata kg",
+    "bergamota kg",
+    "calabresa em kg",
+    "almoco"
+  ],
   "Alimentos não perecíveis": [
     "acucar",
     "acucar kg",
@@ -19,23 +28,56 @@
     "alimentos praticos biscoitos pao de sanduiche iogurte etc",
     "arroz",
     "arroz kg",
-    "almoco",
-    "alimentos pereciveis",
-    "alimentos carnes",
     "achocolatado",
     "achocolatado kg",
     "adocante",
-    "banana kg"
+    "batata palha",
+    "biscoito",
+    "bolacha",
+    "bolacha salgada",
+    "bolachas",
+    "bolachas pct",
+    "bolachasbiscoitos e pao",
+    "cafe",
+    "cafe  pct se for po se for sache  pct",
+    "cafe da manha manha tarde e noite",
+    "cafe soluvel",
+    "cafekg"
   ],
   "Roupas limpas": [
-
+    "blusa de frio feminina e masculina",
+    "calca de moletom feminina legging e malha",
+    "calca de moletom feminina m g e gg",
+    "calca de moletom masculina  a",
+    "calca de moletom masculina adulto tamanho g",
+    "calca de moletom masculina gg xg e xgg",
+    "calca de moletom masculina tam g e gg",
+    "calca de moletom masculino",
+    "calcinha",
+    "calcinhascuecas  adulto  g e gg",
+    "calcinhascuecas de  a  anos",
+    "calcado  masculino",
+    "calcado infantil ate  masc e fem urgente",
+    "calcado masculino  a",
+    "calcados  todos os tamanhos",
+    "calcas masculinas moletomou que sejam quentes",
+    "bota de chuva",
+    "bota de chuva masculina tam",
+    "bota de chuva masculina tam"
   ],
   "Cobertores": [
 
   ],
   "Itens de higiene pessoal": [
     "absorvente",
-    "aparelhos de barba"
+    "aparelhos de barba",
+    "banheira infantil",
+    "banheiro quimico",
+    "banheiros quimicos",
+    "banheiros quimicos com chuveiro",
+    "banheiros quimicos com chuveiros",
+    "barbeadores",
+    "cadeira higiencia e de banho"
   ],
   "Medicamentos básicos": [
     "agemoxi medicacao",
@@ -43,21 +85,45 @@
     "analgesico",
     "antialergico cx",
     "antialergicos",
-    "antigripal"
+    "antigripal",
+    "biotonico injetavel",
+    "calmante injetavel"
   ],
   "Lanternas e pilhas": [
 
   ],
   "Material de primeiros socorros": [
     "band aid",
-    "bandaid cx"
+    "bandaid cx",
+    "caixa de luvas g",
+    "caixa de luvas m",
+    "caixa de luvas p"
   ],
   "Fraldas": [
 
   ],
   "Ferramentas básicas": [
     "alicate grande",
-    "abracadeira grande de plastico"
+    "abracadeira grande de plastico",
+    "bracadeiras tipo u",
+    "caixa para perfuro cortante unidades"
+  ],
+  "Itens para Pets": [
+    "cama pet",
+    "camastocas para animais",
+    "caixa de sache para caes",
+    "caixa de sache para gatos",
+    "caixa de transporte para animais  cachorro",
+    "caixa de transporte porte grande",
+    "brinquedos p pets",
+    "brinquedos pet",
+    "bolinhas p pet",
+    "anti pulgas",
+    "antipulgas",
+    "antipulgas injetavel",
+    "areia higienica  saco para fezes",
+    "areia para gato",
+    "areia para gatos"
   ],
   "Produtos de limpeza": [
     "algodao",
@@ -72,20 +138,33 @@
     "balde grande",
     "balde para bruxas",
     "baldes ou mop",
-    "baldes varroura e rodo"
+    "baldes varroura e rodo",
+    "bombril",
+    "bruxas para limpeza",
+    "buchos mmmm"
   ],
   "Outros": [
-    "precisa de agua para banhos e cadeira de rodas para banhos",
     "andador para adulto",
     "aparelho de pressao",
     "aparelho medir pressao",
     "aparelho para medir glicose",
-    "anti pulgas",
-    "antipulgas",
-    "antipulgas injetavel",
-    "areia higienica  saco para fezes",
-    "areia para gato",
-    "areia para gatos",
+    "biombo",
+    "bolinhas para brincar",
+    "bombas para por o lixo",
+    "botijao de gas c casco",
+    "botijao p",
+    "brinquedos",
+    "brinquedos de morder",
+    "cabideiros  ganchos",
+    "cadeira de rodas",
+    "caixa de papelao",
+    "caixa de papelao urgente",
+    "cama hospitalar",
+    "camas grandes",
+    "camas para os pacientes os colchoes ja existem e precisam mais lencois seguranca para o turno da noite",
+    "caminhao pipa"
+  ],
+  "Voluntários": [
     "apoio de seguranca caso receba abrigados",
     "assistente social",
     "atendimento psiquiatrico"
