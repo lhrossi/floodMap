@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import type { Abrigo } from '~/models/Abrigo';
+import { unionBy } from 'lodash';
 import FilterUtils from '~/utils/filters';
+import necessitiesMap from '~/public/necessities-map.json';
+
+import type { Abrigo } from '~/models/Abrigo';
 
 const props = defineProps<{ abrigos: Abrigo[]; currentCity?: string }>();
 
@@ -11,26 +14,34 @@ const emit = defineEmits([
 
 const formatNecessidade = (necessidade: string) => FilterUtils.slugifyNeed(necessidade);
 
-const necessidadesFromAbrigos = computed(() => (
+const necessidadesFromAbrigos = computed<{ label: string; values: string[] }[]>(() => (
   props.abrigos
     .filter((abrigo) => abrigo.itensUteis?.length)
-    .reduce<string[]>((acc, item) => {
+    .reduce<{ label: string; values: string[] }[]>((acc, item) => {
       if (!item.itensUteis?.length)
         return acc;
 
       const items = item.itensUteis
-        .filter((necessidade) => necessidade.item && !acc.includes(formatNecessidade(necessidade.item)))
-        .map((necessidade) => formatNecessidade(necessidade.item));
+        .reduce<{ label: string; values: string[] }[]>((acc1, necessity) => {
+          const value = Object.keys(necessitiesMap).find((key) => necessitiesMap[key].includes(necessity.item));
 
-      return [
-        ...acc,
-        ...items,
-      ];
+          if (!value) return acc1;
+
+          const exists = acc1.find((porra) => porra.label === value);
+
+          if (!exists) {
+            acc1.push({
+              label: value,
+              values: necessitiesMap[value],
+            });
+          }
+
+          return acc1;
+        }, []);
+
+      return unionBy(acc, items, 'label');
     }, [])
-),
-);
-
-console.log(necessidadesFromAbrigos.value.sort());
+));
 
 const filtrosPreDefinidos = ref([
   {
@@ -63,9 +74,9 @@ const filtrosPreDefinidos = ref([
       </svg>
     `,
     filtros: necessidadesFromAbrigos.value.map((necessidade) => ({
-      name: necessidade,
+      name: necessidade.label,
       active: false,
-      filter: (abrigo: Abrigo) => abrigo.itensUteis?.find((item) => item.item && formatNecessidade(item.item) === necessidade),
+      filter: (abrigo: Abrigo) => abrigo.itensUteis?.find((item) => item.item && necessidade.values.includes(formatNecessidade(item.item))),
       showCounter: false,
     })).sort((a, b) => a.name ? a.name.localeCompare(b.name || '') : -1),
   },
@@ -112,24 +123,21 @@ watch([
     temporary
     class="drawer-style overflow-hidden"
   >
-    <div class="flex flex-column filtros">
-      <div class="px-4 py-2 border-b flex justify-between items-center header-filter">
-        <h2 class="text-2xl">
+    <div class="h-full flex flex-col filtros">
+      <div class="p-5 relative shadow-xl rounded-b-2xl">
+        <h2 class="font-bold text-center">
           Encontrar abrigo | Filtros
         </h2>
 
-        <v-btn
-          elevation="0"
-          rounded="xl"
-          size="x-small"
-          class="flex items-center justify-center"
+        <button
+          class="p-4 absolute top-1/2 right-4 text-green-800 -translate-y-1/2"
           @click="() => emit('closeFilters')"
         >
-          &#x2715;
-        </v-btn>
+          <ion-close-outline />
+        </button>
       </div>
 
-      <div class="px-4 flex flex-col gap-1 pt-5 overflow-auto max-h-[80vh] pb-5">
+      <div class="flex-1 flex flex-col gap-1 p-5 pt-2 mt-2 overflow-auto">
         <div
           v-for="options in filtrosPreDefinidos"
           :key="options.title"
@@ -144,20 +152,33 @@ watch([
           </div>
 
           <div class="flex flex-col gap-2">
-            <v-checkbox
+            <button
               v-for="filtro in options.filtros"
               :key="filtro.name"
-              :value="filtro.active"
-              :label="`${filtro.name}${filtro.showCounter ? ` (${abrigos.filter(a => filtro.filter(a)).length})` : ''}`"
-              density="compact"
-              color="#1351B4"
+              class="flex items-center justify-between"
               @click="() => (filtro.active = !filtro.active)"
-            />
+            >
+              <span class="text-gray-600">
+                {{ filtro.name }}
+                <strong
+                  v-if="filtro.showCounter"
+                  class="text-current"
+                >
+                  ({{ abrigos.filter(a => filtro.filter(a)).length }})
+                </strong>
+              </span>
+
+              <v-checkbox
+                :model-value="filtro.active"
+                density="compact"
+                color="#1351B4"
+              />
+            </button>
           </div>
         </div>
       </div>
 
-      <div class="px-4 flex gap-2 w-full pt-5 border-t pb-4">
+      <div class="p-4 flex gap-2 border-t">
         <v-btn
           elevation="0"
           rounded="xl"
