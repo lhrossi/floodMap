@@ -3,7 +3,7 @@ import { unionBy } from 'lodash';
 import FilterUtils from '~/utils/filters';
 import necessitiesMap from '~/public/necessities-map.json';
 
-import type { Abrigo } from '~/models/Abrigo';
+import type { Abrigo, NecessidadeItem } from '~/models/Abrigo';
 
 const props = defineProps<{ abrigos: Abrigo[]; currentCity?: string }>();
 
@@ -12,34 +12,36 @@ const emit = defineEmits([
   'closeFilters',
 ]);
 
+const necessitiesList: Record<string, string[]> = necessitiesMap;
+
 const formatNecessidade = (necessidade: string) => FilterUtils.slugifyNeed(necessidade);
 
-const necessidadesFromAbrigos = computed<{ label: string; values: string[] }[]>(() => (
+const necessidadesFromAbrigos = computed<NecessidadeItem[]>(() => (
   props.abrigos
     .filter((abrigo) => abrigo.itensUteis?.length)
-    .reduce<{ label: string; values: string[] }[]>((acc, item) => {
+    .reduce<NecessidadeItem[]>((necessidades, item) => {
       if (!item.itensUteis?.length)
-        return acc;
+        return necessidades;
 
       const items = item.itensUteis
-        .reduce<{ label: string; values: string[] }[]>((acc1, necessity) => {
-          const value = Object.keys(necessitiesMap).find((key) => necessitiesMap[key].includes(necessity.item));
+        .reduce<NecessidadeItem[]>((items, necessity) => {
+          const value = Object.keys(necessitiesList).find((key) => necessitiesList[key].includes(necessity.item));
 
-          if (!value) return acc1;
+          if (!value) return items;
 
-          const exists = acc1.find((porra) => porra.label === value);
+          const exists = items.find((porra) => porra.label === value);
 
           if (!exists) {
-            acc1.push({
+            items.push({
               label: value,
-              values: necessitiesMap[value],
+              values: necessitiesList[value],
             });
           }
 
-          return acc1;
+          return items;
         }, []);
 
-      return unionBy(acc, items, 'label');
+      return unionBy(necessidades, items, 'label');
     }, [])
 ));
 
@@ -73,12 +75,14 @@ const filtrosPreDefinidos = ref([
         <path d="M14.25 5.25098H12V4.50098C12 3.70533 11.6839 2.94227 11.1213 2.37966C10.5587 1.81705 9.79565 1.50098 9 1.50098C8.20435 1.50098 7.44129 1.81705 6.87868 2.37966C6.31607 2.94227 6 3.70533 6 4.50098V5.25098H3.75C3.55109 5.25098 3.36032 5.32999 3.21967 5.47065C3.07902 5.6113 3 5.80206 3 6.00098V14.251C3 14.8477 3.23705 15.42 3.65901 15.842C4.08097 16.2639 4.65326 16.501 5.25 16.501H12.75C13.3467 16.501 13.919 16.2639 14.341 15.842C14.7629 15.42 15 14.8477 15 14.251V6.00098C15 5.80206 14.921 5.6113 14.7803 5.47065C14.6397 5.32999 14.4489 5.25098 14.25 5.25098ZM7.5 4.50098C7.5 4.10315 7.65804 3.72162 7.93934 3.44032C8.22064 3.15901 8.60218 3.00098 9 3.00098C9.39782 3.00098 9.77936 3.15901 10.0607 3.44032C10.342 3.72162 10.5 4.10315 10.5 4.50098V5.25098H7.5V4.50098ZM13.5 14.251C13.5 14.4499 13.421 14.6407 13.2803 14.7813C13.1397 14.922 12.9489 15.001 12.75 15.001H5.25C5.05109 15.001 4.86032 14.922 4.71967 14.7813C4.57902 14.6407 4.5 14.4499 4.5 14.251V6.75098H6V7.50098C6 7.69989 6.07902 7.89065 6.21967 8.03131C6.36032 8.17196 6.55109 8.25098 6.75 8.25098C6.94891 8.25098 7.13968 8.17196 7.28033 8.03131C7.42098 7.89065 7.5 7.69989 7.5 7.50098V6.75098H10.5V7.50098C10.5 7.69989 10.579 7.89065 10.7197 8.03131C10.8603 8.17196 11.0511 8.25098 11.25 8.25098C11.4489 8.25098 11.6397 8.17196 11.7803 8.03131C11.921 7.89065 12 7.69989 12 7.50098V6.75098H13.5V14.251Z" fill="#A9A9A9"/>
       </svg>
     `,
-    filtros: necessidadesFromAbrigos.value.map((necessidade) => ({
-      name: necessidade.label,
-      active: false,
-      filter: (abrigo: Abrigo) => abrigo.itensUteis?.find((item) => item.item && necessidade.values.includes(formatNecessidade(item.item))),
-      showCounter: false,
-    })).sort((a, b) => a.name ? a.name.localeCompare(b.name || '') : -1),
+    filtros: necessidadesFromAbrigos.value
+      .map((necessidade) => ({
+        name: necessidade.label,
+        active: false,
+        showCounter: false,
+        filter: (abrigo: Abrigo) => filterNecessities(abrigo, necessidade),
+      }))
+      .sort((a, b) => a.name ? a.name.localeCompare(b.name || '') : -1),
   },
 ]);
 
@@ -105,9 +109,20 @@ function filtrarDados() {
 
   const filtrosHabilitados = filtrosPreDefinidos.value.map((option) => option.filtros).flat().filter((filtro) => filtro.active);
 
-  const abrigosFiltrados = filtrosHabilitados?.length === 0 ? abrigosPorCidade.value : abrigosPorCidade.value.filter((a) => filtrosHabilitados.some((f) => f.filter(a)));
+  const abrigosFiltrados = filtrosHabilitados?.length === 0 ? abrigosPorCidade.value : abrigosPorCidade.value.filter((a) => filtrosHabilitados.every((f) => f.filter(a)));
 
   emit('filterChange', abrigosFiltrados);
+}
+
+function filterNecessities(shelter: Abrigo, necessity?: NecessidadeItem): boolean {
+  const [
+    forPeople,
+    forPets,
+  ] = filtrosPreDefinidos.value[0].filtros;
+  const filterPeople = forPeople.active ? forPeople.filter(shelter) : true;
+  const filterPets = forPets.active ? forPets.filter(shelter) : true;
+
+  return filterPeople && filterPets && !!shelter.itensUteis?.find(({ item }) => item && necessity?.values.includes(formatNecessidade(item)));
 }
 
 watch([
