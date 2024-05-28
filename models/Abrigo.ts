@@ -4,6 +4,11 @@ export interface Necessidade {
   type: string | null;
 }
 
+export interface NecessidadeItem {
+  label: string;
+  values: string[];
+}
+
 export type Vaga = string | number | null;
 
 export interface Abrigo {

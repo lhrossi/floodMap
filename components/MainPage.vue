@@ -116,7 +116,6 @@ function getFilteredSheltersByCity(city?: string) {
 }
 
 async function filterByCity(city: string) {
-  abrigosFiltrados.value = getFilteredSheltersByCity(city);
   currentCity.value = city;
 
   await nextTick();
@@ -195,7 +194,7 @@ watch(abrigosFiltrados, clearPopups);
     <Filtros
       v-model="mostrarFiltros"
       :abrigos="abrigos || []"
-      :initial-city="currentCity"
+      :current-city="currentCity"
       @close-filters="() => (mostrarFiltros = false)"
       @filter-change="(a) => (abrigosFiltrados = a)"
     />
@@ -321,7 +320,6 @@ watch(abrigosFiltrados, clearPopups);
 
 .filtros {
   padding: 1rem;
-  gap: 0.5rem;
 }
 
 .mapboxgl-ctrl-group {
