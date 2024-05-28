@@ -1,15 +1,21 @@
+<script setup lang="ts">
+import { Icon } from '@iconify/vue';
+
+const { iconName, content } = defineProps<{ iconName: string | null; content: string }>();
+</script>
+
 <template>
   <div class="capsule-container">
-    <Icon v-if="iconName" :icon="iconName" height="12px" color="#3E3E3E"/>
+    <Icon
+      v-if="iconName"
+      :icon="iconName"
+      height="12px"
+      color="#3E3E3E"
+    />
+
     <p>{{ content }}</p>
   </div>
 </template>
-
-<script setup lang="ts">
-  import { Icon } from '@iconify/vue';
-  
-  const { iconName, content } = defineProps<{ iconName: string | null, content: string}>();
-</script>
 
 <style scoped>
   .capsule-container {

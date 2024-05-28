@@ -7,36 +7,34 @@ on:
       - homolog
 
 jobs:
-    develop:
-        if: github.ref == 'refs/heads/develop'
-        runs-on: ubuntu-latest
-        environment:
-            name: develop
-        steps:
-            - name: Setup SSH
-              run: |
-                mkdir -p ~/.ssh/
-                echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
-                chmod 600 ~/.ssh/id_rsa
-                ssh-keyscan -H 18.231.210.229 >> ~/.ssh/known_hosts
-            - name: Deploy
-              run: |
-                 ssh ubuntu@18.231.210.229 'whoami && sudo bash /var/www/update.sh floodMap'
-                 
-    homolog:
-        runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/homolog'
-        environment:
-            name: homolog
-        steps:
-            - name: Setup SSH
-              run: |
-                mkdir -p ~/.ssh/
-                echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
-                chmod 600 ~/.ssh/id_rsa
-                ssh-keyscan -H 18.228.37.157 >> ~/.ssh/known_hosts
-            - name: Deploy
-              run: |
-                 ssh ubuntu@18.228.37.157 'whoami && sudo bash /var/www/update.sh floodMap'                 
-                 
-                 
+  develop:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment:
+      name: develop
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 18.231.210.229 >> ~/.ssh/known_hosts
+      - name: Deploy
+        run: |
+          ssh ubuntu@18.231.210.229 'whoami && sudo bash /var/www/update.sh floodMap'
+
+  homolog:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/homolog'
+    environment:
+      name: homolog
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 18.228.37.157 >> ~/.ssh/known_hosts
+      - name: Deploy
+        run: |
+          ssh ubuntu@18.228.37.157 'whoami && sudo bash /var/www/update.sh floodMap'

@@ -9,8 +9,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits([
-  'show-filters',
-  'update-city',
+  'showFilters',
+  'updateCity',
   'onSwitchMap',
 ]);
 const color = computed(() => occupationUtils.getOccupationColorByOccupationPercentage(props.data.percentualOcupacao).text);

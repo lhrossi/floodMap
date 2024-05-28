@@ -1,36 +1,48 @@
+<script setup lang="ts">
+import { Icon } from '@iconify/vue';
+import type { Abrigo } from '~/models/Abrigo';
+
+const { abrigos, selectedCity } = defineProps<{ abrigos: Abrigo[]; selectedCity: string }>();
+const emit = defineEmits([
+  'onSwitchMap',
+]);
+
+function handleSwitchMap() {
+  emit('onSwitchMap');
+}
+</script>
+
 <template>
   <div class="container">
     <div class="header">
-      <h2 class="text-header">{{ `Abrigos em ${selectedCity}` }}</h2>
-      <button @click="handleSwitchMap" class="toggle-map__button">
-        <Icon icon="f7:map-fill" height="16px"/>
-        <p class="ml-[6px]">Ver mapa</p>
+      <h2 class="text-header">
+        {{ `Abrigos em ${selectedCity}` }}
+      </h2>
+
+      <button
+        class="toggle-map__button"
+        @click="handleSwitchMap"
+      >
+        <Icon
+          icon="f7:map-fill"
+          height="16px"
+        />
+
+        <p class="ml-[6px]">
+          Ver mapa
+        </p>
       </button>
     </div>
 
     <div class="list-container">
-      <ShelterDetailCard 
+      <ShelterDetailCard
         v-for="eachShelter in abrigos"
         :key="eachShelter.id"
-        :shelter="eachShelter" 
+        :shelter="eachShelter"
       />
     </div>
-
   </div>
 </template>
-
-<script setup lang="ts">
-  import { Icon } from '@iconify/vue';
-  import type { Abrigo } from '~/models/Abrigo';
-
-  const { abrigos, selectedCity } = defineProps<{ abrigos: Abrigo[], selectedCity: string }>();
-  const emit = defineEmits(['onSwitchMap']);
-
-  const handleSwitchMap = () => {
-    emit('onSwitchMap')
-  }
-
-</script>
 
 <style scoped>
   .container {
@@ -41,7 +53,7 @@
       pt-[32px]
       pb-[32px]
       px-4
-      
+
       laptop:flex
       laptop:items-center
       laptop:flex-col

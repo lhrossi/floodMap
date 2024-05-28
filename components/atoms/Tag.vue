@@ -1,12 +1,12 @@
+<script setup lang="ts">
+const { content } = defineProps<{ content: string; quantity: number }>();
+</script>
+
 <template>
   <div class="tag-container">
-    <p>{{ `${content}${quantity > 0 ? ` (${quantity})`: ''}` }}</p>
+    <p>{{ `${content}${quantity > 0 ? ` (${quantity})` : ''}` }}</p>
   </div>
 </template>
-
-<script setup lang="ts">
-  const { content } = defineProps<{ content: string, quantity: number}>();
-</script>
 
 <style lang="scss" scoped>
   .tag-container {

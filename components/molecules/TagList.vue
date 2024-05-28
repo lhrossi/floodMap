@@ -1,17 +1,19 @@
+<script setup lang="ts">
+import type { Necessidade } from '~/models/Abrigo';
+
+const { data } = defineProps<{ data: Necessidade[] }>();
+</script>
+
 <template>
   <div class="tag-list-container">
-    <Tag :key="eachTag.item"
+    <Tag
       v-for="eachTag in data"
+      :key="eachTag.item"
       :content="eachTag.item"
       :quantity="eachTag.quantidade"
     />
   </div>
 </template>
-
-<script setup lang="ts">
-  import type { Necessidade } from '~/models/Abrigo';
-  const { data } = defineProps<{ data: Necessidade[]}>();
-</script>
 
 <style scoped>
   .tag-list-container {

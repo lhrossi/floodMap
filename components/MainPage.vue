@@ -67,7 +67,7 @@ const cities = computed(() => {
         label: item.city,
       }))
       .filter((city, index, self) => self.findIndex(({ value }) => value === city.value) === index)
-      .filter(({ value }) => value && value != '')
+      .filter(({ value }) => value && value !== '')
       .sort((a, b) => {
         if (b.value === 'Todos') return -1;
 
@@ -121,7 +121,7 @@ function getFilteredSheltersByCity(city?: string) {
 
   if (!city) return abrigos.value;
 
-  return abrigos.value.filter((abrigo) => city == 'Todos' || abrigo.city == city);
+  return abrigos.value.filter((abrigo) => city === 'Todos' || abrigo.city === city);
 }
 
 async function filterByCity(city: string) {
@@ -143,7 +143,7 @@ function getCityCoordinatesAndZoom(city: string) {
   if (city === 'Todos')
     return defaultData;
 
-  const citySlug = city.replaceAll(/[^A-z]/g, '').toLowerCase();
+  const citySlug = city.replaceAll(/[^A-Z]/gi, '').toLowerCase();
   const cityData = citiesCoordinates[citySlug];
 
   if (cityData) {
@@ -246,7 +246,7 @@ watch(abrigosFiltrados, clearPopups);
       :data="dadosGerais"
       :city="currentCity"
       :cities="cities"
-      :isMapShown="isMapShown"
+      :is-map-shown="isMapShown"
       @show-filters="() => (mostrarFiltros = true)"
       @update-city="filterByCity"
       @on-switch-map="handleSwitchMap"
