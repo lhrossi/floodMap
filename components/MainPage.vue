@@ -15,10 +15,10 @@ const props = withDefaults(defineProps<Props>(), {
   mapZoom: 7,
 });
 
-const selectedMenuItem = inject('selectedMenuItem');
-const resetMenuItem = inject<() => void>('resetMenuItem');
+const selectedMenuItem = inject<any>('selectedMenuItem');
+const resetMenuItem = inject<any>('resetMenuItem');
 
-watch(selectedMenuItem, (value) => {
+watch(selectedMenuItem, (value: string) => {
   switch (value) {
     case 'how_to_use':
       mostrarInstrucoes.value = true;
@@ -328,7 +328,8 @@ watch(abrigosFiltrados, clearPopups);
     w-fit
     px-5
     shadow-xl
-    rounded-3xl;
+    rounded-3xl
+    min-w-max;
 
     p {
       @apply

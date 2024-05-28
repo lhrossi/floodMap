@@ -16,7 +16,7 @@ function handleSwitchMap() {
   <div class="container">
     <div class="header">
       <h2 class="text-header">
-        {{ `Abrigos em ${selectedCity}` }}
+        {{ selectedCity === 'Todos' ? 'Abrigos' : `Abrigos em ${selectedCity}` }}
       </h2>
 
       <button
@@ -28,7 +28,7 @@ function handleSwitchMap() {
           height="16px"
         />
 
-        <p class="ml-[6px]">
+        <p class="ml-[6px] min-w-max">
           Ver mapa
         </p>
       </button>
@@ -85,6 +85,7 @@ function handleSwitchMap() {
       px-[12px]
       h-[30px]
       text-white
+      ml-2
       rounded-3xl;
   }
 
