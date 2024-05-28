@@ -29,7 +29,7 @@ const necessidadesFromAbrigos = computed<NecessidadeItem[]>(() => (
 
           if (!value) return items;
 
-          const exists = items.find((porra) => porra.label === value);
+          const exists = items.find(({ label }) => label === value);
 
           if (!exists) {
             items.push({
