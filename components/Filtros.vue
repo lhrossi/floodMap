@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { unionBy } from 'lodash';
+import { unionBy } from 'lodash-es';
 import FilterUtils from '~/utils/filters';
 import necessitiesMap from '~/public/necessities-map.json';
 
