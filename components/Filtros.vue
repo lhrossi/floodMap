@@ -59,12 +59,14 @@ const filtrosPreDefinidos = ref([
         active: false,
         filter: (abrigo: Abrigo) => !!abrigo.vagas,
         showCounter: true,
+        type: true,
       },
       {
         name: 'Com vagas para pets',
         active: false,
         filter: (abrigo: Abrigo) => !!abrigo.vagas_pet && Number.parseInt(abrigo.vagas_pet as string) > 0,
         showCounter: true,
+        type: true,
       },
     ],
   },
@@ -80,6 +82,7 @@ const filtrosPreDefinidos = ref([
         name: necessidade.label,
         active: false,
         showCounter: false,
+        type: false,
         filter: (abrigo: Abrigo) => filterNecessities(abrigo, necessidade),
       }))
       .sort((a, b) => a.name ? a.name.localeCompare(b.name || '') : -1),
@@ -108,21 +111,28 @@ function filtrarDados() {
   if (!props.abrigos || !abrigosPorCidade.value.length) return [];
 
   const filtrosHabilitados = filtrosPreDefinidos.value.map((option) => option.filtros).flat().filter((filtro) => filtro.active);
+  const typeFilters = filtrosHabilitados.filter(({ type }) => type);
+  const necessitiesFilter = filtrosHabilitados.filter(({ type }) => !type);
 
-  const abrigosFiltrados = filtrosHabilitados?.length === 0 ? abrigosPorCidade.value : abrigosPorCidade.value.filter((a) => filtrosHabilitados.every((f) => f.filter(a)));
+  let abrigosFiltrados = abrigosPorCidade.value;
+
+  if (typeFilters.length) {
+    let results: Abrigo[] = [];
+
+    typeFilters.forEach(({ filter }) => {
+      results = results.concat(abrigosFiltrados.filter((a) => filter(a)));
+    });
+
+    abrigosFiltrados = results;
+  }
+
+  if (necessitiesFilter.length) abrigosFiltrados = abrigosFiltrados.filter((a) => necessitiesFilter.every((f) => f.filter(a)));
 
   emit('filterChange', abrigosFiltrados);
 }
 
 function filterNecessities(shelter: Abrigo, necessity?: NecessidadeItem): boolean {
-  const [
-    forPeople,
-    forPets,
-  ] = filtrosPreDefinidos.value[0].filtros;
-  const filterPeople = forPeople.active ? forPeople.filter(shelter) : true;
-  const filterPets = forPets.active ? forPets.filter(shelter) : true;
-
-  return filterPeople && filterPets && !!shelter.itensUteis?.find(({ item }) => item && necessity?.values.includes(formatNecessidade(item)));
+  return !!shelter.itensUteis?.find(({ item }) => item && necessity?.values.includes(formatNecessidade(item)));
 }
 
 watch([
