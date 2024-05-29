@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
 import { defaultCenter } from '~/config';
 import citiesCoordinates from '~/config/citiesCoordinates';
 import type { Abrigo } from '~/models/Abrigo';
@@ -14,10 +15,10 @@ const props = withDefaults(defineProps<Props>(), {
   mapZoom: 7,
 });
 
-const selectedMenuItem = inject('selectedMenuItem');
-const resetMenuItem = inject<() => void>('resetMenuItem');
+const selectedMenuItem = inject<any>('selectedMenuItem');
+const resetMenuItem = inject<any>('resetMenuItem');
 
-watch(selectedMenuItem, (value) => {
+watch(selectedMenuItem, (value: string) => {
   switch (value) {
     case 'how_to_use':
       mostrarInstrucoes.value = true;
@@ -49,6 +50,7 @@ const mostrarFiltros = ref(false);
 const mostrarInstrucoes = ref(false);
 const mostrarPrivacyPolicy = ref(false);
 const currentCity = ref(props.initialCity || 'Todos');
+const isMapShown = ref(true);
 
 const cities = computed(() => {
   if (!abrigos.value) return [];
@@ -84,6 +86,13 @@ function handleMarkerClick(shelter: Abrigo | null) {
   selectedShelter.value = shelter;
 }
 
+function handleSwitchMap() {
+  isMapShown.value = !isMapShown.value;
+
+  if (isMapShown.value)
+    centerMap(currentCity.value);
+}
+
 function handleCloseShelterModal() {
   selectedShelter.value = null;
 }
@@ -116,7 +125,6 @@ function getFilteredSheltersByCity(city?: string) {
 }
 
 async function filterByCity(city: string) {
-  abrigosFiltrados.value = getFilteredSheltersByCity(city);
   currentCity.value = city;
 
   await nextTick();
@@ -191,16 +199,17 @@ watch(abrigosFiltrados, clearPopups);
 </script>
 
 <template>
-  <div>
+  <div class="bg-[#F1F1F1]">
     <Filtros
       v-model="mostrarFiltros"
       :abrigos="abrigos || []"
-      :initial-city="currentCity"
+      :current-city="currentCity"
       @close-filters="() => (mostrarFiltros = false)"
       @filter-change="(a) => (abrigosFiltrados = a)"
     />
 
     <MapboxMap
+      v-if="isMapShown"
       map-id="map"
       :options="{
         style: 'mapbox://styles/mapbox/streets-v12',
@@ -225,13 +234,43 @@ watch(abrigosFiltrados, clearPopups);
       <MapboxGeolocateControl position="bottom-right" />
     </MapboxMap>
 
+    <ShelterList
+      v-else
+      :abrigos="abrigosFiltrados"
+      :selected-city="currentCity"
+      @on-switch-map="handleSwitchMap"
+    />
+
     <FloatingBar
       :data="dadosGerais"
       :city="currentCity"
       :cities="cities"
+      :is-map-shown="isMapShown"
       @show-filters="() => (mostrarFiltros = true)"
       @update-city="filterByCity"
+      @on-switch-map="handleSwitchMap"
     />
+
+    <v-snackbar
+      v-if="error"
+      multi-line
+    >
+      Falha ao carregar abrigos
+    </v-snackbar>
+
+    <button
+      v-if="isMapShown"
+      class="shelter-list__button"
+      @click="handleSwitchMap"
+    >
+      <Icon
+        icon="ion:list"
+        height="16px"
+        color="#fff"
+      />
+
+      <p>Ver lista de abrigos</p>
+    </button>
 
     <v-snackbar
       v-if="error"
@@ -271,6 +310,31 @@ watch(abrigosFiltrados, clearPopups);
   min-width: 280px;
   border-radius: 5px;
   padding: 14px 16px;
+}
+
+.shelter-list__button {
+  @apply
+    mobile:flex
+    laptop:hidden
+    fixed
+    items-center
+    top-[88px]
+    left-[50%]
+    translate-x-[-50%]
+    bg-[#475DFF]
+    z-[999]
+    h-[40px]
+    w-fit
+    px-5
+    shadow-xl
+    rounded-3xl
+    min-w-max;
+
+    p {
+      @apply
+        ml-2
+        text-white
+    }
 }
 
 .privacy-policy-button {
@@ -321,7 +385,6 @@ watch(abrigosFiltrados, clearPopups);
 
 .filtros {
   padding: 1rem;
-  gap: 0.5rem;
 }
 
 .mapboxgl-ctrl-group {

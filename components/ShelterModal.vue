@@ -18,7 +18,7 @@ const scrollRef = ref<HTMLDivElement | null>(null);
 const abrigo = toRef(props, 'abrigo');
 
 const hasPhoneNumber = computed(() => !!abrigo.value?.telefone);
-const formattedLastUpdated = computed(() => dayjs(abrigo.value?.update_in?._seconds! * 1000).format('DD/MM - HH:mm'));
+const formattedLastUpdated = computed(() => dayjs(abrigo.value?.update_in?._seconds ?? 0 * 1000).format('DD/MM - HH:mm'));
 
 const shouldShowLastUpdatedTag = computed(() => {
   return !!abrigo.value?.update_in?._seconds;
