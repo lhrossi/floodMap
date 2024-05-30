@@ -7,9 +7,20 @@ const emit = defineEmits([
   'onSwitchMap',
 ]);
 
+const scrollRef = ref<HTMLDivElement | null>(null);
+
 function handleSwitchMap() {
   emit('onSwitchMap');
 }
+
+watch(abrigos, () => {
+  if (scrollRef.value) {
+    scrollRef.value.scrollTo({
+      top: 0,
+      behavior: 'instant',
+    });
+  }
+});
 </script>
 
 <template>
@@ -34,7 +45,10 @@ function handleSwitchMap() {
       </button>
     </div>
 
-    <div class="list-container">
+    <div
+      ref="scrollRef"
+      class="list-container"
+    >
       <ShelterDetailCard
         v-for="eachShelter in abrigos"
         :key="eachShelter.id"
@@ -91,9 +105,7 @@ function handleSwitchMap() {
   .list-container {
     @apply
       overflow-auto
-      /* laptop:overflow-auto */
-      mobile:max-h-[calc(100vh-200px)]
-      /* laptop:max-h-full */
+      mobile:max-h-[calc(100vh-200px)]    /* laptop:max-h-full */
       animate-appear-from-left
       flex
       flex-col
