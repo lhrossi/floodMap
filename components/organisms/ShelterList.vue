@@ -48,7 +48,6 @@ function handleSwitchMap() {
   .container {
     @apply
       max-w-full
-      min-h-[50vh]
       bg-[#F1F1F1]
       pt-[32px]
       pb-[32px]
@@ -91,10 +90,10 @@ function handleSwitchMap() {
 
   .list-container {
     @apply
-      overflow-scroll
-      laptop:overflow-auto
-      mobile:max-h-[calc(100vh-160px)]
-      laptop:max-h-full
+      overflow-auto
+      /* laptop:overflow-auto */
+      mobile:max-h-[calc(100vh-200px)]
+      /* laptop:max-h-full */
       animate-appear-from-left
       flex
       flex-col

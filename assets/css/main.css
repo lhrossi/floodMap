@@ -1,2 +1,11 @@
 @import "tailwind.css";
 @import "transitions.css";
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+html, body {
+  overflow: hidden;
+  height: 100%;
+}

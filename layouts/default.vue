@@ -16,21 +16,19 @@ provide('resetMenuItem', handleResetMenuItem);
 </script>
 
 <template>
-  <div class="flex flex-column">
-    <Header
-      :selected-item="selectedMenuItem"
-      :on-change-item="handleChangeItem"
-    />
+  <Header
+    :selected-item="selectedMenuItem"
+    :on-change-item="handleChangeItem"
+  />
 
-    <v-main>
-      <Modal
-        :open="selectedMenuItem === 'about'"
-        @close="() => handleChangeItem('shelter_map')"
-      >
-        <AboutModal />
-      </Modal>
+  <v-main>
+    <Modal
+      :open="selectedMenuItem === 'about'"
+      @close="() => handleChangeItem('shelter_map')"
+    >
+      <AboutModal />
+    </Modal>
 
-      <slot />
-    </v-main>
-  </div>
+    <slot />
+  </v-main>
 </template>

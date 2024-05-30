@@ -80,7 +80,7 @@ watch(abrigo, () => {
     mobile:left-0 mobile:w-full mobile:max-h-[80vh] mobile:bottom-0 mobile:transform mobile:animate-appear-from-bottom
     laptop:left-[24px] laptop:bottom-[40px] laptop:w-[375px]
     bg-white pt-5 shadow-[0_4px_20px_0_rgba(0,0,0,0.15)] laptop:rounded-[32px] mobile:rounded-t-[32px]
-    absolute bottom-[40px] pb-[40px] z-50"
+    absolute bottom-[40px] pb-[40px] z-[700]"
   >
     <!-- Header -->
     <div
@@ -352,7 +352,7 @@ watch(abrigo, () => {
 
   <div
     v-if="isMobile"
-    class="fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[40]"
+    class="fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[600]"
     @click="handleClose"
   />
 </template>
