@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const { content } = defineProps<{ content: string; quantity: number }>();
+const { content } = defineProps<{ content: string; quantity: number | string }>();
 </script>
 
 <template>
   <div class="tag-container">
-    <p>{{ `${content}${quantity > 0 ? ` (${quantity})` : ''}` }}</p>
+    <p>{{ `${content}${Number(quantity) > 0 ? ` (${quantity})` : ''}` }}</p>
   </div>
 </template>
 

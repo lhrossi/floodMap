@@ -2,14 +2,33 @@
 import { Icon } from '@iconify/vue';
 import type { Abrigo } from '~/models/Abrigo';
 
-const { abrigos, selectedCity } = defineProps<{ abrigos: Abrigo[]; selectedCity: string }>();
+const props = defineProps<{ abrigos: Abrigo[]; selectedCity: string }>();
 const emit = defineEmits([
   'onSwitchMap',
 ]);
 
+const abrigos = toRef(props, 'abrigos');
+const selectedCity = toRef(props, 'selectedCity');
+
+const scrollRef = ref<HTMLDivElement | null>(null);
+
 function handleSwitchMap() {
   emit('onSwitchMap');
 }
+
+function scrollToTop() {
+  if (scrollRef.value) {
+    scrollRef.value.scrollTo({
+      top: 0,
+      behavior: 'instant',
+    });
+  }
+}
+
+watch(abrigos, async () => {
+  await nextTick();
+  scrollToTop();
+});
 </script>
 
 <template>
@@ -34,7 +53,10 @@ function handleSwitchMap() {
       </button>
     </div>
 
-    <div class="list-container">
+    <div
+      ref="scrollRef"
+      class="list-container"
+    >
       <ShelterDetailCard
         v-for="eachShelter in abrigos"
         :key="eachShelter.id"
@@ -48,7 +70,6 @@ function handleSwitchMap() {
   .container {
     @apply
       max-w-full
-      min-h-[50vh]
       bg-[#F1F1F1]
       pt-[32px]
       pb-[32px]
@@ -91,10 +112,8 @@ function handleSwitchMap() {
 
   .list-container {
     @apply
-      overflow-scroll
-      laptop:overflow-auto
-      mobile:max-h-[calc(100vh-160px)]
-      laptop:max-h-full
+      overflow-auto
+      mobile:max-h-[calc(100vh-200px)]    /* laptop:max-h-full */
       animate-appear-from-left
       flex
       flex-col

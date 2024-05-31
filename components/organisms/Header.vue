@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { MenuItem } from '~/models/MenuItem';
 
-const props = defineProps<{ selectedItem: MenuItem; onChangeItem: (value: string) => void }>();
+const props = defineProps<{ selectedItem: MenuItem; onChangeItem: (item: MenuItem) => void }>();
 
 const isOpen = ref(false);
 
@@ -53,13 +53,15 @@ function onCloseMenu() {
       w-full
       bg-white
       items-center
-      flex
       z-[30]
       mobile:px-4
       laptop:px-8
       relative
       mobile:justify-center
       laptop:justify-between
+      fixed
+      top-0
+      left-0
   }
 
   .background-layer {
