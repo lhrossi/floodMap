@@ -2,10 +2,13 @@
 import { Icon } from '@iconify/vue';
 import type { Abrigo } from '~/models/Abrigo';
 
-const { abrigos, selectedCity } = defineProps<{ abrigos: Abrigo[]; selectedCity: string }>();
+const props = defineProps<{ abrigos: Abrigo[]; selectedCity: string }>();
 const emit = defineEmits([
   'onSwitchMap',
 ]);
+
+const abrigos = toRef(props, 'abrigos');
+const selectedCity = toRef(props, 'selectedCity');
 
 const scrollRef = ref<HTMLDivElement | null>(null);
 
@@ -13,13 +16,18 @@ function handleSwitchMap() {
   emit('onSwitchMap');
 }
 
-watch(abrigos, () => {
+function scrollToTop() {
   if (scrollRef.value) {
     scrollRef.value.scrollTo({
       top: 0,
       behavior: 'instant',
     });
   }
+}
+
+watch(abrigos, async () => {
+  await nextTick();
+  scrollToTop();
 });
 </script>
 
