@@ -1,25 +1,25 @@
 name: Deploy Automatico
 run-name: ${{github.actor}} is testing out GitHub Actions
-on: 
+on:
   push:
     branches:
       - main
   pull_request:
     branches:
-       - main
+      - main
 
-jobs: 
-    production:
-        runs-on: ubuntu-latest
-        environment:
-            name: prod
-        steps:
-            - name: Setup SSH
-              run: |
-                mkdir -p ~/.ssh/
-                echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
-                chmod 600 ~/.ssh/id_rsa
-                ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
-            - name: Deploy
-              run: |
-                 ssh ${{ secrets.USER_IP }} 'whoami && bash /var/www/update.sh floodMap'
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    environment:
+      name: prod
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
+      - name: Deploy
+        run: |
+          ssh ${{ secrets.USER_IP }} 'whoami && bash /var/www/update.sh floodMap'

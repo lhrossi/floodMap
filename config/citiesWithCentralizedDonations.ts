@@ -1,3 +1,3 @@
 export const citiesWithCentralizedDonations = [
-  "Porto Alegre",
+  'Porto Alegre',
 ];

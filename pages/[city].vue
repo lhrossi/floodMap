@@ -1,15 +1,3 @@
-<template>
-  <MainPage
-    :map-center="cityData ? [cityData.lng, cityData.lat] : undefined"
-    :map-zoom="cityData?.initialZoom"
-    :initial-city="cityData?.filterBySlug"
-  />
-</template>
-
-<style lang="scss">
-//
-</style>
-
 <script setup lang="ts">
 import citiesCoordinates from '~/config/citiesCoordinates';
 
@@ -21,8 +9,20 @@ onBeforeMount(() => {
     history.pushState(
       {},
       '',
-      '/'
-    )
+      '/',
+    );
   }
 });
 </script>
+
+<template>
+  <MainPage
+    :map-center="cityData ? [cityData.lng, cityData.lat] : undefined"
+    :map-zoom="cityData?.initialZoom"
+    :initial-city="cityData?.filterBySlug"
+  />
+</template>
+
+<style lang="scss">
+//
+</style>
