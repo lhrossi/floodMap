@@ -12,6 +12,9 @@ const isOpen = toRef(props, 'isOpen');
 function handleSelect(item: MenuItem) {
   emit('onSelect', item);
 }
+function handleAboutClick() {
+  window.open('/about', '_blank').focus();
+}
 </script>
 
 <template>
@@ -34,12 +37,11 @@ function handleSelect(item: MenuItem) {
         Como usar o mapa
       </li>
 
-      <li>
-        <NuxtLink to="about">
-          <p class="menu-item">
-            Sobre
-          </p>
-        </NuxtLink>
+      <li
+        class="menu-item"
+        @click="() => handleAboutClick"
+      >
+        Sobre
       </li>
 
       <li

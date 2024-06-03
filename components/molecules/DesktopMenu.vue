@@ -8,6 +8,10 @@ const emit = defineEmits([
 function handleSelect(item: MenuItem) {
   emit('onSelect', item);
 }
+
+function handleAboutClick() {
+  window.open('/about', '_blank').focus();
+}
 </script>
 
 <template>
@@ -30,14 +34,13 @@ function handleSelect(item: MenuItem) {
       <div class="underline" />
     </li>
 
-    <li>
-      <NuxtLink to="about">
-        <p class="menu-item">
-          Sobre
-        </p>
+    <li
+      class="menu-item"
+      @click="handleAboutClick"
+    >
+      <p>Sobre</p>
 
-        <div class="underline" />
-      </NuxtLink>
+      <div class="underline" />
     </li>
 
     <div class="divider" />
