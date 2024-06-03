@@ -30,13 +30,14 @@ function handleSelect(item: MenuItem) {
       <div class="underline" />
     </li>
 
-    <li
-      class="menu-item"
-      @click="() => handleSelect('about')"
-    >
-      <p>Sobre</p>
+    <li>
+      <NuxtLink to="about">
+        <p class="menu-item">
+          Sobre
+        </p>
 
-      <div class="underline" />
+        <div class="underline" />
+      </NuxtLink>
     </li>
 
     <div class="divider" />

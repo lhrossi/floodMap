@@ -34,11 +34,12 @@ function handleSelect(item: MenuItem) {
         Como usar o mapa
       </li>
 
-      <li
-        class="menu-item"
-        @click="() => handleSelect('about')"
-      >
-        Sobre
+      <li>
+        <NuxtLink to="about">
+          <p class="menu-item">
+            Sobre
+          </p>
+        </NuxtLink>
       </li>
 
       <li
