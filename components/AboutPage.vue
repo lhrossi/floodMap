@@ -4,6 +4,8 @@
 
 <template>
   <div>
+    <InstagramFloatingButton />
+
     <section class="section about-1">
       <div class="bg-about bg-cover bg-center w-100 h-100 flex items-center justify-center">
         <img
@@ -16,9 +18,9 @@
 
     <section class="section about-2 text-xs sm:text-sm md:text-base">
       <div class="flex flex-col gap-2 md:px-4 lg:px-[12rem]">
-        <h1 class="font-bold underline text-2xl">
+        <span class="font-semibold text-md md:text-3xl mx-auto pb-4 underline">
           Sobre
-        </h1>
+        </span>
 
         <div class="flex flex-wrap sm:flex-nowrap gap-2 md:gap-6">
           <div class="col">
@@ -27,13 +29,13 @@
             </p>
 
             <p>
-              Assim, a aplicação AbrigaRS surgiu como uma das diversas respostas inovadoras e solidárias às crises provocadas pelas enchentes no Rio Grande do Sul em 2024. Com mais de 100 profissionais da área de tecnologia, incluindo desenvolvedores, analistas de dados e cientistas de dados e juristas, esse grupo voluntário uniu-se para criar soluções tecnológicas que pudessem ajudar as vítimas das enchentes de maneira eficiente e organizada.
+              Assim, a aplicação AbrigosRS surgiu como uma das diversas respostas inovadoras e solidárias às crises provocadas pelas enchentes no Rio Grande do Sul em 2024. Com mais de 100 profissionais da área de tecnologia, incluindo desenvolvedores, analistas de dados e cientistas de dados e juristas, esse grupo voluntário uniu-se para criar soluções tecnológicas que pudessem ajudar as vítimas das enchentes de maneira eficiente e organizada.
             </p>
           </div>
 
           <div class="col">
             <p>
-              A iniciativa teve início com o desenvolvimento do sistema AbrigaRS, que integra informações sobre os abrigos para que os órgãos públicos possam acessar dados em tempo real sobre os desabrigados e suas necessidades. Esse sistema é fundamental para coordenar melhor a distribuição de recursos e assistência.
+              A iniciativa teve início com o desenvolvimento do sistema AbrigosRS, que integra informações sobre os abrigos para que os órgãos públicos possam acessar dados em tempo real sobre os desabrigados e suas necessidades. Esse sistema é fundamental para coordenar melhor a distribuição de recursos e assistência.
             </p>
 
             <p>
@@ -49,11 +51,11 @@
     </section>
 
     <section class="section about-3">
-      <div class="timeline w-100 h-100 flex flex-col items-center justify-center gap-2">
-        <div class="pb-6">
-          <h2 class="font-semibold text-md md:text-4xl text-white underline">
+      <div class="timeline w-100 h-100 flex flex-col items-center justify-center gap-2 py-6">
+        <div class="pb-4">
+          <span class="font-semibold text-md md:text-3xl mx-auto text-white underline">
             Timeline
-          </h2>
+          </span>
         </div>
 
         <h2 class="font-semibold text-xl text-white">
@@ -69,11 +71,11 @@
     </section>
 
     <section class="section about-4">
-      <span class="font-semibold text-md md:text-4xl mx-auto">
+      <span class="font-semibold text-md md:text-3xl mx-auto pb-4 underline">
         Instituições apoiadoras
       </span>
 
-      <div class="grid-logos grid-cols-4 gap-4 pt-10">
+      <div class="grid-logos grid-cols-4 gap-6 pt-10 px-52">
         <img
           src="../assets/images/institutes/gauge.png"
           alt="Gauge"
@@ -232,7 +234,7 @@
     height: 0.5px;
     display: table;
     margin: auto;
-    width: 60%;
+    width: 40%;
 }
 
 .grid-logos{
@@ -255,19 +257,24 @@
 }
 
 body, html {
-  @apply overflow-x-hidden;
-  scroll-snap-type: y mandatory;
-  height: 100vh;
   overflow-y: scroll;
 }
 
-.section {
-  scroll-snap-align: start;
-  height: 94vh;
+.about-1{
+    padding: 0;
+    height: 600px;
 }
 
-.about-1, .about-3{
+.about-2{
+    height: fit-content
+}
+
+.about-3{
     padding: 0;
+}
+
+about-4{
+
 }
 
 .about-4 span {
