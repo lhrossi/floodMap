@@ -322,7 +322,7 @@ watch(abrigosFiltrados, clearPopups);
     left-[50%]
     translate-x-[-50%]
     bg-[#475DFF]
-    z-[500]
+    z-[20]
     h-[40px]
     w-fit
     px-5
