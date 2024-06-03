@@ -8,6 +8,10 @@ const emit = defineEmits([
 function handleSelect(item: MenuItem) {
   emit('onSelect', item);
 }
+
+function handleAboutClick() {
+  window.open('/about', '_blank').focus();
+}
 </script>
 
 <template>
@@ -32,7 +36,7 @@ function handleSelect(item: MenuItem) {
 
     <li
       class="menu-item"
-      @click="() => handleSelect('about')"
+      @click="handleAboutClick"
     >
       <p>Sobre</p>
 
