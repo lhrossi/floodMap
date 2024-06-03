@@ -49,11 +49,178 @@
     </section>
 
     <section class="section about-3">
-      <div class="timeline w-100 h-100 flex items-center justify-center">
+      <div class="timeline w-100 h-100 flex flex-col items-center justify-center gap-2">
+        <div class="pb-6">
+          <h2 class="font-semibold text-md md:text-4xl text-white underline">
+            Timeline
+          </h2>
+        </div>
+
+        <h2 class="font-semibold text-xl text-white">
+          Início da crise
+        </h2>
+
         <img
+          class="w-screen md:w-2/5"
           src="../assets/images/timeline_objects.png"
           alt="AbrigosRS"
-          width="40%"
+        >
+      </div>
+    </section>
+
+    <section class="section about-4">
+      <span class="font-semibold text-md md:text-4xl mx-auto">
+        Instituições apoiadoras
+      </span>
+
+      <div class="grid-logos grid-cols-4 gap-4 pt-10">
+        <img
+          src="../assets/images/institutes/gauge.png"
+          alt="Gauge"
+          width="120px"
+        >
+
+        <img
+          src="../assets/images/institutes/l2code.png"
+          alt="L2"
+          width="80px"
+        >
+
+        <img
+          src="../assets/images/institutes/be220.png"
+          alt="be220"
+          width="70px"
+        >
+
+        <img
+          src="../assets/images/institutes/gx2.png"
+          alt="GX2"
+          width="80px"
+        >
+
+        <img
+          src="../assets/images/institutes/sofiatti.png"
+          alt="Sofiatti"
+          width="140px"
+        >
+
+        <img
+          src="../assets/images/institutes/voluntarios_dev.png"
+          alt="Voluntários dev"
+          width="140px"
+        >
+
+        <img
+          src="../assets/images/institutes/hubble.png"
+          alt="Hubble"
+          width="140px"
+        >
+
+        <img
+          src="../assets/images/institutes/mprs.png"
+          alt="MPRS"
+          width="140px"
+        >
+
+        <img
+          src="../assets/images/institutes/gedd.png"
+          alt="GEDD"
+          width="120px"
+        >
+
+        <img
+          src="../assets/images/institutes/prefa.png"
+          alt="Prefa"
+          width="120px"
+        >
+
+        <img
+          src="../assets/images/institutes/pp_construcao.png"
+          alt="Painel de Preços da Construção"
+          width="120px"
+        >
+
+        <img
+          src="../assets/images/institutes/pierozan.png"
+          alt="Pierozan"
+          width="70px"
+        >
+
+        <img
+          src="../assets/images/institutes/volters.png"
+          alt="Volters"
+          width="100px"
+        >
+
+        <img
+          src="../assets/images/institutes/agide.png"
+          alt="Agidesk"
+          width="100px"
+        >
+
+        <img
+          src="../assets/images/institutes/cognitiva_brasil.png"
+          alt="Cognitiva Brasil"
+          width="140px"
+        >
+
+        <img
+          src="../assets/images/institutes/sucesu.png"
+          alt="SUCESU RS"
+          width="100px"
+        >
+
+        <img
+          src="../assets/images/institutes/orbe.png"
+          alt="Orbe"
+          width="80px"
+        >
+
+        <img
+          src="../assets/images/institutes/area.png"
+          alt="area."
+          width="80px"
+        >
+
+        <img
+          src="../assets/images/institutes/senai.png"
+          alt="SENAI"
+          width="160px"
+        >
+
+        <img
+          src="../assets/images/institutes/conectar_hub.png"
+          alt="Conectar Hub"
+          width="120px"
+        >
+
+        <img
+          src="../assets/images/institutes/dorak.png"
+          alt="DORAK"
+          width="80px"
+        >
+
+        <img
+          src="../assets/images/institutes/arkona.png"
+          alt="Arkona"
+          width="120px"
+        >
+
+        <img
+          src="../assets/images/institutes/ceu.png"
+          alt="Céu"
+          width="120px"
+        >
+      </div>
+
+      <div class="pt-6">
+        <hr class="divider">
+      </div>
+
+      <div class="flex justify-center items-center">
+        <img
+          src="../assets/images/institutes/abrigosrs.png"
+          alt="AbrigosRS"
         >
       </div>
     </section>
@@ -61,6 +228,18 @@
 </template>
 
 <style lang="scss">
+.divider{
+    height: 0.5px;
+    display: table;
+    margin: auto;
+    width: 60%;
+}
+
+.grid-logos{
+    display: grid;
+    align-items: center;
+    place-items: center;
+}
 .col{
     flex: 1;
     display: block;
@@ -75,7 +254,7 @@
     margin: 0 0 1em 0;
 }
 
-body {
+body, html {
   @apply overflow-x-hidden;
   scroll-snap-type: y mandatory;
   height: 100vh;
@@ -89,6 +268,10 @@ body {
 
 .about-1, .about-3{
     padding: 0;
+}
+
+.about-4 span {
+    display: table;
 }
 
 .timeline{
