@@ -132,7 +132,7 @@
       <img
         src="../assets/images/institutes/dorak.png"
         alt="DORAK"
-        width="80px"
+        width="60px"
       >
 
       <img
@@ -156,7 +156,7 @@
       <img
         src="../assets/images/institutes/wine.png"
         alt="Wine"
-        width="120px"
+        width="160px"
       >
 
       <img
