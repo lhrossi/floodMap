@@ -6,7 +6,7 @@
   <section class="section about text-xs sm:text-sm md:text-base">
     <div class="flex flex-col gap-6 md:px-4 lg:px-12 xl:px-[22rem]">
       <span class="font-semibold text-md md:text-3xl mx-auto pb-4 underline">
-        Sobre
+        SOBRE
       </span>
 
       <!-- <div class="flex flex-wrap sm:flex-nowrap gap-2 md:gap-12"> -->

@@ -3,11 +3,13 @@
 </script>
 
 <template>
-  <AboutDescription />
+  <div>
+    <AboutDescription />
 
-  <AboutTimeline />
+    <AboutTimeline />
 
-  <AboutSupportingInstitutes />
+    <AboutSupportingInstitutes />
+  </div>
 </template>
 
 <style lang="scss">

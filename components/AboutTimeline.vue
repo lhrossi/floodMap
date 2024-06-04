@@ -7,7 +7,7 @@
     <div class="timeline w-100 h-100 flex flex-col items-center justify-center gap-2 py-6">
       <div class="pb-4">
         <span class="font-semibold text-md md:text-3xl mx-auto text-white underline">
-          Timeline
+          TIMELINE
         </span>
       </div>
 
