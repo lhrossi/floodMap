@@ -158,6 +158,36 @@
         alt="Wine"
         width="120px"
       >
+
+      <img
+        src="../assets/images/institutes/govrs.png"
+        alt="GOVRS"
+        width="120px"
+      >
+
+      <img
+        src="../assets/images/institutes/melhor_envio.png"
+        alt="Melhor Envio"
+        width="120px"
+      >
+
+      <img
+        src="../assets/images/institutes/procempa.png"
+        alt="Procempa"
+        width="120px"
+      >
+
+      <img
+        src="../assets/images/institutes/stefanini.png"
+        alt="Stefanini"
+        width="120px"
+      >
+
+      <img
+        src="../assets/images/institutes/woopi.png"
+        alt="Woopi"
+        width="120px"
+      >
     </div>
 
     <div class="pt-6">

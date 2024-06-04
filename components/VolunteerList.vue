@@ -1,18 +1,5 @@
 <script setup lang="ts">
-const volunteers = ref([
-  {
-    id: 1,
-    name: 'Guilherme Tischer',
-    role: 'Herói',
-    description: 'Apagando incendio desde 2020',
-  },
-  {
-    id: 2,
-    name: 'Luciano Andrade',
-    role: 'Dev/PO/StakeHolder/Herói/SR',
-    description: 'É ele, n adianta',
-  },
-]);
+const volunteers = getContributors();
 </script>
 
 <template>
@@ -20,7 +7,7 @@ const volunteers = ref([
     <div class="volunteers-grid volunteers-grid-cols-1 sm:volunteers-grid-cols-3 gap-4">
       <div
         v-for="volunteer in volunteers"
-        :key="volunteer.id"
+        :key="volunteer.name"
         class="p-4 border border-gray-300 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300"
       >
         <h2 class="text-xl font-semibold">
@@ -28,11 +15,11 @@ const volunteers = ref([
         </h2>
 
         <p class="text-gray-600">
-          {{ volunteer.role }}
+          {{ volunteer.workplace }}
         </p>
 
         <p class="text-gray-500">
-          {{ volunteer.description }}
+          {{ volunteer.city_state }}
         </p>
       </div>
     </div>
