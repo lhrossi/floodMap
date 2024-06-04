@@ -17,11 +17,7 @@ const volunteers = ref([
 
 <template>
   <section class="container mx-auto py-8 sm:px-4 md:px-20">
-    <h1 class="text-2xl font-bold mb-4">
-      Volunteers
-    </h1>
-
-    <div class="volunteers-grid volunteers-grid-cols-1 sm:volunteers-grid-cols-2 gap-4">
+    <div class="volunteers-grid volunteers-grid-cols-1 sm:volunteers-grid-cols-3 gap-4">
       <div
         v-for="volunteer in volunteers"
         :key="volunteer.id"
@@ -50,9 +46,9 @@ const volunteers = ref([
 .volunteers-grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
-.sm\:volunteers-grid-cols-2 {
+.sm\:volunteers-grid-cols-3 {
   @media (min-width: 640px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 </style>

@@ -1,9 +1,69 @@
 <script setup lang="ts">
-//
+import axios from 'axios';
+import { useChallengeV2 } from 'vue-recaptcha';
+
+const { root, onVerify } = useChallengeV2({
+  options: {
+    theme: 'light',
+    size: 'normal',
+  },
+});
+
+onVerify((response) => {
+  if (response)
+    isCaptchaVerified.value = true;
+});
+const formData = ref({
+  name: '',
+  lastName: '',
+  institute: '',
+  city: '',
+  state: '',
+  whatsapp: '',
+  email: '',
+  message: '',
+});
+
+const isCaptchaVerified = ref(false);
+const requestUrl = '/api/contact';
+
+async function submitForm() {
+  if (!isCaptchaVerified.value) {
+    // eslint-disable-next-line no-alert
+    alert('Por favor, complete o reCAPTCHA.');
+    return;
+  }
+  try {
+    await $fetch(requestUrl, {
+      method: 'post',
+      body: formData.value,
+    });
+
+    formData.value = {
+      name: '',
+      lastName: '',
+      institute: '',
+      city: '',
+      state: '',
+      whatsapp: '',
+      email: '',
+      message: '',
+    };
+
+    // eslint-disable-next-line no-alert
+    alert('Formulário enviado!');
+  }
+  catch (error) {
+    console.error('Erro ao enviar e-mail:', error);
+  }
+}
 </script>
 
 <template>
-  <form class="max-w-xl mx-auto">
+  <form
+    class="max-w-xl mx-auto"
+    @submit.prevent="submitForm"
+  >
     <div class="grid md:grid-cols-2 md:gap-6">
       <div class="relative z-0 w-full group">
         <label
@@ -17,6 +77,7 @@
 
         <input
           id="name"
+          v-model="formData.name"
           type="text"
           name="name"
           class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5"
@@ -36,6 +97,7 @@
 
         <input
           id="last_name"
+          v-model="formData.lastName"
           type="text"
           name="last_name"
           class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5"
@@ -57,6 +119,7 @@
 
       <input
         id="institute"
+        v-model="formData.institute"
         type="text"
         name="institute"
         class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5 "
@@ -78,6 +141,7 @@
 
         <input
           id="city"
+          v-model="formData.city"
           type="text"
           name="city"
           class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5"
@@ -97,6 +161,7 @@
 
         <input
           id="state"
+          v-model="formData.state"
           type="text"
           name="state"
           class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5"
@@ -119,6 +184,7 @@
 
         <input
           id="whatsapp"
+          v-model="formData.whatsapp"
           type="text"
           name="whatsapp"
           class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5"
@@ -138,6 +204,7 @@
 
         <input
           id="email"
+          v-model="formData.email"
           type="email"
           name="email"
           class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5"
@@ -159,12 +226,18 @@
 
       <textarea
         id="message"
+        v-model="formData.message"
         rows="4"
         class="block p-2.5 w-full text-sm rounded-lg border border-gray-300 "
         placeholder="Leave a comment..."
         required
       />
     </div>
+
+    <div
+      ref="root"
+      class="flex items-center justify-center mb-5"
+    />
 
     <div class="flex justify-center">
       <button
