@@ -19,8 +19,7 @@
     "compressorjs": "^1.2.1",
     "lodash-es": "^4.17.21",
     "maska": "^2.1.10",
-    "nuxt-snackbar": "^1.0.3",
-    "vue-recaptcha": "3.0.0-alpha.6"
+    "nuxt-snackbar": "^1.0.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.18.1",

@@ -1,18 +1,4 @@
 <script setup lang="ts">
-import axios from 'axios';
-import { useChallengeV2 } from 'vue-recaptcha';
-
-const { root, onVerify } = useChallengeV2({
-  options: {
-    theme: 'light',
-    size: 'normal',
-  },
-});
-
-onVerify((response) => {
-  if (response)
-    isCaptchaVerified.value = true;
-});
 const formData = ref({
   name: '',
   lastName: '',
@@ -24,20 +10,26 @@ const formData = ref({
   message: '',
 });
 
-const isCaptchaVerified = ref(false);
-const requestUrl = '/api/contact';
+function generateMailtoLink(formData: any) {
+  const subject = encodeURIComponent('AbrigosRS - Formulário de Contato');
+  const body = encodeURIComponent(`
+        Nome: ${formData.name}
+        Sobrenome: ${formData.lastName}
+        Instituição: ${formData.institute}
+        Cidade: ${formData.city}
+        Estado: ${formData.state}
+        WhatsApp: ${formData.whatsapp}
+        E-mail: ${formData.email}
+        Mensagem: ${formData.message}
+      `);
+
+  return `mailto:abrigos.org@gmail.com?subject=${subject}&body=${body}`;
+}
 
 async function submitForm() {
-  if (!isCaptchaVerified.value) {
-    // eslint-disable-next-line no-alert
-    alert('Por favor, complete o reCAPTCHA.');
-    return;
-  }
   try {
-    await $fetch(requestUrl, {
-      method: 'post',
-      body: formData.value,
-    });
+    const mailtoLink = generateMailtoLink(formData.value);
+    window.location.href = mailtoLink;
 
     formData.value = {
       name: '',
@@ -49,9 +41,6 @@ async function submitForm() {
       email: '',
       message: '',
     };
-
-    // eslint-disable-next-line no-alert
-    alert('Formulário enviado!');
   }
   catch (error) {
     console.error('Erro ao enviar e-mail:', error);
@@ -233,11 +222,6 @@ async function submitForm() {
         required
       />
     </div>
-
-    <div
-      ref="root"
-      class="flex items-center justify-center mb-5"
-    />
 
     <div class="flex justify-center">
       <button

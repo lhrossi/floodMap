@@ -33,10 +33,6 @@ export default defineNuxtConfig({
     public: {
       NUXT_PUBLIC_GTAG_ID: process.env.NUXT_PUBLIC_GTAG_ID,
       NUXT_PUBLIC_GTAG_ENABLED: process.env.NUXT_PUBLIC_GTAG_ENABLED,
-      recaptcha: {
-        v2SiteKey: process.env.NUXT_PUBLIC_V2_RECAPTCHA_KEY,
-        v3SiteKey: process.env.NUXT_PUBLIC_V3_RECAPTCHA_KEY,
-      },
     },
   },
 
@@ -51,7 +47,6 @@ export default defineNuxtConfig({
     'nuxt-mapbox', // https://alexlavoie42.github.io/Nuxt-Mapbox/
     'unplugin-icons/nuxt',
     'nuxt-gtag',
-    'vue-recaptcha/nuxt', // https://github.com/DanSnow/vue-recaptcha
   ],
 
   app: {
