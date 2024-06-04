@@ -14,10 +14,6 @@ const volunteers = getContributors();
           {{ volunteer.name }}
         </h2>
 
-        <p class="text-gray-600">
-          {{ volunteer.workplace }}
-        </p>
-
         <p class="text-gray-500">
           {{ volunteer.city_state }}
         </p>

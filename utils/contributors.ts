@@ -363,7 +363,7 @@ const contributors: Contributor[] = [
   {
     name: 'Gabriel Soares Dos Santos',
     workplace: 'U-tech',
-    city_state: 'João Pessoa / PB em mudança para Santo Ângelo / RS',
+    city_state: 'João Pessoa - PB',
   },
   {
     name: 'Gabrielle Dos Santos Feijó',
