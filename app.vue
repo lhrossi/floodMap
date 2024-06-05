@@ -1,3 +1,7 @@
+<script setup lang="ts">
+//
+</script>
+
 <template>
   <v-app>
     <nuxt-layout>
