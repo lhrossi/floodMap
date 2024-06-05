@@ -39,6 +39,10 @@ onMounted(() => {
     marker.setLngLat(latAndLng);
     marker._element.addEventListener('click', () => {
       emit('onClick');
+      useTrackEvent('click_shelter', {
+        shelter_id: abrigo.id,
+        shelter_name: abrigo.nome,
+      });
     });
   });
 });
