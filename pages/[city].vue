@@ -4,6 +4,12 @@ import citiesCoordinates from '~/config/citiesCoordinates';
 const { city } = useRoute().params;
 const cityData = citiesCoordinates[city as string];
 
+if (cityData) {
+  useTrackEvent('screen_view', {
+    city: cityData.filterBySlug,
+  });
+}
+
 onBeforeMount(() => {
   if (!cityData) {
     history.pushState(

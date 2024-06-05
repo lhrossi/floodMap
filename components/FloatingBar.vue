@@ -19,10 +19,14 @@ const backgroundColor = computed(() => hexToRGBA(color.value, 0.15));
 
 function updateCity(value: string) {
   emit('updateCity', value);
+  useTrackEvent('select_city', {
+    city: value,
+  });
 }
 
 function showFilters() {
   emit('showFilters');
+  useTrackEvent('show_filters');
 }
 
 function handleSwitchMap() {
