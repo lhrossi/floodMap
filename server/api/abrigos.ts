@@ -14,19 +14,20 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    const data = response.data.map((item: any) => {
-      if (!item.longitude || !item.latitude) {
-        // Replace missing latitude and longitude with default values
-        return {
-          ...item,
-          latitude: -30,
-          longitude: -50,
-        };
-      }
-      else {
+    const data = response.data
+      .filter((item: any) => item?.ativo)
+      .map((item: any) => {
+        if (!item.longitude || !item.latitude) {
+          // Replace missing latitude and longitude with default values
+          return {
+            ...item,
+            latitude: -30,
+            longitude: -50,
+          };
+        }
+
         return item;
-      }
-    });
+      });
 
     return data;
   }
